@@ -1,0 +1,42 @@
+# Publishes the website to GitHub Pages whenever main changes.
+# Only the website's own files are published (not the README, scripts or workflows).
+name: Deploy website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Collect the website files
+        run: |
+          mkdir -p _site
+          cp -R index.html about.html timetable.html css js data assets _site/
+          rm -f _site/assets/trustees/README.txt
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

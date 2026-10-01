@@ -1,0 +1,58 @@
+# Copies the mosque's published adhan and iqamah times from MyLocalMasjid into
+# data/timetable.js every two hours, commits the file when the times change,
+# and republishes the website. Needs a repository secret called MLM_API_KEY
+# (see README); until it is added, the job does nothing.
+name: Sync prayer times
+
+on:
+  schedule:
+    - cron: "17 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: sync-prayer-times
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      MLM_API_KEY: ${{ secrets.MLM_API_KEY }}
+    steps:
+      - name: Waiting for an API key
+        if: env.MLM_API_KEY == ''
+        run: echo "::notice::No MLM_API_KEY secret yet, so there is nothing to sync. See README → Prayer times from MyLocalMasjid."
+
+      - uses: actions/checkout@v5
+        if: env.MLM_API_KEY != ''
+
+      - uses: actions/setup-node@v5
+        if: env.MLM_API_KEY != ''
+        with:
+          node-version: 22
+
+      - name: Fetch times from MyLocalMasjid
+        if: env.MLM_API_KEY != ''
+        run: node scripts/sync-prayer-times.mjs
+
+      - name: Commit and publish if the times changed
+        if: env.MLM_API_KEY != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/timetable.js; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/timetable.js
+          git commit -m "Update prayer times from MyLocalMasjid"
+          git push
+          # Pushes made by this workflow don't trigger other workflows, so start the deploy directly.
+          gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
