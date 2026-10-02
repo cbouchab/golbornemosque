@@ -28,8 +28,13 @@
 
     const tomorrow = !GM.sameDay(day, today);
     const hijri = P.hijri(day);
-    dayEl.textContent = tomorrow ? "Tomorrow" : "Today";
-    dateEl.textContent = GM.formatDay(day, { weekday: "short", day: "numeric", month: "short" }) + (hijri ? ` · ${hijri}` : "");
+    // Today's date speaks for itself; after Isha a label makes clear the times are tomorrow's.
+    dayEl.hidden = !tomorrow;
+    dayEl.textContent = tomorrow ? "Tomorrow" : "";
+    const date = document.createElement("span");
+    date.className = "prayer-bar__date";
+    date.textContent = GM.formatDay(day, { weekday: "short", day: "numeric", month: "short" });
+    dateEl.replaceChildren(date, hijri ? ` · ${hijri}` : "");
     sunriseEl.textContent = `Sunrise ${P.fmt(P.times(day).sunrise)}`;
     // MyLocalMasjid's terms ask for this credit wherever its times are shown.
     creditEl.innerHTML =

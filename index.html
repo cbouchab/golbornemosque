@@ -97,7 +97,7 @@
   <section class="prayer-bar" id="prayer-bar" aria-label="Prayer times">
     <div class="wrap prayer-bar__inner">
       <div class="prayer-bar__day">
-        <p><span class="prayer-bar__title" data-bar-day>Today</span> <span data-bar-date>&nbsp;</span></p>
+        <p><span class="prayer-bar__title" data-bar-day hidden></span><span data-bar-date>&nbsp;</span></p>
         <p data-bar-sunrise>&nbsp;</p>
         <p class="prayer-bar__credit" data-bar-credit>&nbsp;</p>
       </div>
@@ -132,19 +132,38 @@
         <aside class="arch" aria-labelledby="next-label">
           <svg class="arch__frame" viewBox="0 0 320 420" aria-hidden="true" focusable="false">
             <defs>
-              <pattern id="arch-lattice" width="44" height="48.7" patternUnits="userSpaceOnUse" x="160" y="10">
-                <image href="assets/zellige.webp" width="44" height="48.7"/>
+              <pattern id="arch-lattice" width="44" height="48.71" patternUnits="userSpaceOnUse" x="160" y="10">
+                <image href="assets/zellige.webp" width="44" height="48.71"/>
               </pattern>
+              <pattern id="arch-weave" width="64" height="70.84" patternUnits="userSpaceOnUse" x="128" y="20">
+                <image href="assets/zellige.webp" width="64" height="70.84"/>
+              </pattern>
+              <radialGradient id="arch-light" cx="160" cy="110" r="190" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#f6cf5c" stop-opacity="0.13"/>
+                <stop offset="1" stop-color="#f6cf5c" stop-opacity="0"/>
+              </radialGradient>
             </defs>
             <path class="arch__fill" d="M10 410V233.2A162 162 0 1 1 310 233.2V410Z"/>
-            <!-- A band of lattice around the inside edge, like the carved border of a Moroccan arch -->
-            <path class="arch__band" fill="url(#arch-lattice)" fill-rule="evenodd" d="M10 410V233.2A162 162 0 1 1 310 233.2V410ZM26 394V229.97A146 146 0 1 1 294 229.97V394Z"/>
+            <!-- inside the window: a faint woven lattice and light from the top -->
+            <path class="arch__weave" d="M30 390V229.13A142 142 0 1 1 290 229.13V390Z"/>
+            <path d="M30 390V229.13A142 142 0 1 1 290 229.13V390Z" fill="url(#arch-light)"/>
+            <!-- the arch: alternating voussoirs (lattice / plain with a star), a keystone, a scalloped intrados -->
+            <path class="arch__band" fill="url(#arch-lattice)" fill-rule="evenodd" d="M10 410V233.2A162 162 0 1 1 310 233.2V410ZM30 390V229.13A142 142 0 1 1 290 229.13V390Z"/>
+            <path class="arch__voussoir" d="M20.33 197.6L0.65 201.2A162 162 0 0 1 -1.95 167.97L18.04 168.47A142 142 0 0 0 20.33 197.6ZM21.77 139.49L2.3 134.91A162 162 0 0 1 13.23 103.42L31.35 111.89A142 142 0 0 0 21.77 139.49ZM46.38 86.83L30.37 74.83A162 162 0 0 1 53.01 50.36L66.21 65.38A142 142 0 0 0 46.38 86.83ZM90.02 48.44L80.17 31.04A162 162 0 0 1 110.71 17.68L116.79 36.73A142 142 0 0 0 90.02 48.44ZM203.21 36.73L209.29 17.68A162 162 0 0 1 239.83 31.04L229.98 48.44A142 142 0 0 0 203.21 36.73ZM253.79 65.38L266.99 50.36A162 162 0 0 1 289.63 74.83L273.62 86.83A142 142 0 0 0 253.79 65.38ZM288.65 111.89L306.77 103.42A162 162 0 0 1 317.7 134.91L298.23 139.49A142 142 0 0 0 288.65 111.89ZM301.96 168.47L321.95 167.97A162 162 0 0 1 319.35 201.2L299.67 197.6A142 142 0 0 0 301.96 168.47Z"/>
+            <path class="arch__voussoir arch__voussoir--key" d="M145.7 33.74L140.5 6.14A167 167 0 0 1 179.5 6.14L174.3 33.74A139 139 0 0 0 145.7 33.74Z"/>
+            <path class="arch__kstar" d="M160 13.6L161.58 15.18L163.82 15.18L163.82 17.42L165.4 19L163.82 20.58L163.82 22.82L161.58 22.82L160 24.4L158.42 22.82L156.18 22.82L156.18 20.58L154.6 19L156.18 17.42L156.18 15.18L158.42 15.18Z"/>
+            <path class="arch__vstars" d="M8.46 179.27L9.81 180.62L11.72 180.62L11.72 182.53L13.06 183.87L11.72 185.22L11.72 187.13L9.81 187.13L8.46 188.47L7.12 187.13L5.21 187.13L5.21 185.22L3.86 183.87L5.21 182.53L5.21 180.62L7.12 180.62ZM16.4 117.56L17.75 118.91L19.65 118.91L19.65 120.82L21 122.16L19.65 123.51L19.65 125.42L17.75 125.42L16.4 126.76L15.05 125.42L13.15 125.42L13.15 123.51L11.8 122.16L13.15 120.82L13.15 118.91L15.05 118.91ZM48.4 64.2L49.75 65.55L51.65 65.55L51.65 67.46L53 68.8L51.65 70.15L51.65 72.06L49.75 72.06L48.4 73.4L47.05 72.06L45.15 72.06L45.15 70.15L43.8 68.8L45.15 67.46L45.15 65.55L47.05 65.55ZM99.1 28.13L100.45 29.48L102.35 29.48L102.35 31.39L103.7 32.73L102.35 34.08L102.35 35.99L100.45 35.99L99.1 37.33L97.75 35.99L95.85 35.99L95.85 34.08L94.5 32.73L95.85 31.39L95.85 29.48L97.75 29.48ZM220.9 28.13L222.25 29.48L224.15 29.48L224.15 31.39L225.5 32.73L224.15 34.08L224.15 35.99L222.25 35.99L220.9 37.33L219.55 35.99L217.65 35.99L217.65 34.08L216.3 32.73L217.65 31.39L217.65 29.48L219.55 29.48ZM271.6 64.2L272.95 65.55L274.85 65.55L274.85 67.46L276.2 68.8L274.85 70.15L274.85 72.06L272.95 72.06L271.6 73.4L270.25 72.06L268.35 72.06L268.35 70.15L267 68.8L268.35 67.46L268.35 65.55L270.25 65.55ZM303.6 117.56L304.95 118.91L306.85 118.91L306.85 120.82L308.2 122.16L306.85 123.51L306.85 125.42L304.95 125.42L303.6 126.76L302.25 125.42L300.35 125.42L300.35 123.51L299 122.16L300.35 120.82L300.35 118.91L302.25 118.91ZM311.54 179.27L312.88 180.62L314.79 180.62L314.79 182.53L316.14 183.87L314.79 185.22L314.79 187.13L312.88 187.13L311.54 188.47L310.19 187.13L308.28 187.13L308.28 185.22L306.94 183.87L308.28 182.53L308.28 180.62L310.19 180.62Z"/>
+            <path class="arch__dividers" d="M20.33 197.6L0.65 201.2M18.04 168.47L-1.95 167.97M21.77 139.49L2.3 134.91M31.35 111.89L13.23 103.42M46.38 86.83L30.37 74.83M66.21 65.38L53.01 50.36M90.02 48.44L80.17 31.04M116.79 36.73L110.71 17.68M145.39 30.75L143.33 10.86M174.61 30.75L176.67 10.86M203.21 36.73L209.29 17.68M229.98 48.44L239.83 31.04M253.79 65.38L266.99 50.36M273.62 86.83L289.63 74.83M288.65 111.89L306.77 103.42M298.23 139.49L317.7 134.91M301.96 168.47L321.95 167.97M299.67 197.6L319.35 201.2"/>
+            <path class="arch__lobes" d="M30 229.13C39.24 220.61 31.94 195.41 19.58 193.14C30.73 187.33 30.28 161.1 18.94 155.67C31.22 152.98 37.64 127.55 28.12 119.35C40.68 119.96 53.53 97.09 46.49 86.68C58.44 90.56 76.83 71.85 72.76 59.96C83.28 66.83 105.92 53.58 105.1 41.04C113.46 50.42 138.78 43.56 141.26 31.24C146.89 42.48 173.11 42.48 178.74 31.24C181.22 43.56 206.54 50.42 214.9 41.04C214.08 53.58 236.72 66.83 247.24 59.96C243.17 71.85 261.56 90.56 273.51 86.68C266.47 97.09 279.32 119.96 291.88 119.35C282.36 127.55 288.78 152.98 301.06 155.67C289.72 161.1 289.27 187.33 300.42 193.14C288.06 195.41 280.76 220.61 290 229.13"/>
+            <!-- imposts on slim columns -->
+            <path class="arch__impost" d="M5 228H41V237H5ZM279 228H315V237H279Z"/>
+            <path class="arch__columns" d="M31.4 237H40.6M32.2 237Q32.4 241 34.6 242M39.8 237Q39.6 241 37.4 242M33.8 243.2H38.2M34.6 242V380M37.4 242V380M279.4 237H288.6M280.2 237Q280.4 241 282.6 242M287.8 237Q287.6 241 285.4 242M281.8 243.2H286.2M282.6 242V380M285.4 242V380"/>
+            <path class="arch__bases" d="M33.6 380H38.4V383H33.6ZM32.4 383H39.6V389.5H32.4ZM281.6 380H286.4V383H281.6ZM280.4 383H287.6V389.5H280.4Z"/>
             <path class="arch__line" d="M10 410V233.2A162 162 0 1 1 310 233.2V410Z"/>
-            <path class="arch__line arch__line--inner" d="M26 394V229.97A146 146 0 1 1 294 229.97V394Z"/>
-            <!-- Crescent and star, as on the mosque's logo -->
-            <g class="arch__key" transform="translate(158 47)">
-              <path d="M12.29 4.24A13 13 0 1 1 -1.44 -12.92A11 11 0 1 0 12.29 4.24Z"/>
-              <path d="M5.6 -8L6.75 -4.78L10.17 -4.68L7.45 -2.6L8.42 0.68L5.6 -1.25L2.78 0.68L3.75 -2.6L1.03 -4.68L4.45 -4.78Z"/>
+            <path class="arch__line arch__line--inner" d="M30 390V229.13A142 142 0 1 1 290 229.13V390Z"/>
+            <!-- finial: the crescent and star above the arch, as on the dome in the logo -->
+            <g class="arch__finial">
+              <path d="M155.4 5.4C155.4 2.2 164.6 2.2 164.6 5.4Z"/><path d="M158.9 2.6V-7.6H161.1V2.6Z"/><circle cx="160" cy="-10.6" r="3.2"/><path d="M159.2 -13.6V-16.4H160.8V-13.6Z"/><circle cx="160" cy="-18.4" r="2.1"/><g transform="translate(158.2 -32.4) scale(0.82)"><path d="M12.29 4.24A13 13 0 1 1 -1.44 -12.92A11 11 0 1 0 12.29 4.24Z"/><path d="M5.6 -8L6.75 -4.78L10.17 -4.68L7.45 -2.6L8.42 0.68L5.6 -1.25L2.78 0.68L3.75 -2.6L1.03 -4.68L4.45 -4.78Z"/></g>
             </g>
           </svg>
           <div class="arch__content">
