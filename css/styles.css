@@ -288,26 +288,29 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   min-height: 56px;
 }
 
-/* The logo and the name form one lockup, sized from --brand-size (the logo's
-   height). The name is stacked on two lines that span exactly that height, from
-   the top of GOLBORNE to the foot of MOSQUE. */
+/* The mosque symbol and the name form one lockup, sized from --brand-size (the
+   symbol's height). The name sits on one line, centred on the symbol. */
 .brand {
   --brand-size: 40px;
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--brand-size) * 0.25);
+  gap: calc(var(--brand-size) * 0.3);
   color: var(--gold);
 }
-.brand__logo { width: var(--brand-size); height: var(--brand-size); flex: none; }
+.brand__logo { width: auto; height: var(--brand-size); flex: none; }
 .brand--footer { --brand-size: 48px; }
 .brand__text {
   display: flex;
   flex-direction: column;
-  /* capitals are 0.7em tall and the lines 1em apart, so 1.7em = the logo's height */
-  font-size: calc(var(--brand-size) / 1.7);
+  font-size: calc(var(--brand-size) * 0.5);
   line-height: 1;
-  /* centres the capitals themselves (not their line boxes) on the logo */
-  translate: 0 0.053em;
+  /* centres the capitals themselves (not their line box) on the symbol */
+  translate: 0 0.04em;
+}
+/* On a phone the name shrinks a little if needed, so it never runs into the menu button */
+@media (max-width: 899px) {
+  .site-header .brand__text { font-size: min(calc(var(--brand-size) * 0.5), calc((100vw - 148px) / 12.5)); }
+  .brand--footer .brand__text { font-size: min(calc(var(--brand-size) * 0.5), calc((100vw - 100px) / 12.5)); }
 }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
@@ -318,8 +321,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   text-transform: uppercase;
   white-space: nowrap;
 }
-/* MOSQUE, spaced out to end where GOLBORNE does (its trailing space taken back too) */
-.brand__line { display: block; margin-right: -0.311em; letter-spacing: 0.431em; }
 
 .nav-toggle {
   display: grid;

@@ -173,7 +173,7 @@ js/donate.js      SumUp buttons and bank transfer details
 js/about.js       Trustee cards on the About page
 js/site.js        Mobile menu, footer year
 assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
-assets/icon.svg   The mosque in its circle, beside the name in the header and footer
+assets/symbol.svg The mosque symbol beside the name in the header and footer (a cropped copy of brand/symbol.svg)
 assets/icons/     Browser-tab and home-screen icons; favicon.ico and site.webmanifest sit at the top level
 assets/og.jpg     The picture shown when a link to the site is shared
 assets/zellige.webp  The faint background pattern (one repeat, in the logo's gold)
