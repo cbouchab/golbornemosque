@@ -82,7 +82,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 76px;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -287,7 +287,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 60px;
+  min-height: 56px;
 }
 
 .brand {
@@ -299,8 +299,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .brand__logo { width: 40px; height: 40px; flex: none; }
 .brand--footer { gap: 14px; }
 .brand--footer .brand__logo { width: 72px; height: 72px; }
-/* Arabic letters reach further below the line than above it, so lift the pair to centre the lettering */
-.brand__text { display: flex; flex-direction: column; line-height: 1.05; translate: 0 -2.5px; }
+.brand__text { display: flex; flex-direction: column; line-height: 1.05; }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
      line's box ends where the lettering does */
@@ -309,17 +308,14 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-/* The Arabic name spans the same width as "GOLBORNE MOSQUE" above it: set just
-   under that width, and justified so both lines end together exactly. */
+/* The Arabic name at the same visual size as the English: its tallest letters
+   (alef, lam) stand about as high as the capitals above */
 .brand__ar {
-  align-self: stretch;
-  margin-top: -0.12em;
+  align-self: flex-start;
   font-family: var(--font-name);
-  font-size: 2.07rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  line-height: 1.05;
-  text-align: justify;
-  text-align-last: justify;
+  line-height: 1.35;
   white-space: nowrap;
   color: var(--gold-bright);
 }
@@ -550,7 +546,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   height: auto;
   filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45));
 }
-.sign__logo + .eyebrow { margin: 32px 0 0; }
+.sign__logo + .sign__lede { margin-top: 32px; }
 
 .sign__lede {
   max-width: 30em;
