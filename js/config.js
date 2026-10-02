@@ -10,7 +10,7 @@
  */
 window.MOSQUE_CONFIG = {
   name: "Golborne Mosque",
-  arabicName: "مسجد الهدى",
+  arabicName: "مسجد غولبورن",
 
   // 76 Golborne Road, London W10 5PS
   location: { lat: 51.52195, lng: -0.2086, timeZone: "Europe/London" },

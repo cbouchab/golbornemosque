@@ -1,8 +1,8 @@
 # Golborne Mosque website
 
-A website for Golborne Mosque (Alhuda Mosque, مسجد الهدى), 76 Golborne Road, London W10 5PS. It is styled after the mosque's frontage: dark grey with gold outlines and lettering.
+A website for Golborne Mosque (مسجد غولبورن, also known as Alhuda Mosque), 76 Golborne Road, London W10 5PS. It is styled after the mosque's logo and frontage: grey and gold, with a faint Moroccan zellige pattern.
 
-It is a plain static site: HTML, CSS and a little JavaScript, with no build step, database or monthly fees.
+It is a plain static site: HTML, CSS and a little JavaScript, with no build tools, database or monthly fees.
 
 Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adhan and iqamah times its screens show. A scheduled job copies them into the site (see [Prayer times from MyLocalMasjid](#prayer-times-from-mylocalmasjid)). For any day the mosque hasn't published, the site calculates the times itself.
 
@@ -172,6 +172,7 @@ js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp buttons and bank transfer details
 js/about.js       Trustee cards on the About page
 js/site.js        Mobile menu, footer year
+assets/logo.svg   The logo at the top of the home page (a lighter copy of brand/logo.svg)
 assets/logo.webp  The logo in the header and footer
 assets/icon-64.png, favicon.ico, assets/apple-touch-icon.png
                   Browser-tab and home-screen icons (the badge's mosque, without lettering)
@@ -185,4 +186,4 @@ scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 wrangler.jsonc    Cloudflare Pages settings
 ```
 
-Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies three: Cinzel for the name beside the logo and the big heading, Scheherazade New for the Arabic name, and Amiri for other Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
+Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies three: Cinzel for the name beside the logo and the timetable's title, Scheherazade New for the Arabic name beside the logo, and Amiri for other Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.

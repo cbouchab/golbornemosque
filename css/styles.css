@@ -524,47 +524,22 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   align-items: center;
 }
 @media (min-width: 900px) {
-  .hero { padding: 104px 0 128px; }
+  .hero { padding: 72px 0 112px; }
   /* On wide screens the tiles sit behind the arch rather than the text, so they can show a little more */
   .hero::before { opacity: 0.1; }
   .hero__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 72px; }
 }
 
 .sign { container-type: inline-size; }
-/* The name in the same Roman capitals as the logo in the menu bar */
-.sign__title {
-  padding-bottom: 0.1em;
-  font-family: var(--font-brand);
-  font-size: clamp(2.25rem, 7vw, 4.5rem);
-  /* "GOLBORNE" is ~6.5em wide in these capitals: scale to its column so it never overflows */
-  font-size: clamp(2rem, 14cqi, 4.75rem);
-  font-weight: 700;
-  line-height: 1.04;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* The mosque's badge stands in for a written heading */
+.sign__logo { margin: 0; line-height: 0; }
+.sign__logo img {
+  display: block;
+  width: clamp(220px, 66cqi, 320px);
+  height: auto;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45));
 }
-.sign__title span { display: block; }
-
-/* The mosque's name in Mushaf-style Naskh with Qur'anic spelling, gilded like the
-   English title. Padding keeps the vowel marks inside the gradient's box. */
-.sign__ar {
-  width: fit-content;
-  margin: 6px 0 0;
-  padding: 0.12em 0.04em 0.18em;
-  font-family: var(--font-name);
-  font-size: clamp(2.75rem, 11cqi, 4.5rem);
-  font-weight: 700;
-  line-height: 1.5;
-  text-align: left;
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+.sign__logo + .eyebrow { margin: 32px 0 0; }
 
 .sign__lede {
   max-width: 30em;
