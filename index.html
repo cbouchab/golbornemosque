@@ -205,6 +205,32 @@
           </div>
 
           <div class="panel panel--framed jumuah" aria-labelledby="jumuah-title">
+          <!-- Drawn as a prayer mat: a lattice border, the mihrab arch with a hanging lamp, stars in the spandrels -->
+          <div class="mat" aria-hidden="true">
+            <div class="mat__field">
+              <svg class="mat__niche" viewBox="0 0 100 600" preserveAspectRatio="xMidYMin meet" focusable="false">
+                <defs>
+                  <radialGradient id="mat-glow">
+                    <stop offset="0" stop-color="#f1be31" stop-opacity="0.22"/>
+                    <stop offset="1" stop-color="#f1be31" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+                <path class="mat__arch" d="M0.5 600V55A62 62 0 0 1 50 1A62 62 0 0 1 99.5 55V600"/>
+                <path class="mat__arch mat__arch--inner" d="M4.5 600V56.5A58 58 0 0 1 50 6.5A58 58 0 0 1 95.5 56.5V600"/>
+                <path class="mat__stars" d="M11.00 7.80L12.52 9.32L14.68 9.32L14.68 11.48L16.20 13.00L14.68 14.52L14.68 16.68L12.52 16.68L11.00 18.20L9.48 16.68L7.32 16.68L7.32 14.52L5.80 13.00L7.32 11.48L7.32 9.32L9.48 9.32ZM89.00 7.80L90.52 9.32L92.68 9.32L92.68 11.48L94.20 13.00L92.68 14.52L92.68 16.68L90.52 16.68L89.00 18.20L87.48 16.68L85.32 16.68L85.32 14.52L83.80 13.00L85.32 11.48L85.32 9.32L87.48 9.32Z"/>
+                <circle cx="50" cy="20" r="12" fill="url(#mat-glow)"/>
+                <g class="mat__lamp" transform="translate(50 6.5) scale(0.75) translate(-50 -6.5)">
+                  <path d="M50 6.5V11.5"/>
+                  <path d="M46.6 13.6Q50 9.6 53.4 13.6Z"/>
+                  <path d="M47.6 13.6L46.8 17H53.2L52.4 13.6"/>
+                  <path d="M42.5 17H57.5C57.5 24.6 54 28.6 50 28.6C46 28.6 42.5 24.6 42.5 17Z"/>
+                  <path d="M45 20.5H55"/>
+                  <path d="M50 28.6V31.6"/>
+                  <circle cx="50" cy="32.6" r="0.9"/>
+                </g>
+              </svg>
+            </div>
+          </div>
             <p class="jumuah__ar" lang="ar" dir="rtl">صلاة الجمعة</p>
             <h3 id="jumuah-title">Jumu‘ah</h3>
             <p class="jumuah__sub">Friday prayer, every week of the year</p>
