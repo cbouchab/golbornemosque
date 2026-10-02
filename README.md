@@ -155,4 +155,4 @@ scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/deploy.yml             Publishes the site to GitHub Pages
 ```
 
-Fonts come from Google Fonts (Cinzel, Amiri and Source Sans 3), and the map from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
+Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies just two: Cinzel for the logo lettering and Amiri for Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.

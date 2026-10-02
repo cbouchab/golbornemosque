@@ -215,18 +215,23 @@
     renderHero(next);
   }
 
-  $("prev-day").addEventListener("click", () => {
-    viewing = GM.addDays(viewing, -1);
+  // Changing day crossfades the table, with a slight blur so the old and new
+  // times don't read as two sets overlapping. Reduced motion: a plain fade.
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function showDay(day) {
+    viewing = day;
     renderTable(findNext(Date.now()));
-  });
-  $("next-day").addEventListener("click", () => {
-    viewing = GM.addDays(viewing, 1);
-    renderTable(findNext(Date.now()));
-  });
-  $("today-btn").addEventListener("click", () => {
-    viewing = today;
-    renderTable(findNext(Date.now()));
-  });
+    const frames = reduceMotion.matches
+      ? [{ opacity: 0.4 }, { opacity: 1 }]
+      : [{ opacity: 0, filter: "blur(2px)" }, { opacity: 1, filter: "blur(0)" }];
+    for (const el of [document.querySelector(".times__table"), document.querySelector(".times__date")]) {
+      if (el && el.animate) el.animate(frames, { duration: 220, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
+    }
+  }
+
+  $("prev-day").addEventListener("click", () => showDay(GM.addDays(viewing, -1)));
+  $("next-day").addEventListener("click", () => showDay(GM.addDays(viewing, 1)));
+  $("today-btn").addEventListener("click", () => showDay(today));
 
   renderAll();
   setInterval(tick, 15000);
