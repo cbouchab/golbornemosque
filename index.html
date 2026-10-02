@@ -13,7 +13,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&family=Cinzel:wght@600&display=swap">
   <link rel="stylesheet" href="css/styles.css">
   <script type="application/ld+json">
   {
@@ -107,11 +107,19 @@
   <main id="main">
     <!-- Hero: styled on the mosque's dark grey frontage and gold lettering -->
     <section class="hero" aria-labelledby="hero-title">
+      <!-- Bismillah: the ligature (U+FDFD) drawn by Amiri; read aloud in full for screen readers -->
+      <div class="wrap">
+        <p class="bismillah">
+          <span class="bismillah__glyph" lang="ar" aria-hidden="true">﷽</span>
+          <span class="visually-hidden" lang="ar">بسم الله الرحمن الرحيم</span>
+          <span class="visually-hidden">In the name of Allah, the Most Gracious, the Most Merciful</span>
+        </p>
+      </div>
       <div class="wrap hero__grid">
         <div class="sign">
           <p class="eyebrow">76 Golborne Road · North Kensington</p>
           <h1 id="hero-title" class="sign__title">Golborne <span>Mosque</span></h1>
-          <p class="sign__ar" lang="ar" dir="rtl">مسجد الهدى</p>
+          <p class="sign__ar" lang="ar" dir="rtl">مَسْجِدُ الهُدَىٰ</p>
           <p class="sign__lede">A neighbourhood mosque on Golborne Road, open for the five daily prayers and Jumu‘ah throughout the year.</p>
           <div class="sign__actions">
             <a class="btn btn--gold" href="#prayer-times">Prayer times</a>
