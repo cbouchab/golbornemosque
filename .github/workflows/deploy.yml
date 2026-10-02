@@ -1,5 +1,5 @@
 # Publishes the website to Cloudflare whenever main changes.
-# Only the website's own files are published (see .assetsignore).
+# Only the website's own files are published (scripts/build.sh collects them).
 # Needs a repository secret called CLOUDFLARE_API_TOKEN (see README);
 # until it is added, the job does nothing.
 name: Deploy website
@@ -22,13 +22,13 @@ jobs:
     timeout-minutes: 10
     environment:
       name: cloudflare
-      url: https://golbornemosque.cbouchab.workers.dev
+      url: https://golbornemosque.pages.dev
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - name: Waiting for an API token
         if: env.CLOUDFLARE_API_TOKEN == ''
-        run: echo "::notice::No CLOUDFLARE_API_TOKEN secret yet, so nothing was published. See README → Hosting on Cloudflare."
+        run: echo "::notice::No CLOUDFLARE_API_TOKEN secret yet, so nothing was published. See README → Hosting (Cloudflare Pages)."
 
       - uses: actions/checkout@v5
         if: env.CLOUDFLARE_API_TOKEN != ''
@@ -37,4 +37,8 @@ jobs:
         if: env.CLOUDFLARE_API_TOKEN != ''
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # cbouchab@gmail.com's personal Cloudflare account.
+          accountId: 722237b243245541dfb7d4407d4c234c
           wranglerVersion: "4.147.0"
+          preCommands: sh scripts/build.sh
+          command: pages deploy --branch main

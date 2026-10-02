@@ -1,13 +1,10 @@
-// Hosts the website on Cloudflare as a Worker with static assets: there is no
-// server code, Cloudflare serves the files in this folder as they are.
-// Files that aren't part of the website are listed in .assetsignore.
+// Hosts the website on Cloudflare Pages at golbornemosque.pages.dev, in the
+// personal Cloudflare account of cbouchab@gmail.com. There is no server code:
+// Cloudflare serves the files that scripts/build.sh collects into _site/.
+// Pages config can't hold the account ID, so deploys set CLOUDFLARE_ACCOUNT_ID
+// (see README), which makes them fail rather than land on any other account.
 {
   "name": "golbornemosque",
-  // cbouchab@gmail.com's personal Cloudflare account. Deploys fail rather than
-  // land anywhere else if Wrangler is logged in to a different account.
-  "account_id": "722237b243245541dfb7d4407d4c234c",
-  "compatibility_date": "2026-10-02",
-  "assets": {
-    "directory": "."
-  }
+  "pages_build_output_dir": "./_site",
+  "compatibility_date": "2026-10-02"
 }

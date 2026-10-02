@@ -93,17 +93,19 @@ MLM_API_KEY=mlm_live_your_key node scripts/sync-prayer-times.mjs
 
 The script prints how many days it saved, or a plain explanation if something went wrong (wrong key, rate limit, no times published).
 
-## Hosting (Cloudflare)
+## Hosting (Cloudflare Pages)
 
-The site is published free on Cloudflare at **<https://golbornemosque.cbouchab.workers.dev>**, from the personal Cloudflare account of cbouchab@gmail.com. The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
+The site is published free on Cloudflare Pages at **<https://golbornemosque.pages.dev>**, from the personal Cloudflare account of cbouchab@gmail.com. The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
 
-Cloudflare serves the files as they are; there is no server code. `wrangler.jsonc` holds the settings, including the account ID, so a deploy can't end up on any other Cloudflare account. `.assetsignore` lists what is never published: this README, the scripts, the workflows and the git files. Pages have clean addresses (`/about`, `/timetable`), and old links ending in `.html` redirect to them.
+Cloudflare serves the files as they are; there is no server code. `scripts/build.sh` copies the website's own files into `_site/`, and only that folder is published, so this README, the scripts, the workflows and the git files never go online. `wrangler.jsonc` holds the settings. Pages have clean addresses (`/about`, `/timetable`), old links ending in `.html` redirect to them, and any address that doesn't exist shows `404.html`.
+
+Every publish names the account ID (`722237b243245541dfb7d4407d4c234c`), so it fails rather than landing on any other Cloudflare account.
 
 ### Publishing automatically from GitHub
 
 Every change pushed to the `main` branch is published by `.github/workflows/deploy.yml`, usually within a minute. Progress shows on the repository's **Actions** tab. It needs a Cloudflare API token, added once:
 
-1. In the Cloudflare dashboard, go to **My Profile → API Tokens → Create Token** and pick the **Edit Cloudflare Workers** template. Under **Account Resources**, choose cbouchab@gmail.com's account, then create the token and copy it.
+1. In the Cloudflare dashboard, go to **My Profile → API Tokens → Create Token → Create Custom Token**. Give it the permission **Account · Cloudflare Pages · Edit**, set **Account Resources** to cbouchab@gmail.com's account, then create the token and copy it.
 2. In the repository, go to **Settings → Secrets and variables → Actions → New repository secret**. Name it `CLOUDFLARE_API_TOKEN` and paste the token.
 
 Until the secret is added, the workflow does nothing.
@@ -119,16 +121,16 @@ npx wrangler@4.147.0 login
 ```
 
 ```bash
-npx wrangler@4.147.0 deploy
+sh scripts/build.sh && CLOUDFLARE_ACCOUNT_ID=722237b243245541dfb7d4407d4c234c npx wrangler@4.147.0 pages deploy --branch main
 ```
 
-To preview on your own computer first, run this and open <http://localhost:8642>. It behaves like the live site, clean addresses included:
+To preview on your own computer first, run this and open <http://localhost:8642>. It behaves like the live site, clean addresses and the not-found page included:
 
 ```bash
-npx wrangler@4.147.0 dev --port 8642
+npx wrangler@4.147.0 pages dev . --port 8642
 ```
 
-**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year. Cloudflare sells domains at cost, or one bought elsewhere can be moved onto Cloudflare. Then, in the dashboard, open **Workers & Pages → golbornemosque → Settings → Domains & Routes → Add → Custom domain**.
+**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year. Cloudflare sells domains at cost, or one bought elsewhere can be used. Then, in the dashboard, open **Workers & Pages → golbornemosque → Custom domains → Set up a custom domain**.
 
 ## Please confirm with the mosque before launch
 
@@ -159,6 +161,7 @@ The content is limited to what could be verified from the mosque's public Charit
 index.html        Home page
 about.html        Our story and the trustees
 timetable.html    Monthly, printable timetable
+404.html          Shown for addresses that don't exist
 css/styles.css    All styling (colours are set at the top)
 js/config.js      Settings the mosque edits
 data/timetable.js The mosque's published times (generated, don't edit)
@@ -171,11 +174,11 @@ js/about.js       Trustee cards on the About page
 js/site.js        Mobile menu, footer year
 assets/favicon.svg
 assets/trustees/  Trustee headshots
+scripts/build.sh                     Collects the site's files into _site/ for publishing
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours
 .github/workflows/deploy.yml             Publishes the site to Cloudflare
-wrangler.jsonc    Cloudflare settings
-.assetsignore     Files Cloudflare doesn't publish
+wrangler.jsonc    Cloudflare Pages settings
 ```
 
 Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies three: Cinzel for the logo and the big heading, Scheherazade New for the Arabic name, and Amiri for other Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
