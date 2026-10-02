@@ -292,8 +292,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 /* The mosque symbol and the name form one lockup, sized from --brand-size (the
    name's font size). The mosque stands on the name's baseline and rises to twice
    the height of its capitals (Cinzel's capitals are 0.7em, so 1.4em). */
+/* Set on the header (not the lockup) so the menu can line up with the name too */
+.site-header { --brand-size: 28px; }
 .brand {
-  --brand-size: 28px;
   display: inline-flex;
   /* an image's baseline is its bottom edge, so this sets the mosque on the text's baseline */
   align-items: baseline;
@@ -312,7 +313,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 /* On a phone the lockup shrinks a little if needed, so it never runs into the menu button */
 @media (max-width: 899px) {
-  .site-header .brand { --brand-size: min(28px, calc((100vw - 112px) / 14)); }
+  .site-header { --brand-size: min(28px, calc((100vw - 112px) / 14)); }
   .brand--footer { --brand-size: min(30px, calc((100vw - 48px) / 14)); }
 }
 .brand__name {
@@ -425,10 +426,13 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   .nav-toggle { display: none; }
   .site-nav ul { display: flex; gap: 32px; }
   .site-nav a { padding: 10px 0; white-space: nowrap; }
+  /* The name's capitals sit 0.35em below the header's middle (it stands on the
+     mosque's base), so the menu moves down to the same line */
+  .site-nav { translate: 0 calc(var(--brand-size) * 0.35); }
 }
 /* Small laptops: a slightly smaller name and tighter menu keep both on one row */
 @media (min-width: 900px) and (max-width: 1099px) {
-  .site-header .brand { --brand-size: 24px; }
+  .site-header { --brand-size: 24px; }
   .site-nav ul { gap: 22px; }
 }
 
@@ -581,13 +585,14 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .arch__frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .arch__fill { fill: var(--surface); }
 .arch__line { fill: none; stroke: var(--gold); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
-/* A white keyline inside the gold, as the logo outlines its gold in white */
-.arch__line--inner { stroke: rgba(255, 255, 255, 0.36); stroke-width: 1; }
+.arch__band { opacity: 0.6; }
+/* the inner edge of the lattice band */
+.arch__line--inner { stroke: var(--gold-line); stroke-width: 1; }
 .arch__key { fill: var(--gold); }
 
 .arch__content {
   position: absolute;
-  inset: 22% 10% 6%;
+  inset: 21% 12% 9%;
   display: flex;
   flex-direction: column;
   align-items: center;

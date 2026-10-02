@@ -131,9 +131,16 @@
 
         <aside class="arch" aria-labelledby="next-label">
           <svg class="arch__frame" viewBox="0 0 320 420" aria-hidden="true" focusable="false">
+            <defs>
+              <pattern id="arch-lattice" width="44" height="48.7" patternUnits="userSpaceOnUse" x="160" y="10">
+                <image href="assets/zellige.webp" width="44" height="48.7"/>
+              </pattern>
+            </defs>
             <path class="arch__fill" d="M10 410V233.2A162 162 0 1 1 310 233.2V410Z"/>
+            <!-- A band of lattice around the inside edge, like the carved border of a Moroccan arch -->
+            <path class="arch__band" fill="url(#arch-lattice)" fill-rule="evenodd" d="M10 410V233.2A162 162 0 1 1 310 233.2V410ZM26 394V229.97A146 146 0 1 1 294 229.97V394Z"/>
             <path class="arch__line" d="M10 410V233.2A162 162 0 1 1 310 233.2V410Z"/>
-            <path class="arch__line arch__line--inner" d="M16 404V232.4A156 156 0 1 1 304 232.4V404Z"/>
+            <path class="arch__line arch__line--inner" d="M26 394V229.97A146 146 0 1 1 294 229.97V394Z"/>
             <!-- Crescent and star, as on the mosque's logo -->
             <g class="arch__key" transform="translate(158 47)">
               <path d="M12.29 4.24A13 13 0 1 1 -1.44 -12.92A11 11 0 1 0 12.29 4.24Z"/>
