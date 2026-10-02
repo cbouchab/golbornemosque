@@ -33,10 +33,10 @@
 
   /* The platform's own typeface: San Francisco on Apple devices */
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-brand: "Cinzel", "Trajan Pro", Georgia, serif;
   --font-ar: "Amiri", "Geeza Pro", "Traditional Arabic", serif;
-  /* The mosque's name, in both scripts: Mushaf-style Naskh for the Arabic, and
-     the same family's Latin, drawn to match it, for the English */
-  --font-name: "Scheherazade New", "Amiri", "Geeza Pro", Georgia, serif;
+  /* Mushaf-style Naskh, as in a printed Qur'an, for the mosque's Arabic name */
+  --font-name: "Scheherazade New", "Amiri", "Geeza Pro", serif;
 
   /* Motion curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -282,8 +282,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .brand__mark { width: 28px; height: 28px; flex: none; }
 .brand__text { display: flex; flex-direction: column; line-height: 1.05; }
 .brand__name {
-  font: 700 1.1875rem/1.05 var(--font-name);
-  letter-spacing: 0;
+  font: 600 0.9375rem/1.1 var(--font-brand);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 .brand__ar {
   align-self: flex-start;
@@ -512,14 +513,13 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 
 .sign { container-type: inline-size; }
 .sign__title {
-  padding-bottom: 0.14em;
-  font-family: var(--font-name);
-  font-size: clamp(3rem, 10vw, 6rem);
-  /* "Golborne" is ~3.8em wide: scale to its column so it never overflows */
-  font-size: clamp(3rem, 19cqi, 6.25rem);
+  padding-bottom: 0.06em;
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  /* "Golborne" is ~4.6em wide: scale to its column so it never overflows */
+  font-size: clamp(2.75rem, 16cqi, 5.75rem);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.04em;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   background-clip: text;
@@ -1095,13 +1095,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   color: transparent;
 }
 .page-head .eyebrow { margin: 0 0 12px; font-size: 1.0625rem; letter-spacing: -0.01em; color: var(--gold); }
-.page-head h1.page-head__name {
-  padding-bottom: 0.12em;
-  font-family: var(--font-name);
-  font-size: clamp(3rem, 9vw, 5rem);
-  letter-spacing: 0;
-  line-height: 1.05;
-}
 .page-head p:not(.eyebrow) {
   margin-top: 14px;
   font-size: clamp(1.125rem, 2vw, 1.3125rem);
@@ -1419,7 +1412,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   .page-head { padding: 0 0 3mm; border: 0; background: none; }
   .page-head::before { display: none; }
   .page-head h1 { font-size: 17pt; color: #111; background: none; -webkit-background-clip: border-box; background-clip: border-box; letter-spacing: -0.01em; }
-  .page-head h1.page-head__name { font-size: 19pt; padding-bottom: 0; }
   .page-head p { margin-top: 1.5mm; font-size: 9pt; color: #333; }
   .month-bar { margin: 0 0 3mm; justify-content: center; }
   .month-bar h2 { font-size: 14pt; color: #111; }
