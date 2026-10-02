@@ -292,14 +292,14 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
    name's font size). The symbol stands exactly as tall as the capitals (0.7em)
    and sits level with them, from cap height to baseline. */
 .brand {
-  --brand-size: 20px;
+  --brand-size: 28px;
   display: inline-flex;
   align-items: center;
   gap: calc(var(--brand-size) * 0.4);
   color: var(--gold);
 }
 .brand__logo { width: auto; height: calc(var(--brand-size) * 0.7); flex: none; }
-.brand--footer { --brand-size: 24px; }
+.brand--footer { --brand-size: 30px; }
 .brand__text {
   display: flex;
   flex-direction: column;
@@ -310,8 +310,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 /* On a phone the lockup shrinks a little if needed, so it never runs into the menu button */
 @media (max-width: 899px) {
-  .site-header .brand { --brand-size: min(20px, calc((100vw - 112px) / 13.4)); }
-  .brand--footer { --brand-size: min(24px, calc((100vw - 48px) / 13.4)); }
+  .site-header .brand { --brand-size: min(28px, calc((100vw - 112px) / 13.4)); }
+  .brand--footer { --brand-size: min(30px, calc((100vw - 48px) / 13.4)); }
 }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
