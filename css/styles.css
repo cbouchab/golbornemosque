@@ -10,13 +10,13 @@
   color-scheme: dark;
 
   /* The frontage's dark grey, in four depths */
-  --bg: #161618;
-  --bg-alt: #1c1c1f;
-  --bg-deep: #0f0f11;
-  --surface: #232327;
-  --surface-2: #2c2c31;
-  --hairline: rgba(255, 255, 255, 0.08);
-  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --bg: #2a2b2f;
+  --bg-alt: #313236;
+  --bg-deep: #24252a;
+  --surface: #37383d;
+  --surface-2: #404146;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --hairline-strong: rgba(255, 255, 255, 0.17);
 
   /* Its gold lettering, used sparingly */
   --gold: #d4ae62;
@@ -26,8 +26,9 @@
   --gold-gradient: linear-gradient(180deg, #f7e4b5 0%, #dcb76d 46%, #a8833c 100%);
 
   --ink: #f5f5f7;
-  --ink-2: #a1a1a6;
-  --ink-3: #8e8e93;
+  /* Secondary text, kept at 4.5:1 or better on every grey above */
+  --ink-2: #b4b4b9;
+  --ink-3: #a5a5aa;
   --ink-on-gold: #1b1508;
 
   /* The platform's own typeface: San Francisco on Apple devices */
@@ -44,7 +45,7 @@
   --radius-sm: 12px;
   --radius: 18px;
   --radius-lg: 28px;
-  --lift: 0 24px 60px -30px rgba(0, 0, 0, 0.75);
+  --lift: 0 24px 60px -30px rgba(0, 0, 0, 0.55);
 
   /* Moroccan eight-pointed star lattice */
   --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23d4ae62' stroke-width='1'%3E%3Cpath d='M20 20h40v40H20z'/%3E%3Cpath d='M40 11.7 68.3 40 40 68.3 11.7 40z'/%3E%3Cpath d='M40 0v11.7M40 68.3V80M0 40h11.7M68.3 40H80M0 0l20 20M80 0 60 20M0 80l20-20M80 80 60 60'/%3E%3C/g%3E%3C/svg%3E");
@@ -256,7 +257,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   top: 0;
   z-index: 50;
   padding-top: env(safe-area-inset-top, 0px);
-  background: rgba(22, 22, 24, 0.72);
+  background: rgba(42, 43, 47, 0.74);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   box-shadow: 0 1px 0 var(--hairline);
@@ -809,7 +810,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .countdown {
   padding: 40px 28px;
   text-align: center;
-  background: rgba(35, 35, 39, 0.62);
+  background: rgba(55, 56, 61, 0.62);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   backdrop-filter: blur(20px) saturate(160%);
   border-radius: var(--radius-lg);
@@ -1168,6 +1169,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .month-table tr.is-today td,
 .month-table tr.is-today th { background: var(--gold-wash); color: var(--gold-bright); }
 .month-table tr.is-today th { box-shadow: inset 3px 0 0 var(--gold); }
+.month-table tr.is-today .day-num,
+.month-table tr.is-today .day-name,
+.month-table tr.is-today .col-hijri { color: var(--gold-bright); }
 .month-table td.is-sunrise { color: var(--ink-2); }
 .month-table.has-iqamah { min-width: 760px; }
 .month-table thead th.is-group { padding-bottom: 4px; border-bottom: 0; }
