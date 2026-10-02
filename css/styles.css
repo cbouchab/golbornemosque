@@ -289,29 +289,30 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 
 /* The mosque symbol and the name form one lockup, sized from --brand-size (the
-   name's font size). The symbol stands exactly as tall as the capitals (0.7em)
-   and sits level with them, from cap height to baseline. */
+   name's font size). The mosque stands on the name's baseline and rises to twice
+   the height of its capitals (Cinzel's capitals are 0.7em, so 1.4em). */
 .brand {
   --brand-size: 28px;
   display: inline-flex;
-  align-items: center;
-  gap: calc(var(--brand-size) * 0.4);
+  /* an image's baseline is its bottom edge, so this sets the mosque on the text's baseline */
+  align-items: baseline;
+  gap: calc(var(--brand-size) * 0.35);
   color: var(--gold);
 }
-.brand__logo { width: auto; height: calc(var(--brand-size) * 0.7); flex: none; }
+.brand__logo { width: auto; height: calc(var(--brand-size) * 1.4); flex: none; }
 .brand--footer { --brand-size: 30px; }
 .brand__text {
   display: flex;
   flex-direction: column;
+  /* the space below the letters (for the Q's tail) shouldn't push the mosque off-centre */
+  margin-bottom: -0.21em;
   font-size: var(--brand-size);
   line-height: 1;
-  /* centres the capitals themselves (not their line box) on the symbol */
-  translate: 0 0.04em;
 }
 /* On a phone the lockup shrinks a little if needed, so it never runs into the menu button */
 @media (max-width: 899px) {
-  .site-header .brand { --brand-size: min(28px, calc((100vw - 112px) / 13.4)); }
-  .brand--footer { --brand-size: min(30px, calc((100vw - 48px) / 13.4)); }
+  .site-header .brand { --brand-size: min(28px, calc((100vw - 112px) / 14)); }
+  .brand--footer { --brand-size: min(30px, calc((100vw - 48px) / 14)); }
 }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
