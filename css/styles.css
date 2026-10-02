@@ -50,8 +50,6 @@
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-brand: "Cinzel", "Cinzel Fallback", "Trajan Pro", Georgia, serif;
   --font-ar: "Amiri", "Geeza Pro", "Traditional Arabic", serif;
-  /* Naskh for the Arabic name beside the logo */
-  --font-name: "Noto Naskh Arabic", "Geeza Pro", "Amiri", serif;
 
   /* Motion curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -290,9 +288,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   min-height: 56px;
 }
 
-/* The logo and the two-line name form one lockup. Everything is sized from
-   --brand-size (the logo's height), and the lettering spans exactly that height:
-   from the top of the English capitals to the foot of the Arabic. */
+/* The logo and the name form one lockup, sized from --brand-size (the logo's
+   height). The name is stacked on two lines that span exactly that height, from
+   the top of GOLBORNE to the foot of MOSQUE. */
 .brand {
   --brand-size: 40px;
   display: inline-flex;
@@ -305,34 +303,23 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .brand__text {
   display: flex;
   flex-direction: column;
-  font-size: calc(var(--brand-size) * 0.3917);
-  line-height: 1.05;
-  /* centres the lettering itself (not its line boxes) on the logo */
-  translate: 0 0.05em;
+  /* capitals are 0.7em tall and the lines 1em apart, so 1.7em = the logo's height */
+  font-size: calc(var(--brand-size) / 1.7);
+  line-height: 1;
+  /* centres the capitals themselves (not their line boxes) on the logo */
+  translate: 0 0.053em;
 }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
      line's box ends where the lettering does */
   margin-right: -0.12em;
-  font: 600 1em/1.1 var(--font-brand);
+  font: 600 1em/1 var(--font-brand);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-}
-/* The Arabic name matches the English in size, and kashida (tatweel) strokes in
-   مسـجد and غولبـورن draw it out to the same width, as a calligrapher would.
-   Justifying absorbs the last pixel or two so both lines end together. */
-.brand__ar {
-  align-self: stretch;
-  margin-top: -0.06em;
-  font-family: var(--font-name);
-  font-size: 1.5733em;
-  font-weight: 600;
-  line-height: 1.2;
-  text-align: justify;
-  text-align-last: justify;
   white-space: nowrap;
-  color: var(--gold-bright);
 }
+/* MOSQUE, spaced out to end where GOLBORNE does (its trailing space taken back too) */
+.brand__line { display: block; margin-right: -0.311em; letter-spacing: 0.431em; }
 
 .nav-toggle {
   display: grid;
