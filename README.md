@@ -172,13 +172,12 @@ js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp buttons and bank transfer details
 js/about.js       Trustee cards on the About page
 js/site.js        Mobile menu, footer year
-assets/logo.svg   The logo at the top of the home page (a lighter copy of brand/logo.svg)
-assets/logo.webp  The logo in the header and footer
-assets/icon-64.png, favicon.ico, assets/apple-touch-icon.png
-                  Browser-tab and home-screen icons (the badge's mosque, without lettering)
+assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
+assets/icon.svg   The mosque in its circle, beside the name in the header and footer
+assets/icons/     Browser-tab and home-screen icons; favicon.ico and site.webmanifest sit at the top level
 assets/og.jpg     The picture shown when a link to the site is shared
 assets/zellige.webp  The faint background pattern (one repeat, in the logo's gold)
-brand/logo.svg    The original vector logo, kept as the master copy (not published)
+brand/            The mosque's master logo files (logo, icon, symbol, favicon, and the full favicon set); not published
 assets/trustees/  Trustee headshots
 scripts/build.sh                     Collects the site's files into _site/ for publishing
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
