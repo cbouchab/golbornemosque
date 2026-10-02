@@ -289,28 +289,29 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 
 /* The mosque symbol and the name form one lockup, sized from --brand-size (the
-   symbol's height). The name sits on one line, centred on the symbol. */
+   name's font size). The symbol stands exactly as tall as the capitals (0.7em)
+   and sits level with them, from cap height to baseline. */
 .brand {
-  --brand-size: 40px;
+  --brand-size: 20px;
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--brand-size) * 0.3);
+  gap: calc(var(--brand-size) * 0.4);
   color: var(--gold);
 }
-.brand__logo { width: auto; height: var(--brand-size); flex: none; }
-.brand--footer { --brand-size: 48px; }
+.brand__logo { width: auto; height: calc(var(--brand-size) * 0.7); flex: none; }
+.brand--footer { --brand-size: 24px; }
 .brand__text {
   display: flex;
   flex-direction: column;
-  font-size: calc(var(--brand-size) * 0.5);
+  font-size: var(--brand-size);
   line-height: 1;
   /* centres the capitals themselves (not their line box) on the symbol */
   translate: 0 0.04em;
 }
-/* On a phone the name shrinks a little if needed, so it never runs into the menu button */
+/* On a phone the lockup shrinks a little if needed, so it never runs into the menu button */
 @media (max-width: 899px) {
-  .site-header .brand__text { font-size: min(calc(var(--brand-size) * 0.5), calc((100vw - 148px) / 12.5)); }
-  .brand--footer .brand__text { font-size: min(calc(var(--brand-size) * 0.5), calc((100vw - 100px) / 12.5)); }
+  .site-header .brand { --brand-size: min(20px, calc((100vw - 112px) / 13.4)); }
+  .brand--footer { --brand-size: min(24px, calc((100vw - 48px) / 13.4)); }
 }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
