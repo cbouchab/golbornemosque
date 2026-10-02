@@ -91,21 +91,16 @@ window.MOSQUE_CONFIG = {
   // Donations. Anything left as null shows as "To be added" on the website,
   // so fill these in before the site goes live.
   donations: {
-    // Online giving through SumUp Payment Links.
-    // In the SumUp app or dashboard: Payment Links → Create payment link.
-    //   - Turn on "reusable link", so every donor can use the same link.
-    //   - Choose "open amount", so donors can enter any amount.
-    // Then copy the link and paste it below (it starts with https://).
+    // Card donations through SumUp's payment widget: the card form appears on the
+    // page itself. They switch on by themselves once the mosque's SumUp API key
+    // is added on Cloudflare (see README → Donations by card). Set enabled to
+    // false to hide card donations without removing the key.
     sumup: {
-      link: null,
-
-      // Optional quick-amount buttons. Each needs its own reusable,
-      // fixed-amount payment link. Buttons without a link are not shown.
-      amounts: [
-        { label: "£10", link: null },
-        { label: "£25", link: null },
-        { label: "£50", link: null },
-      ],
+      enabled: true,
+      // The amount buttons, in pounds. Donors can also type any amount from £1 to £5,000.
+      amounts: [10, 25, 50, 100],
+      // The amount picked when the page opens.
+      preselected: 25,
     },
 
     // Bank transfer, for donors who prefer to give straight from their banking app.

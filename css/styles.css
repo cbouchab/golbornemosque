@@ -1002,14 +1002,19 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .give__text { color: var(--ink-2); }
 .give__note { margin-top: 18px; font-size: 0.875rem; color: var(--ink-2); }
 
+.donate-form { display: grid; gap: 12px; margin-top: 24px; }
 .amounts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
   gap: 10px;
-  margin-top: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
 }
-.amounts:empty { display: none; }
 .amount {
+  position: relative;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1024,8 +1029,58 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   transition: transform 160ms var(--ease-out), background-color 200ms ease;
 }
 .amount:active { transform: scale(0.97); }
-#sumup-action { margin-top: 12px; }
-#sumup-action:empty { display: none; }
+/* the radio itself is hidden; the chip shows its state */
+.amount input { position: absolute; opacity: 0; pointer-events: none; }
+.amount:has(input:checked) { background: var(--gold-wash); box-shadow: inset 0 0 0 1.5px var(--gold); color: var(--gold-bright); }
+.amount:has(input:focus-visible) { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+.amount-other {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+  cursor: text;
+}
+.amount-other:focus-within { box-shadow: inset 0 0 0 1.5px var(--gold); }
+.amount-other__label { font-size: 0.9375rem; color: var(--ink-2); }
+.amount-other__field { display: flex; align-items: baseline; gap: 4px; font-size: 1.25rem; font-weight: 600; color: var(--ink); }
+.amount-other input {
+  width: 6.5ch;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.amount-other input::placeholder { color: var(--ink-3); opacity: 1; }
+.amount-other input:focus { outline: none; }
+/* until card donations are switched on */
+.donate-form.is-off .amount, .donate-form.is-off .amount-other, .donate-form.is-off .btn {
+  background: transparent;
+  box-shadow: none;
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  color: var(--ink-2);
+  cursor: not-allowed;
+}
+.donate-form.is-off .btn { opacity: 1; }
+/* SumUp's card form: it is drawn for a light page, so it sits on a light card */
+.donate-card { margin-top: 24px; }
+.donate-card__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: var(--ink-2); }
+.donate-card__head strong { color: var(--gold-bright); font-size: 1.125rem; }
+.donate-card__form { min-height: 320px; padding: 4px; border-radius: var(--radius); background: #fff; color: #1c1c1e; }
+.donate-done { margin-top: 24px; padding: 28px 20px; border-radius: var(--radius); text-align: center; background: var(--gold-wash); box-shadow: inset 0 0 0 1px var(--gold-line); }
+.donate-done:focus { outline: none; }
+.donate-done__ar { margin: 0 0 4px; font-family: var(--font-ar); font-size: 1.75rem; line-height: 1.4; color: var(--gold); }
+.donate-done__title { margin: 0 0 6px; font-size: 1.5rem; font-weight: 700; color: var(--ink); }
+.donate-done p:not([class]) { color: var(--ink-2); }
+.donate-done .link-btn { margin-top: 12px; }
+#donate-status:empty { display: none; }
 
 /* Shown until the mosque fills in its details */
 .is-placeholder {

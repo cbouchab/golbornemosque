@@ -17,7 +17,7 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 - Jumu'ah details, with the date of the next Friday.
 - A Ramadan section with a countdown to the expected start.
 - Services, and how to find the mosque, with a Google map.
-- Donations: online card payments through SumUp, and bank transfer details (sort code, account number, IBAN, BIC) with tap-to-copy buttons.
+- Donations: card payments on the page itself through SumUp's widget, and bank transfer details (sort code, account number, IBAN, BIC) with tap-to-copy buttons.
 
 **About page** (`about.html`):
 
@@ -41,7 +41,7 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 | `jumuah` | Khutbah and prayer times for Friday, e.g. `khutbah: "13:15", prayer: "13:45"`. Used only if MyLocalMasjid has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah. |
 | `notices` | Announcements shown at the top of the home page. Each one hides itself after its `until` date. |
 | `trustees` | Name, role and photo of each trustee on the About page. To add a headshot, save it in `assets/trustees/` and set `photo` (see `assets/trustees/README.txt`). |
-| `donations.sumup` | SumUp payment links: one main link, plus optional quick-amount buttons (£10, £25, £50). See below. |
+| `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |
 | `donations.bank` | Account name, bank, sort code, account number, IBAN, BIC/SWIFT and reference. |
 | `calculation`, `adhan`, `iqamah` | The backup, used for any day without synced MyLocalMasjid times (see below). It is set up to follow the mosque's own pattern. `calculation` uses the Moonsighting Committee method (MyLocalMasjid's), with Fajr and Isha 2 minutes later, which matched the mosque's published September 2026 start times to within 2 minutes. `iqamah` uses the mosque's usual gap after the adhan: 15 minutes for Fajr, Dhuhr and Asr, 5 for Maghrib, 10 for Isha. A gap is written `"+15"`; a fixed time `"13:30"` also works. |
 | `hijriOffsetDays` | Moves the Islamic date by a day to match local moon sighting. |
@@ -49,17 +49,31 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 
 Any donation detail left as `null` shows on the site as a dashed "To be added" placeholder, so it's obvious what is still missing. If an IBAN, sort code, account number or BIC looks mistyped, the browser console shows a warning.
 
-### Setting up SumUp
+### Donations by card (SumUp)
 
-SumUp's Payment Links work on a plain website with no server or API keys.
+Donors choose an amount (£10, £25, £50, £100, or any amount from £1 to £5,000) and SumUp's card form opens right on the page. Card details go straight from the donor's browser to SumUp; the mosque's website never sees them. When SumUp reports success, the site checks with SumUp that the payment is really marked paid before it thanks the donor.
 
-1. In the SumUp app or dashboard, open **Payment Links** and choose **Create payment link**.
-2. Turn on **reusable link**, so every donor can use the same link. A one-off link stops working after one payment.
-3. Choose **open amount**, so donors can enter whatever they wish.
-4. Copy the link and paste it into `donations.sumup.link` in `js/config.js`.
-5. Optional: create reusable **fixed-amount** links (e.g. £10, £25, £50) and paste each one into `donations.sumup.amounts`. Any amount without a link is simply not shown.
+Behind it is a small Cloudflare function, `functions/api/donate.js`. It holds the mosque's **SumUp API key**, which must never be put in the website's own files, and uses it to set up each payment. The mosque's SumUp merchant code is looked up automatically with the key. Card donations switch on by themselves once the key is added; until then the panel shows "Card donations to be switched on".
 
-Donors are taken to SumUp's own secure payment page in a new tab, so card details never touch this website. SumUp charges a fee on each payment; check the current rate in the mosque's SumUp account.
+**1. Create an API key.** Log in to <https://me.sumup.com>, open **Settings → For Developers → Toolkit → API Keys**, choose **Create** and name it (e.g. "Website donations"). Copy it straight away; SumUp shows it only once.
+
+**2. Add it to Cloudflare** as a secret, from this folder:
+
+```bash
+npx wrangler@4.147.0 pages secret put SUMUP_API_KEY --project-name golbornemosque
+```
+
+Paste the key when asked; it isn't shown on screen. The next deploy picks it up. (It can also be added in the Cloudflare dashboard: **Workers & Pages → golbornemosque → Settings → Variables and secrets**, type *Secret*.)
+
+**Testing without real money.** SumUp offers a sandbox account: in **Settings → For Developers → Toolkit → Sandboxes**, create one, then create an API key for it. Put that key in a file called `.dev.vars` in this folder (it is never published or committed):
+
+```
+SUMUP_API_KEY=the-sandbox-key
+```
+
+then run `npx wrangler@4.147.0 pages dev . --port 8642` and donate with SumUp's test card `4200 0000 0000 0091` (any future expiry, any CVV). Amounts of £11.00 always fail, to try the error message.
+
+To hide card donations without removing the key, set `donations.sumup.enabled` to `false` in `js/config.js`. SumUp charges 2.5% on each online payment; there is no monthly fee.
 
 ## Prayer times from MyLocalMasjid
 
@@ -169,7 +183,7 @@ js/praytimes.js   Prayer times (published or calculated) and Hijri dates
 js/home.js        Home page behaviour
 js/timetable.js   Timetable page behaviour
 js/prayer-bar.js  Prayer times strip under the menu
-js/donate.js      SumUp buttons and bank transfer details
+js/donate.js      SumUp card widget and bank transfer details
 js/about.js       Trustee cards on the About page
 js/site.js        Mobile menu, footer year
 assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
@@ -180,6 +194,7 @@ assets/zellige.webp  The faint background pattern (one repeat, in the logo's gol
 brand/            The mosque's master logo files (logo, icon, symbol, favicon, and the full favicon set); not published
 assets/trustees/  Trustee headshots
 scripts/build.sh                     Collects the site's files into _site/ for publishing
+functions/api/donate.js              Sets up SumUp card payments (runs on Cloudflare, holds the API key)
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours
 .github/workflows/deploy.yml             Publishes the site to Cloudflare

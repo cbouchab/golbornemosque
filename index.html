@@ -362,10 +362,34 @@
           <div class="panel panel--framed give" aria-labelledby="give-online-title">
             <p class="give__eyebrow">Card payment · SumUp</p>
             <h3 id="give-online-title">Give online</h3>
-            <p class="give__text">Choose an amount, or give whatever you wish, on SumUp’s secure payment page.</p>
-            <div class="amounts" id="sumup-amounts"></div>
-            <div id="sumup-action"></div>
-            <p class="give__note" id="sumup-note"></p>
+            <p class="give__text">Choose an amount and give by card, right here.</p>
+            <form class="donate-form" id="donate-form" novalidate>
+              <fieldset class="amounts" id="donate-amounts">
+                <legend class="visually-hidden">Choose an amount</legend>
+              </fieldset>
+              <label class="amount-other" for="donate-other">
+                <span class="amount-other__label">Other amount</span>
+                <span class="amount-other__field"><span aria-hidden="true">£</span><input id="donate-other" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="donate-limits"></span>
+              </label>
+              <p class="visually-hidden" id="donate-limits">From £1 to £5,000.</p>
+              <button class="btn btn--gold btn--block" type="submit" id="donate-submit">Donate</button>
+            </form>
+            <!-- SumUp's card form appears here once an amount is chosen -->
+            <div class="donate-card" id="donate-card" hidden>
+              <div class="donate-card__head">
+                <p>Giving <strong id="donate-chosen"></strong></p>
+                <button class="link-btn" type="button" id="donate-change">Change amount</button>
+              </div>
+              <div class="donate-card__form" id="sumup-card"></div>
+            </div>
+            <div class="donate-done" id="donate-done" tabindex="-1" hidden>
+              <p class="donate-done__ar" lang="ar" dir="rtl">جزاكم الله خيرا</p>
+              <p class="donate-done__title">Thank you</p>
+              <p id="donate-done-text">Your donation has been received.</p>
+              <button class="link-btn" type="button" id="donate-again">Give again</button>
+            </div>
+            <p class="give__note" id="donate-status" role="status" aria-live="polite"></p>
+            <p class="give__note" id="sumup-note">Card payments are handled securely by SumUp. The mosque never sees your card details.</p>
           </div>
 
           <div class="panel panel--framed give" aria-labelledby="give-bank-title">

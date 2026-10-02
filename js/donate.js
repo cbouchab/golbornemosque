@@ -1,4 +1,4 @@
-/* Golborne Mosque — donations: SumUp payment links and bank transfer details. */
+/* Golborne Mosque — donations: SumUp card widget and bank transfer details. */
 (function () {
   "use strict";
 
@@ -14,45 +14,209 @@
   const warn = (msg) => console.warn(`Golborne Mosque settings: ${msg}`);
   const PLACEHOLDER = '<span class="placeholder-chip">To be added</span>';
 
-  /* ---------- SumUp ---------- */
+  /* ---------- SumUp card widget ---------- */
+  // The page asks /api/donate (a Cloudflare function holding the SumUp key) to
+  // create a checkout, then mounts SumUp's card form for it. Card details go
+  // straight to SumUp; the page only learns whether the payment succeeded.
 
-  // Only https:// addresses are used, so a typo can't turn the button into something else.
-  function safeLink(url) {
-    if (!url) return null;
-    try {
-      const u = new URL(url);
-      if (u.protocol === "https:") return u.href;
-    } catch (e) {
-      /* fall through */
+  const SDK = "https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js";
+  const MIN = 1;
+  const MAX = 5000;
+  const form = $("donate-form");
+  const other = $("donate-other");
+  const submit = $("donate-submit");
+  const status = $("donate-status");
+  const pounds = (n) => `£${n % 1 ? n.toFixed(2) : n}`;
+  let widget = null;
+  let checkoutId = null;
+  let chosen = null;
+
+  function setStatus(msg) {
+    status.textContent = msg || "";
+  }
+
+  function readAmount() {
+    const typed = other.value.trim().replace(/^£/, "").replace(/,/g, "");
+    if (typed) {
+      const n = Math.round(Number(typed) * 100) / 100;
+      return Number.isFinite(n) ? n : NaN;
     }
-    warn(`ignoring a SumUp link that isn't an https:// address: ${url}`);
+    const picked = form.querySelector('input[name="amount"]:checked');
+    return picked ? Number(picked.value) : NaN;
+  }
+
+  function refreshButton() {
+    const n = readAmount();
+    submit.textContent = Number.isFinite(n) && n >= MIN && n <= MAX ? `Donate ${pounds(n)}` : "Donate";
+  }
+
+  function renderAmounts() {
+    const list = (sumup.amounts || []).filter((n) => Number.isFinite(Number(n)) && n >= MIN && n <= MAX);
+    $("donate-amounts").insertAdjacentHTML(
+      "beforeend",
+      list
+        .map(
+          (n) =>
+            `<label class="amount"><input type="radio" name="amount" value="${n}"${n === sumup.preselected ? " checked" : ""}>` +
+            `<span>${pounds(Number(n))}</span></label>`
+        )
+        .join("")
+    );
+  }
+
+  let sdkPromise = null;
+  function loadSdk() {
+    if (window.SumUpCard) return Promise.resolve();
+    if (!sdkPromise) {
+      sdkPromise = new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = SDK;
+        s.onload = () => resolve();
+        s.onerror = () => {
+          sdkPromise = null;
+          reject(new Error("SumUp's card form couldn't load"));
+        };
+        document.head.appendChild(s);
+      });
+    }
+    return sdkPromise;
+  }
+
+  function show(state) {
+    form.hidden = state !== "choose";
+    $("donate-card").hidden = state !== "card";
+    $("donate-done").hidden = state !== "done";
+  }
+
+  function reset() {
+    if (widget) widget.unmount();
+    widget = null;
+    checkoutId = null;
+    show("choose");
+    setStatus("");
+    refreshButton();
+  }
+
+  async function confirmPaid(id) {
+    // The widget's "success" is checked with SumUp before thanking the donor.
+    for (const wait of [0, 1500, 3000]) {
+      if (wait) await new Promise((r) => setTimeout(r, wait));
+      try {
+        const res = await fetch(`/api/donate?id=${encodeURIComponent(id)}`, { cache: "no-store" });
+        const data = await res.json();
+        if (data.status === "PAID") return true;
+        if (data.status === "FAILED" || data.status === "EXPIRED") return false;
+      } catch (e) {
+        /* try again */
+      }
+    }
     return null;
   }
 
-  function renderSumUp() {
-    const link = safeLink(sumup.link);
-    const amounts = (sumup.amounts || []).filter((a) => a && a.label).map((a) => ({ label: a.label, link: safeLink(a.link) }));
-    const live = amounts.filter((a) => a.link);
-    const newTab = '<span class="visually-hidden"> (opens SumUp in a new tab)</span>';
-
-    if (!link && live.length === 0) {
-      // Placeholder until the mosque adds its SumUp payment links.
-      $("sumup-amounts").innerHTML = amounts
-        .map((a) => `<span class="amount is-placeholder" aria-hidden="true">${esc(a.label)}</span>`)
-        .join("");
-      $("sumup-action").innerHTML = '<span class="btn btn--gold btn--block is-placeholder" aria-disabled="true">Donate online</span>';
-      $("sumup-note").innerHTML = '<span class="placeholder-chip">SumUp payment link to be added</span>';
-      return;
+  function onResponse(type) {
+    if (type === "sent") setStatus("Processing your payment…");
+    else if (type === "auth-screen") setStatus("Please confirm the payment with your bank.");
+    else if (type === "error") setStatus("Something went wrong with the card payment. No money was taken. Please try again.");
+    else if (type === "fail") setStatus("The payment didn’t go through, so no money was taken. You can try again or use another card.");
+    else if (type === "success") {
+      const id = checkoutId;
+      setStatus("Confirming your payment…");
+      confirmPaid(id).then((paid) => {
+        if (paid === false) {
+          setStatus("The payment didn’t go through, so no money was taken. You can try again or use another card.");
+          return;
+        }
+        if (widget) widget.unmount();
+        widget = null;
+        $("donate-done-text").textContent =
+          paid === true
+            ? `Your donation of ${pounds(chosen)} has been received. May Allah reward you.`
+            : `Thank you for your donation of ${pounds(chosen)}. SumUp is still confirming the payment; you’ll get a receipt if you gave an email.`;
+        show("done");
+        setStatus("");
+        $("donate-done").focus();
+      });
     }
+  }
 
-    $("sumup-amounts").innerHTML = live
-      .map((a) => `<a class="amount" href="${esc(a.link)}" target="_blank" rel="noopener">${esc(a.label)}${newTab}</a>`)
-      .join("");
-    $("sumup-action").innerHTML = link
-      ? `<a class="btn btn--gold btn--block" href="${esc(link)}" target="_blank" rel="noopener">` +
-        `${live.length ? "Give another amount" : "Donate online"}${newTab}</a>`
-      : "";
-    $("sumup-note").textContent = "Payments are processed securely by SumUp. The mosque never sees your card details.";
+  async function startCheckout(amount) {
+    submit.disabled = true;
+    setStatus("Opening the secure card form…");
+    try {
+      const [res] = await Promise.all([
+        fetch("/api/donate", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ amount }),
+        }),
+        loadSdk(),
+      ]);
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 503) throw new Error("Card donations aren’t switched on yet. Please give by bank transfer for now.");
+      if (!res.ok || !data.checkoutId) throw new Error("The card form couldn’t be opened just now. Please try again in a moment.");
+      checkoutId = data.checkoutId;
+      chosen = data.amount;
+      $("donate-chosen").textContent = pounds(chosen);
+      show("card");
+      setStatus("");
+      widget = window.SumUpCard.mount({
+        id: "sumup-card",
+        checkoutId,
+        onResponse,
+        locale: "en-GB",
+        currency: "GBP",
+        amount: String(chosen),
+        donateSubmitButton: true,
+        showFooter: true,
+      });
+    } catch (e) {
+      show("choose");
+      setStatus(e.message);
+    } finally {
+      submit.disabled = false;
+    }
+  }
+
+  // Shown as a placeholder until the mosque's SumUp key is in place.
+  function setReady(ready) {
+    form.classList.toggle("is-off", !ready);
+    form.querySelectorAll("input, button").forEach((el) => (el.disabled = !ready));
+    $("sumup-note").innerHTML = ready
+      ? "Card payments are handled securely by SumUp. The mosque never sees your card details."
+      : '<span class="placeholder-chip">Card donations to be switched on</span>';
+    if (ready) refreshButton();
+    else submit.textContent = "Donate";
+  }
+
+  function setupSumUp() {
+    renderAmounts(false);
+    setReady(false);
+    if (sumup.enabled === false) return;
+    // Card donations switch on by themselves once the SumUp key is added on Cloudflare.
+    fetch("/api/donate", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : { ready: false }))
+      .then((data) => setReady(Boolean(data.ready)))
+      .catch(() => setReady(false));
+    form.addEventListener("change", (e) => {
+      if (e.target.name === "amount") other.value = "";
+      refreshButton();
+    });
+    other.addEventListener("input", () => {
+      if (other.value.trim()) form.querySelectorAll('input[name="amount"]').forEach((r) => (r.checked = false));
+      refreshButton();
+    });
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const amount = readAmount();
+      if (!Number.isFinite(amount) || amount < MIN || amount > MAX) {
+        setStatus(`Please choose an amount from £${MIN} to £${MAX.toLocaleString("en-GB")}.`);
+        other.focus();
+        return;
+      }
+      startCheckout(amount);
+    });
+    $("donate-change").addEventListener("click", reset);
+    $("donate-again").addEventListener("click", reset);
   }
 
   /* ---------- bank transfer ---------- */
@@ -170,6 +334,6 @@
     );
   });
 
-  renderSumUp();
+  setupSumUp();
   renderBank();
 })();
