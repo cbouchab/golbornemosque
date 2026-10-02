@@ -64,8 +64,10 @@
   --radius-lg: 28px;
   --lift: 0 24px 60px -30px rgba(0, 0, 0, 0.55);
 
-  /* Zellige: the Moroccan star-and-cross tilework, as faint gold and white pieces with dark grout */
-  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg stroke='%231e1e1e' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath fill='%23fff' fill-opacity='.5' d='M40 0L28.28 11.72L28.28 28.28L11.72 28.28L0 40L-11.72 28.28L-28.28 28.28L-28.28 11.72L-40 0L-28.28 -11.72L-28.28 -28.28L-11.72 -28.28L-0 -40L11.72 -28.28L28.28 -28.28L28.28 -11.72ZM120 0L108.28 11.72L108.28 28.28L91.72 28.28L80 40L68.28 28.28L51.72 28.28L51.72 11.72L40 0L51.72 -11.72L51.72 -28.28L68.28 -28.28L80 -40L91.72 -28.28L108.28 -28.28L108.28 -11.72ZM40 80L28.28 91.72L28.28 108.28L11.72 108.28L0 120L-11.72 108.28L-28.28 108.28L-28.28 91.72L-40 80L-28.28 68.28L-28.28 51.72L-11.72 51.72L-0 40L11.72 51.72L28.28 51.72L28.28 68.28ZM120 80L108.28 91.72L108.28 108.28L91.72 108.28L80 120L68.28 108.28L51.72 108.28L51.72 91.72L40 80L51.72 68.28L51.72 51.72L68.28 51.72L80 40L91.72 51.72L108.28 51.72L108.28 68.28Z'/%3E%3Cpath fill='%23e7b22e' fill-opacity='.55' d='M40 0L51.72 11.72L51.72 28.28L68.28 28.28L80 40L68.28 51.72L51.72 51.72L51.72 68.28L40 80L28.28 68.28L28.28 51.72L11.72 51.72L0 40L11.72 28.28L28.28 28.28L28.28 11.72Z'/%3E%3Cpath fill='%23e7b22e' d='M15.20 0L10.75 4.45L10.75 10.75L4.45 10.75L0 15.20L-4.45 10.75L-10.75 10.75L-10.75 4.45L-15.20 0L-10.75 -4.45L-10.75 -10.75L-4.45 -10.75L-0 -15.20L4.45 -10.75L10.75 -10.75L10.75 -4.45ZM95.20 0L90.75 4.45L90.75 10.75L84.45 10.75L80 15.20L75.55 10.75L69.25 10.75L69.25 4.45L64.80 0L69.25 -4.45L69.25 -10.75L75.55 -10.75L80 -15.20L84.45 -10.75L90.75 -10.75L90.75 -4.45ZM15.20 80L10.75 84.45L10.75 90.75L4.45 90.75L0 95.20L-4.45 90.75L-10.75 90.75L-10.75 84.45L-15.20 80L-10.75 75.55L-10.75 69.25L-4.45 69.25L-0 64.80L4.45 69.25L10.75 69.25L10.75 75.55ZM95.20 80L90.75 84.45L90.75 90.75L84.45 90.75L80 95.20L75.55 90.75L69.25 90.75L69.25 84.45L64.80 80L69.25 75.55L69.25 69.25L75.55 69.25L80 64.80L84.45 69.25L90.75 69.25L90.75 75.55ZM52 40L48.49 43.51L48.49 48.49L43.51 48.49L40 52L36.49 48.49L31.51 48.49L31.51 43.51L28 40L31.51 36.49L31.51 31.51L36.49 31.51L40 28L43.51 31.51L48.49 31.51L48.49 36.49Z'/%3E%3C/g%3E%3C/svg%3E");
+  /* Zellige: a Moroccan lattice of eight-pointed stars and rosettes, as fine gold lines.
+     One repeat is 220 x 243.5px; the tile is drawn at twice that for sharp screens. */
+  --pattern: url("../assets/zellige.webp");
+  --pattern-size: 220px auto;
 }
 
 @media (min-width: 640px) {
@@ -80,7 +82,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 76px;
+  scroll-padding-top: 80px;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -285,7 +287,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 56px;
+  min-height: 60px;
 }
 
 .brand {
@@ -297,20 +299,29 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .brand__logo { width: 40px; height: 40px; flex: none; }
 .brand--footer { gap: 14px; }
 .brand--footer .brand__logo { width: 72px; height: 72px; }
-.brand__text { display: flex; flex-direction: column; line-height: 1.05; }
+/* Arabic letters reach further below the line than above it, so lift the pair to centre the lettering */
+.brand__text { display: flex; flex-direction: column; line-height: 1.05; translate: 0 -2.5px; }
 .brand__name {
+  /* The tracking after the last letter would leave a gap; take it back so the
+     line's box ends where the lettering does */
+  margin-right: -0.12em;
   font: 600 0.9375rem/1.1 var(--font-brand);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
+/* The Arabic name spans the same width as "GOLBORNE MOSQUE" above it: set just
+   under that width, and justified so both lines end together exactly. */
 .brand__ar {
-  align-self: flex-start;
+  align-self: stretch;
+  margin-top: -0.12em;
   font-family: var(--font-name);
-  font-size: 0.9375rem;
+  font-size: 2.07rem;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.05;
+  text-align: justify;
+  text-align-last: justify;
+  white-space: nowrap;
   color: var(--gold-bright);
-  opacity: 0.85;
 }
 
 .nav-toggle {
@@ -510,7 +521,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   position: absolute;
   inset: 0;
   background-image: var(--pattern);
-  background-size: 80px 80px;
+  background-size: var(--pattern-size);
   opacity: 0.07;
   -webkit-mask-image: radial-gradient(ellipse 55% 70% at 75% 45%, #000, transparent 75%);
   mask-image: radial-gradient(ellipse 55% 70% at 75% 45%, #000, transparent 75%);
@@ -794,7 +805,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   position: absolute;
   inset: 0;
   background-image: var(--pattern);
-  background-size: 64px 64px;
+  background-size: var(--pattern-size);
   opacity: 0.06;
   pointer-events: none;
 }
@@ -1048,7 +1059,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   inset: 0 0 auto;
   height: 160px;
   background-image: var(--pattern);
-  background-size: 64px 64px;
+  background-size: var(--pattern-size);
   opacity: 0.07;
   -webkit-mask-image: linear-gradient(#000, transparent);
   mask-image: linear-gradient(#000, transparent);
@@ -1088,7 +1099,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   position: absolute;
   inset: 0;
   background-image: var(--pattern);
-  background-size: 80px 80px;
+  background-size: var(--pattern-size);
   opacity: 0.07;
   -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, #000, transparent 75%);
   mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, #000, transparent 75%);

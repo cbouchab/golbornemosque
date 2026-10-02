@@ -177,6 +177,7 @@ assets/logo.webp  The logo in the header and footer
 assets/icon-64.png, favicon.ico, assets/apple-touch-icon.png
                   Browser-tab and home-screen icons (the badge's mosque, without lettering)
 assets/og.jpg     The picture shown when a link to the site is shared
+assets/zellige.webp  The faint background pattern (one repeat, in the logo's gold)
 brand/logo.svg    The original vector logo, kept as the master copy (not published)
 assets/trustees/  Trustee headshots
 scripts/build.sh                     Collects the site's files into _site/ for publishing
