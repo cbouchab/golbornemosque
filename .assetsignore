@@ -1,0 +1,9 @@
+# Everything in this folder is published to Cloudflare except these
+# (same format as .gitignore).
+.*
+README.md
+wrangler.jsonc
+scripts/
+node_modules/
+_site/
+assets/trustees/README.txt

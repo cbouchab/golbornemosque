@@ -1,0 +1,13 @@
+// Hosts the website on Cloudflare as a Worker with static assets: there is no
+// server code, Cloudflare serves the files in this folder as they are.
+// Files that aren't part of the website are listed in .assetsignore.
+{
+  "name": "golbornemosque",
+  // cbouchab@gmail.com's personal Cloudflare account. Deploys fail rather than
+  // land anywhere else if Wrangler is logged in to a different account.
+  "account_id": "722237b243245541dfb7d4407d4c234c",
+  "compatibility_date": "2026-10-02",
+  "assets": {
+    "directory": "."
+  }
+}

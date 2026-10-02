@@ -85,7 +85,7 @@ The workflow (`.github/workflows/sync-prayer-times.yml`) then runs every two hou
 
 ### Or update by hand
 
-With Node.js 18 or newer installed, run this in the folder, then upload `data/timetable.js` again:
+With Node.js 18 or newer installed, run this in the folder, then publish again (see Hosting below):
 
 ```bash
 MLM_API_KEY=mlm_live_your_key node scripts/sync-prayer-times.mjs
@@ -93,21 +93,42 @@ MLM_API_KEY=mlm_live_your_key node scripts/sync-prayer-times.mjs
 
 The script prints how many days it saved, or a plain explanation if something went wrong (wrong key, rate limit, no times published).
 
-## Hosting (GitHub Pages)
+## Hosting (Cloudflare)
 
-The site is published free with GitHub Pages at **<https://cbouchab.github.io/golbornemosque/>**, from the repository <https://github.com/cbouchab/golbornemosque>.
+The site is published free on Cloudflare at **<https://golbornemosque.cbouchab.workers.dev>**, from the personal Cloudflare account of cbouchab@gmail.com. The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
 
-Every change pushed to the `main` branch is published automatically by `.github/workflows/deploy.yml`, usually within a minute. Only the website's own files are published, not this README, the scripts or the workflows. Progress shows on the repository's **Actions** tab.
+Cloudflare serves the files as they are; there is no server code. `wrangler.jsonc` holds the settings, including the account ID, so a deploy can't end up on any other Cloudflare account. `.assetsignore` lists what is never published: this README, the scripts, the workflows and the git files. Pages have clean addresses (`/about`, `/timetable`), and old links ending in `.html` redirect to them.
+
+### Publishing automatically from GitHub
+
+Every change pushed to the `main` branch is published by `.github/workflows/deploy.yml`, usually within a minute. Progress shows on the repository's **Actions** tab. It needs a Cloudflare API token, added once:
+
+1. In the Cloudflare dashboard, go to **My Profile → API Tokens → Create Token** and pick the **Edit Cloudflare Workers** template. Under **Account Resources**, choose cbouchab@gmail.com's account, then create the token and copy it.
+2. In the repository, go to **Settings → Secrets and variables → Actions → New repository secret**. Name it `CLOUDFLARE_API_TOKEN` and paste the token.
+
+Until the secret is added, the workflow does nothing.
 
 To edit without any tools, open a file on github.com (for example `js/config.js`), click the pencil icon, make the change and commit it. The site updates by itself.
 
-**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year from any UK registrar. To use one, add it under **Settings → Pages → Custom domain**, then follow GitHub's instructions for the DNS records.
+### Publishing from your own computer
 
-To preview on your own computer, run this inside the folder and open <http://localhost:8642>:
+With Node.js installed, run these inside the folder. Log in with the personal Cloudflare account:
 
 ```bash
-python3 -m http.server 8642
+npx wrangler@4.147.0 login
 ```
+
+```bash
+npx wrangler@4.147.0 deploy
+```
+
+To preview on your own computer first, run this and open <http://localhost:8642>. It behaves like the live site, clean addresses included:
+
+```bash
+npx wrangler@4.147.0 dev --port 8642
+```
+
+**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year. Cloudflare sells domains at cost, or one bought elsewhere can be moved onto Cloudflare. Then, in the dashboard, open **Workers & Pages → golbornemosque → Settings → Domains & Routes → Add → Custom domain**.
 
 ## Please confirm with the mosque before launch
 
@@ -152,7 +173,9 @@ assets/favicon.svg
 assets/trustees/  Trustee headshots
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours
-.github/workflows/deploy.yml             Publishes the site to GitHub Pages
+.github/workflows/deploy.yml             Publishes the site to Cloudflare
+wrangler.jsonc    Cloudflare settings
+.assetsignore     Files Cloudflare doesn't publish
 ```
 
-Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies just two: Cinzel for the logo lettering and Amiri for Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
+Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies three: Cinzel for the logo and the big heading, Scheherazade New for the Arabic name, and Amiri for other Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
