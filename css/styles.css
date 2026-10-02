@@ -512,14 +512,17 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 
 .sign { container-type: inline-size; }
+/* The name in the same Roman capitals as the logo in the menu bar */
 .sign__title {
-  padding-bottom: 0.06em;
-  font-size: clamp(3rem, 9vw, 5.5rem);
-  /* "Golborne" is ~4.6em wide: scale to its column so it never overflows */
-  font-size: clamp(2.75rem, 16cqi, 5.75rem);
+  padding-bottom: 0.1em;
+  font-family: var(--font-brand);
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  /* "GOLBORNE" is ~6.5em wide in these capitals: scale to its column so it never overflows */
+  font-size: clamp(2rem, 14cqi, 4.75rem);
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.04em;
+  line-height: 1.04;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   background-clip: text;
@@ -1095,6 +1098,14 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   color: transparent;
 }
 .page-head .eyebrow { margin: 0 0 12px; font-size: 1.0625rem; letter-spacing: -0.01em; color: var(--gold); }
+.page-head h1.page-head__name {
+  padding-bottom: 0.08em;
+  font-family: var(--font-brand);
+  font-size: clamp(2rem, 7vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
 .page-head p:not(.eyebrow) {
   margin-top: 14px;
   font-size: clamp(1.125rem, 2vw, 1.3125rem);
@@ -1412,6 +1423,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   .page-head { padding: 0 0 3mm; border: 0; background: none; }
   .page-head::before { display: none; }
   .page-head h1 { font-size: 17pt; color: #111; background: none; -webkit-background-clip: border-box; background-clip: border-box; letter-spacing: -0.01em; }
+  .page-head h1.page-head__name { font-size: 17pt; padding-bottom: 0; }
   .page-head p { margin-top: 1.5mm; font-size: 9pt; color: #333; }
   .month-bar { margin: 0 0 3mm; justify-content: center; }
   .month-bar h2 { font-size: 14pt; color: #111; }
