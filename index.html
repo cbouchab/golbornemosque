@@ -5,12 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Golborne Mosque · Alhuda Mosque, Golborne Road, London W10</title>
   <meta name="description" content="Golborne Mosque (Alhuda Mosque) at 76 Golborne Road, North Kensington. Today's prayer times, Jumu'ah, Ramadan and free iftar, funeral prayers, and how to find us.">
-  <meta name="theme-color" content="#2a2b2f">
+  <meta name="theme-color" content="#333333">
   <meta name="color-scheme" content="dark">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Golborne Mosque · مسجد الهدى">
   <meta property="og:description" content="A neighbourhood mosque at 76 Golborne Road, London W10 — five daily prayers, Jumu'ah and free iftar every day of Ramadan.">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:image" content="https://golbornemosque.pages.dev/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Golborne Mosque badge: a gold dome, minaret and crescent on grey, with the name in English and Arabic.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="assets/icon-64.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@700&family=Cinzel:wght@600;700&display=swap">
@@ -62,7 +69,7 @@
   <header class="site-header">
     <div class="wrap site-header__inner">
       <a class="brand" href="#top">
-        <svg class="brand__mark" aria-hidden="true"><use href="#i-star"/></svg>
+        <img class="brand__logo" src="assets/logo.webp" width="40" height="40" alt="">
         <span class="brand__text">
           <span class="brand__name">Golborne Mosque</span>
           <span class="brand__ar" lang="ar" dir="rtl">مسجد الهدى</span>
@@ -123,10 +130,11 @@
           <svg class="arch__frame" viewBox="0 0 320 420" aria-hidden="true" focusable="false">
             <path class="arch__fill" d="M10 410V233.2A162 162 0 1 1 310 233.2V410Z"/>
             <path class="arch__line" d="M10 410V233.2A162 162 0 1 1 310 233.2V410Z"/>
-            <path class="arch__line arch__line--inner" d="M20 400V231A152 152 0 1 1 300 231V400Z"/>
-            <g class="arch__key" transform="translate(148 32)">
-              <rect x="4" y="4" width="16" height="16"/>
-              <rect x="4" y="4" width="16" height="16" transform="rotate(45 12 12)"/>
+            <path class="arch__line arch__line--inner" d="M16 404V232.4A156 156 0 1 1 304 232.4V404Z"/>
+            <!-- Crescent and star, as on the mosque's logo -->
+            <g class="arch__key" transform="translate(158 47)">
+              <path d="M12.29 4.24A13 13 0 1 1 -1.44 -12.92A11 11 0 1 0 12.29 4.24Z"/>
+              <path d="M5.6 -8L6.75 -4.78L10.17 -4.68L7.45 -2.6L8.42 0.68L5.6 -1.25L2.78 0.68L3.75 -2.6L1.03 -4.68L4.45 -4.78Z"/>
             </g>
           </svg>
           <div class="arch__content">
@@ -368,7 +376,7 @@
     <div class="wrap site-footer__grid">
       <div>
         <a class="brand brand--footer" href="#top">
-          <svg class="brand__mark" aria-hidden="true"><use href="#i-star"/></svg>
+          <img class="brand__logo" src="assets/logo.webp" width="40" height="40" alt="">
           <span class="brand__text">
             <span class="brand__name">Golborne Mosque</span>
             <span class="brand__ar" lang="ar" dir="rtl">مسجد الهدى</span>

@@ -1,39 +1,54 @@
 /* ==========================================================================
    Golborne Mosque
-   The dark grey and gold of the mosque's frontage, set in an Apple-style
+   The grey and gold of the mosque's logo and frontage, set in an Apple-style
    system: the platform's own typeface with size-specific tracking, a
    translucent header, rounded surfaces with hairlines instead of heavy rules,
    and motion only where it has a job (see "motion" near the end).
    ========================================================================== */
 
+/* Until Cinzel arrives, Georgia stands in, scaled to Cinzel's width so the
+   lettering wraps the same way and nothing jumps when the font swaps. */
+@font-face {
+  font-family: "Cinzel Fallback";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-weight: 600;
+  size-adjust: 95.3%;
+}
+@font-face {
+  font-family: "Cinzel Fallback";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-weight: 700;
+  size-adjust: 96.9%;
+}
+
 :root {
   color-scheme: dark;
 
-  /* The frontage's dark grey, in four depths */
-  --bg: #2a2b2f;
-  --bg-alt: #313236;
-  --bg-deep: #24252a;
-  --surface: #37383d;
-  --surface-2: #404146;
+  /* Neutral greys, a few steps darker than the logo's grey disc (#606060) */
+  --bg: #333333;
+  --bg-alt: #393939;
+  --bg-deep: #2c2c2c;
+  --surface: #404040;
+  --surface-2: #474747;
   --hairline: rgba(255, 255, 255, 0.1);
   --hairline-strong: rgba(255, 255, 255, 0.17);
 
-  /* Its gold lettering, used sparingly */
-  --gold: #d4ae62;
-  --gold-bright: #ebcb8b;
-  --gold-wash: rgba(212, 174, 98, 0.12);
-  --gold-line: rgba(212, 174, 98, 0.34);
-  --gold-gradient: linear-gradient(180deg, #f7e4b5 0%, #dcb76d 46%, #a8833c 100%);
+  /* The logo's golds: its English lettering, its Arabic lettering, and a gradient between them */
+  --gold: #e7b22e;
+  --gold-bright: #f1be31;
+  --gold-wash: rgba(231, 178, 46, 0.12);
+  --gold-line: rgba(231, 178, 46, 0.34);
+  --gold-gradient: linear-gradient(180deg, #f7d466 0%, #e7b22e 50%, #c9961f 100%);
 
-  --ink: #f5f5f7;
+  --ink: #f5f5f5;
   /* Secondary text, kept at 4.5:1 or better on every grey above */
-  --ink-2: #b4b4b9;
-  --ink-3: #a5a5aa;
+  --ink-2: #c4c4c4;
+  --ink-3: #b8b8b8;
   --ink-on-gold: #1b1508;
 
   /* The platform's own typeface: San Francisco on Apple devices */
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-brand: "Cinzel", "Trajan Pro", Georgia, serif;
+  --font-brand: "Cinzel", "Cinzel Fallback", "Trajan Pro", Georgia, serif;
   --font-ar: "Amiri", "Geeza Pro", "Traditional Arabic", serif;
   /* Mushaf-style Naskh, as in a printed Qur'an, for the mosque's Arabic name */
   --font-name: "Scheherazade New", "Amiri", "Geeza Pro", serif;
@@ -49,8 +64,8 @@
   --radius-lg: 28px;
   --lift: 0 24px 60px -30px rgba(0, 0, 0, 0.55);
 
-  /* Moroccan eight-pointed star lattice */
-  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23d4ae62' stroke-width='1'%3E%3Cpath d='M20 20h40v40H20z'/%3E%3Cpath d='M40 11.7 68.3 40 40 68.3 11.7 40z'/%3E%3Cpath d='M40 0v11.7M40 68.3V80M0 40h11.7M68.3 40H80M0 0l20 20M80 0 60 20M0 80l20-20M80 80 60 60'/%3E%3C/g%3E%3C/svg%3E");
+  /* Zellige: the Moroccan star-and-cross tilework, as faint gold and white pieces with dark grout */
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg stroke='%231e1e1e' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath fill='%23fff' fill-opacity='.5' d='M40 0L28.28 11.72L28.28 28.28L11.72 28.28L0 40L-11.72 28.28L-28.28 28.28L-28.28 11.72L-40 0L-28.28 -11.72L-28.28 -28.28L-11.72 -28.28L-0 -40L11.72 -28.28L28.28 -28.28L28.28 -11.72ZM120 0L108.28 11.72L108.28 28.28L91.72 28.28L80 40L68.28 28.28L51.72 28.28L51.72 11.72L40 0L51.72 -11.72L51.72 -28.28L68.28 -28.28L80 -40L91.72 -28.28L108.28 -28.28L108.28 -11.72ZM40 80L28.28 91.72L28.28 108.28L11.72 108.28L0 120L-11.72 108.28L-28.28 108.28L-28.28 91.72L-40 80L-28.28 68.28L-28.28 51.72L-11.72 51.72L-0 40L11.72 51.72L28.28 51.72L28.28 68.28ZM120 80L108.28 91.72L108.28 108.28L91.72 108.28L80 120L68.28 108.28L51.72 108.28L51.72 91.72L40 80L51.72 68.28L51.72 51.72L68.28 51.72L80 40L91.72 51.72L108.28 51.72L108.28 68.28Z'/%3E%3Cpath fill='%23e7b22e' fill-opacity='.55' d='M40 0L51.72 11.72L51.72 28.28L68.28 28.28L80 40L68.28 51.72L51.72 51.72L51.72 68.28L40 80L28.28 68.28L28.28 51.72L11.72 51.72L0 40L11.72 28.28L28.28 28.28L28.28 11.72Z'/%3E%3Cpath fill='%23e7b22e' d='M15.20 0L10.75 4.45L10.75 10.75L4.45 10.75L0 15.20L-4.45 10.75L-10.75 10.75L-10.75 4.45L-15.20 0L-10.75 -4.45L-10.75 -10.75L-4.45 -10.75L-0 -15.20L4.45 -10.75L10.75 -10.75L10.75 -4.45ZM95.20 0L90.75 4.45L90.75 10.75L84.45 10.75L80 15.20L75.55 10.75L69.25 10.75L69.25 4.45L64.80 0L69.25 -4.45L69.25 -10.75L75.55 -10.75L80 -15.20L84.45 -10.75L90.75 -10.75L90.75 -4.45ZM15.20 80L10.75 84.45L10.75 90.75L4.45 90.75L0 95.20L-4.45 90.75L-10.75 90.75L-10.75 84.45L-15.20 80L-10.75 75.55L-10.75 69.25L-4.45 69.25L-0 64.80L4.45 69.25L10.75 69.25L10.75 75.55ZM95.20 80L90.75 84.45L90.75 90.75L84.45 90.75L80 95.20L75.55 90.75L69.25 90.75L69.25 84.45L64.80 80L69.25 75.55L69.25 69.25L75.55 69.25L80 64.80L84.45 69.25L90.75 69.25L90.75 75.55ZM52 40L48.49 43.51L48.49 48.49L43.51 48.49L40 52L36.49 48.49L31.51 48.49L31.51 43.51L28 40L31.51 36.49L31.51 31.51L36.49 31.51L40 28L43.51 31.51L48.49 31.51L48.49 36.49Z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 @media (min-width: 640px) {
@@ -259,7 +274,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   top: 0;
   z-index: 50;
   padding-top: env(safe-area-inset-top, 0px);
-  background: rgba(42, 43, 47, 0.74);
+  background: rgba(51, 51, 51, 0.74);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   box-shadow: 0 1px 0 var(--hairline);
@@ -279,7 +294,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   gap: 10px;
   color: var(--gold);
 }
-.brand__mark { width: 28px; height: 28px; flex: none; }
+.brand__logo { width: 40px; height: 40px; flex: none; }
+.brand--footer { gap: 14px; }
+.brand--footer .brand__logo { width: 72px; height: 72px; }
 .brand__text { display: flex; flex-direction: column; line-height: 1.05; }
 .brand__name {
   font: 600 0.9375rem/1.1 var(--font-brand);
@@ -484,7 +501,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   position: relative;
   padding: 56px 0 72px;
   background:
-    radial-gradient(ellipse 60% 55% at 74% 40%, rgba(212, 174, 98, 0.13), transparent 70%),
+    radial-gradient(ellipse 60% 55% at 74% 40%, rgba(231, 178, 46, 0.13), transparent 70%),
     var(--bg);
   overflow: hidden;
 }
@@ -494,7 +511,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   inset: 0;
   background-image: var(--pattern);
   background-size: 80px 80px;
-  opacity: 0.045;
+  opacity: 0.07;
   -webkit-mask-image: radial-gradient(ellipse 55% 70% at 75% 45%, #000, transparent 75%);
   mask-image: radial-gradient(ellipse 55% 70% at 75% 45%, #000, transparent 75%);
   pointer-events: none;
@@ -508,6 +525,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 @media (min-width: 900px) {
   .hero { padding: 104px 0 128px; }
+  /* On wide screens the tiles sit behind the arch rather than the text, so they can show a little more */
+  .hero::before { opacity: 0.1; }
   .hero__grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 72px; }
 }
 
@@ -570,8 +589,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .arch__frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .arch__fill { fill: var(--surface); }
 .arch__line { fill: none; stroke: var(--gold); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
-.arch__line--inner { stroke: rgba(212, 174, 98, 0.22); stroke-width: 1; }
-.arch__key rect { fill: var(--surface); stroke: var(--gold); stroke-width: 1; }
+/* A white keyline inside the gold, as the logo outlines its gold in white */
+.arch__line--inner { stroke: rgba(255, 255, 255, 0.36); stroke-width: 1; }
+.arch__key { fill: var(--gold); }
 
 .arch__content {
   position: absolute;
@@ -790,7 +810,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   position: relative;
   padding: 96px 0;
   background:
-    radial-gradient(ellipse 55% 75% at 80% 50%, rgba(212, 174, 98, 0.16), transparent 70%),
+    radial-gradient(ellipse 55% 75% at 80% 50%, rgba(231, 178, 46, 0.16), transparent 70%),
     var(--bg-deep);
   overflow: hidden;
 }
@@ -800,7 +820,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   inset: 0;
   background-image: var(--pattern);
   background-size: 64px 64px;
-  opacity: 0.045;
+  opacity: 0.06;
   pointer-events: none;
 }
 .band__grid { position: relative; display: grid; gap: 40px; align-items: center; }
@@ -826,7 +846,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .countdown {
   padding: 40px 28px;
   text-align: center;
-  background: rgba(55, 56, 61, 0.62);
+  background: rgba(64, 64, 64, 0.62);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   backdrop-filter: blur(20px) saturate(160%);
   border-radius: var(--radius-lg);
@@ -1040,12 +1060,26 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 /* ---------- footer ---------- */
 
 .site-footer {
+  position: relative;
   padding: 56px 0 calc(32px + env(safe-area-inset-bottom, 0px));
   background: var(--bg-alt);
   box-shadow: 0 -1px 0 var(--hairline);
   font-size: 0.875rem;
   color: var(--ink-3);
 }
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 160px;
+  background-image: var(--pattern);
+  background-size: 64px 64px;
+  opacity: 0.07;
+  -webkit-mask-image: linear-gradient(#000, transparent);
+  mask-image: linear-gradient(#000, transparent);
+  pointer-events: none;
+}
+.site-footer > * { position: relative; }
 .site-footer__grid { display: grid; gap: 28px; }
 @media (min-width: 900px) {
   .site-footer__grid { grid-template-columns: 1.2fr 1.2fr 1fr; align-items: start; }
@@ -1070,7 +1104,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   padding: 72px 0 56px;
   text-align: center;
   background:
-    radial-gradient(ellipse 60% 70% at 50% 0%, rgba(212, 174, 98, 0.1), transparent 70%),
+    radial-gradient(ellipse 60% 70% at 50% 0%, rgba(231, 178, 46, 0.1), transparent 70%),
     var(--bg);
   overflow: hidden;
 }
@@ -1080,7 +1114,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   inset: 0;
   background-image: var(--pattern);
   background-size: 80px 80px;
-  opacity: 0.04;
+  opacity: 0.07;
   -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, #000, transparent 75%);
   mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, #000, transparent 75%);
   pointer-events: none;
@@ -1101,7 +1135,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .page-head h1.page-head__name {
   padding-bottom: 0.08em;
   font-family: var(--font-brand);
-  font-size: clamp(2rem, 7vw, 3.75rem);
+  /* 7vw keeps the name on one line at any phone width, in Cinzel or its stand-in */
+  font-size: clamp(1.25rem, 7vw, 3.75rem);
   line-height: 1.1;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1241,7 +1276,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   top: 8px;
   bottom: 8px;
   width: 1px;
-  background: linear-gradient(180deg, var(--gold), rgba(212, 174, 98, 0.25) 85%, transparent);
+  background: linear-gradient(180deg, var(--gold), rgba(231, 178, 46, 0.25) 85%, transparent);
 }
 .timeline__item { position: relative; padding: 0 0 48px 46px; }
 .timeline__item:last-child { padding-bottom: 0; }
@@ -1329,7 +1364,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   overflow: hidden;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 30%, rgba(212, 174, 98, 0.18), transparent 70%),
+    radial-gradient(circle at 50% 30%, rgba(231, 178, 46, 0.18), transparent 70%),
     var(--surface);
   box-shadow: inset 0 0 0 1px var(--hairline-strong), var(--lift);
 }
@@ -1350,7 +1385,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 /* ---------- hover, only where there's a real pointer ---------- */
 
 @media (hover: hover) and (pointer: fine) {
-  a:hover { color: #f3d9a1; }
+  a:hover { color: #fbd77a; }
   .text-link:hover,
   .link-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
   .btn--gold:hover { background: var(--gold-bright); color: var(--ink-on-gold); }
@@ -1407,8 +1442,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   :root {
     --hairline: rgba(255, 255, 255, 0.24);
     --hairline-strong: rgba(255, 255, 255, 0.36);
-    --ink-2: #c7c7cc;
-    --ink-3: #aeaeb2;
+    --ink-2: #d6d6d6;
+    --ink-3: #cacaca;
   }
 }
 

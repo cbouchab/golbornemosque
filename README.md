@@ -130,7 +130,7 @@ To preview on your own computer first, run this and open <http://localhost:8642>
 npx wrangler@4.147.0 pages dev . --port 8642
 ```
 
-**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year. Cloudflare sells domains at cost, or one bought elsewhere can be used. Then, in the dashboard, open **Workers & Pages → golbornemosque → Custom domains → Set up a custom domain**.
+**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year. Cloudflare sells domains at cost, or one bought elsewhere can be used. Then, in the dashboard, open **Workers & Pages → golbornemosque → Custom domains → Set up a custom domain**. Afterwards, change `golbornemosque.pages.dev` to the new domain in the `og:image` lines of `index.html`, `about.html` and `timetable.html`: link previews need the picture's full address.
 
 ## Please confirm with the mosque before launch
 
@@ -172,7 +172,11 @@ js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp buttons and bank transfer details
 js/about.js       Trustee cards on the About page
 js/site.js        Mobile menu, footer year
-assets/favicon.svg
+assets/logo.webp  The logo in the header and footer
+assets/icon-64.png, favicon.ico, assets/apple-touch-icon.png
+                  Browser-tab and home-screen icons (the badge's mosque, without lettering)
+assets/og.jpg     The picture shown when a link to the site is shared
+brand/logo.svg    The original vector logo, kept as the master copy (not published)
 assets/trustees/  Trustee headshots
 scripts/build.sh                     Collects the site's files into _site/ for publishing
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
@@ -181,4 +185,4 @@ scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 wrangler.jsonc    Cloudflare Pages settings
 ```
 
-Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies three: Cinzel for the logo and the big heading, Scheherazade New for the Arabic name, and Amiri for other Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
+Text is set in each device's own system font (San Francisco on Apple devices). Google Fonts supplies three: Cinzel for the name beside the logo and the big heading, Scheherazade New for the Arabic name, and Amiri for other Arabic. The map comes from Google Maps. Google's map embed may set its own cookies; if the site later adds a cookie notice, the map should be included in it.
