@@ -35,8 +35,8 @@
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-brand: "Cinzel", "Trajan Pro", Georgia, serif;
   --font-ar: "Amiri", "Geeza Pro", "Traditional Arabic", serif;
-  /* Calligraphic Ruq'ah, for the mosque's name */
-  --font-callig: "Aref Ruqaa", "Amiri", "Geeza Pro", serif;
+  /* Mushaf-style Naskh, as in a printed Qur'an, for the mosque's name */
+  --font-quran: "Scheherazade New", "Amiri", "Geeza Pro", serif;
 
   /* Motion curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -288,8 +288,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 .brand__ar {
   align-self: flex-start;
-  font-family: var(--font-callig);
-  font-size: 0.875rem;
+  font-family: var(--font-quran);
+  font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.35;
   color: var(--gold-bright);
@@ -527,16 +527,16 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 .sign__title span { display: block; }
 
-/* The mosque's name in calligraphic Ruq'ah, gilded like the English title.
-   Padding keeps the vowel marks inside the gradient's box so none are clipped. */
+/* The mosque's name in Mushaf-style Naskh with Qur'anic spelling, gilded like the
+   English title. Padding keeps the vowel marks inside the gradient's box. */
 .sign__ar {
   width: fit-content;
   margin: 6px 0 0;
   padding: 0.12em 0.04em 0.18em;
-  font-family: var(--font-callig);
+  font-family: var(--font-quran);
   font-size: clamp(2.75rem, 11cqi, 4.5rem);
   font-weight: 700;
-  line-height: 1.45;
+  line-height: 1.5;
   text-align: left;
   background: var(--gold-gradient);
   -webkit-background-clip: text;
