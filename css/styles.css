@@ -80,7 +80,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 76px;
+  scroll-padding-top: 88px;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -285,7 +285,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 56px;
+  /* room above and below the lockup, including the tail of the Q */
+  min-height: 68px;
 }
 
 /* The mosque symbol and the name form one lockup, sized from --brand-size (the
@@ -369,7 +370,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .site-nav a {
   display: block;
   color: var(--ink-2);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   line-height: 1;
   transition: color 200ms ease;
 }
@@ -423,7 +424,12 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 @media (min-width: 900px) {
   .nav-toggle { display: none; }
   .site-nav ul { display: flex; gap: 32px; }
-  .site-nav a { padding: 10px 0; }
+  .site-nav a { padding: 10px 0; white-space: nowrap; }
+}
+/* Small laptops: a slightly smaller name and tighter menu keep both on one row */
+@media (min-width: 900px) and (max-width: 1099px) {
+  .site-header .brand { --brand-size: 24px; }
+  .site-nav ul { gap: 22px; }
 }
 
 /* ---------- prayer times strip (under the menu, scrolls with the page) ---------- */
