@@ -302,7 +302,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   color: var(--gold);
 }
 .brand__logo { width: auto; height: calc(var(--brand-size) * 1.4); flex: none; }
-.brand--footer { --brand-size: 30px; }
+.brand--footer { --brand-size: 22px; }
 .brand__text {
   display: flex;
   flex-direction: column;
@@ -314,7 +314,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 /* On a phone the lockup shrinks a little if needed, so it never runs into the menu button */
 @media (max-width: 899px) {
   .site-header { --brand-size: min(28px, calc((100vw - 112px) / 14)); }
-  .brand--footer { --brand-size: min(30px, calc((100vw - 48px) / 14)); }
+  .brand--footer { --brand-size: min(22px, calc((100vw - 48px) / 14)); }
 }
 .brand__name {
   /* The tracking after the last letter would leave a gap; take it back so the
@@ -1204,7 +1204,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 
 .site-footer {
   position: relative;
-  padding: 56px 0 calc(32px + env(safe-area-inset-bottom, 0px));
+  padding: 64px 0 calc(32px + env(safe-area-inset-bottom, 0px));
   background: var(--bg-alt);
   box-shadow: 0 -1px 0 var(--hairline);
   font-size: 0.875rem;
@@ -1223,15 +1223,32 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   pointer-events: none;
 }
 .site-footer > * { position: relative; }
-.site-footer__grid { display: grid; gap: 28px; }
-@media (min-width: 900px) {
-  .site-footer__grid { grid-template-columns: 1.2fr 1.2fr 1fr; align-items: start; }
+.site-footer__grid { display: grid; gap: 32px; }
+/* Columns are as wide as their contents and spread across the width, so nothing wraps or collides */
+@media (min-width: 640px) {
+  .site-footer__grid { grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 40px 32px; }
+  .site-footer__brand { grid-column: 1 / -1; }
 }
-.site-footer__charity { margin-top: 12px; font-size: 0.8125rem; color: var(--ink-3); }
-.site-footer__contact { font-style: normal; line-height: 1.8; color: var(--ink-2); }
-.site-footer__contact a { color: var(--ink-2); word-break: break-word; transition: color 200ms ease; }
-.site-footer__nav { display: flex; flex-wrap: wrap; gap: 10px 22px; }
-.site-footer__nav a { color: var(--ink-2); transition: color 200ms ease; }
+@media (min-width: 1000px) {
+  .site-footer__grid { grid-template-columns: repeat(4, auto); }
+  .site-footer__brand { grid-column: auto; }
+}
+.site-footer__charity { margin-top: 16px; font-size: 0.8125rem; line-height: 1.6; color: var(--ink-3); }
+.site-footer__heading {
+  margin: 0 0 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.site-footer__lines { display: grid; gap: 8px; font-style: normal; font-size: 0.9375rem; line-height: 1.4; color: var(--ink-2); }
+.site-footer__lines a { color: var(--ink-2); overflow-wrap: break-word; transition: color 200ms ease; }
+.site-footer__links { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 0.9375rem; line-height: 1.4; }
+@media (max-width: 639px) {
+  .site-footer__links { grid-template-columns: repeat(2, max-content); column-gap: 40px; }
+}
+.site-footer__links a { color: var(--ink-2); transition: color 200ms ease; }
 .site-footer__copy {
   margin-top: 36px;
   padding-top: 20px;
@@ -1541,8 +1558,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   .copy:hover { background: rgba(255, 255, 255, 0.06); }
   .contact-list a[href^="tel"]:hover,
   .contact-list a[href^="mailto"]:hover,
-  .site-footer__contact a:hover,
-  .site-footer__nav a:hover { color: var(--ink); }
+  .site-footer__lines a:hover,
+  .site-footer__links a:hover { color: var(--ink); }
   .sources a:hover { color: var(--gold-bright); }
 }
 
