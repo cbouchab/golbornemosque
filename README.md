@@ -21,9 +21,9 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 
 **About page** (`about.html`):
 
-- "Our story": a timeline of the mosque from the building of Golborne Road and the first Moroccan families of the 1960s to today, with its sources listed underneath.
-- The trustees, each with a headshot (or their initials until a photo is added), name and role.
-- An invitation to share memories and photos of the mosque's early days, and the charity's details.
+- "Our story": a timeline of the mosque from the first Moroccan families of the 1960s to today, with its sources listed underneath. The line draws itself down the page as you scroll, and each milestone appears as it reaches it (everything simply shows with reduced motion or without JavaScript).
+- The trustees, each with a headshot (or an outline figure until a photo is added), name and role.
+- The trust's aim and its charity details.
 
 **Monthly timetable** (`timetable.html`):
 
@@ -40,7 +40,7 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 | `myLocalMasjid` | The mosque's MyLocalMasjid listing (its id and page address). |
 | `jumuah` | Khutbah and prayer times for Friday, e.g. `khutbah: "13:15", prayer: "13:45"`. Used only if MyLocalMasjid has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah. |
 | `notices` | Announcements shown at the top of the home page. Each one hides itself after its `until` date. |
-| `trustees` | Name, role and photo of each trustee on the About page. To add a headshot, save it in `assets/trustees/` and set `photo` (see `assets/trustees/README.txt`). |
+| `trustees` | Name, role and photo of each trustee on the About page. To add a headshot, save it in `assets/trustees/` and set `photo` (see `assets/trustees/README.txt`). Without a photo, an outline figure is shown; `figure: "woman"` shows a woman in hijab. |
 | `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |
 | `donations.bank` | Account name, bank, sort code, account number, IBAN, BIC/SWIFT and reference. |
 | `calculation`, `adhan`, `iqamah` | The backup, used for any day without synced MyLocalMasjid times (see below). It is set up to follow the mosque's own pattern. `calculation` uses the Moonsighting Committee method (MyLocalMasjid's), with Fajr and Isha 2 minutes later, which matched the mosque's published September 2026 start times to within 2 minutes. `iqamah` uses the mosque's usual gap after the adhan: 15 minutes for Fajr, Dhuhr and Asr, 5 for Maghrib, 10 for Isha. A gap is written `"+15"`; a fixed time `"13:30"` also works. |
@@ -159,9 +159,9 @@ The content is limited to what could be verified from the mosque's public Charit
   - the 1981 founding by three Moroccans, which comes from a single community-history record;
   - where the congregation prayed before 76 Golborne Road (not found anywhere);
   - Muhammed Khaja's outreach role in the early 1990s, also from a single source;
-  - the Grenfell entry and its closing line, "We remember all who were lost… in our prayers", which speaks in the mosque's voice.
+  - the wording of the trust's aim, which is written for the site rather than taken from the register.
 
-  Founders' names, early photographs or memories would make the story much richer. The page invites people to share them.
+  Founders' names, early photographs or memories would make the story much richer.
 - [ ] **SumUp payment link**: reusable and open-amount, plus any quick-amount links.
 - [ ] **Bank details**: account name, bank, sort code, account number, IBAN and BIC. Check every digit against a bank statement; a wrong number sends donations to the wrong place.
 - [ ] **Phone and email.** `020 8968 1592` and `golbornemosquetrust@gmail.com` are taken from the charity register.
@@ -184,7 +184,7 @@ js/home.js        Home page behaviour
 js/timetable.js   Timetable page behaviour
 js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp card widget and bank transfer details
-js/about.js       Trustee cards on the About page
+js/about.js       The scrolling timeline and trustee cards on the About page
 js/site.js        Mobile menu, footer year
 assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
 assets/symbol.svg The mosque symbol beside the name in the header and footer: brand/symbol.svg in gold only, its white left out so the background shows through

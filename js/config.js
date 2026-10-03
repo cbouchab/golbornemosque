@@ -126,12 +126,13 @@ window.MOSQUE_CONFIG = {
   // Trustees shown on the About page, as listed on the Charity Commission register.
   // To add a headshot, put a square photo (at least 320 × 320 pixels) in
   // assets/trustees/ and set photo, e.g. photo: "assets/trustees/ahmed-youssfi.jpg".
-  // Without a photo, the trustee's initials are shown instead.
+  // Without a photo, an outline figure is shown instead: set figure: "woman" for a
+  // woman trustee (shown in hijab).
   trustees: [
     { name: "Ahmed Youssfi", role: "Chair", photo: null },
     { name: "Abdelkader Akhrif", role: "Trustee", photo: null },
     { name: "Faissal Bouchab", role: "Trustee", photo: null },
-    { name: "Fatima Youssfi", role: "Trustee", photo: null },
+    { name: "Fatima Youssfi", role: "Trustee", photo: null, figure: "woman" },
     { name: "Mohamed Said Daoud", role: "Trustee", photo: null },
     { name: "Mustapha Bouyardan", role: "Trustee", photo: null },
   ],

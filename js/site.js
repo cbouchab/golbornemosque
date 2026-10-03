@@ -49,9 +49,8 @@
     ".give",
     ".visit__info",
     ".map",
-    ".timeline__item",
     ".trustee",
-    ".story__after > *",
+    ".trust",
   ].join(",");
 
   function initReveal() {
