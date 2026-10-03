@@ -3,7 +3,7 @@
   "use strict";
 
   /* ---------- the timeline ---------- */
-  // As the page scrolls, the rule grows down behind a glowing pen; each star
+  // As the page scrolls, the rule grows down behind a glowing pen; each dot
   // turns gold as the pen reaches it and that milestone's text rises in. The
   // line only ever grows, and whatever is on screen when the page opens is
   // shown straight away, so nothing being read disappears.
@@ -13,7 +13,7 @@
 
   if (timeline && !calm) {
     const items = Array.from(timeline.children);
-    const MARK = 14; // a star's centre, from the top of its milestone
+    const MARK = 14; // a dot's centre, from the top of its milestone
     const PEN = 0.6; // the pen sits this far down the window
 
     const wrap = document.createElement("div");
