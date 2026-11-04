@@ -1615,6 +1615,104 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .trustee--chair .trustee__role { color: var(--gold); }
 .trustees__note { margin: 44px 0 0; text-align: center; font-size: 0.875rem; color: var(--ink-3); }
 
+/* ---------- welcome message ----------
+   Shown once to a new visitor (js/site.js). The card scrolls on its own
+   when the message is taller than the screen; the button stays in reach. */
+
+.welcome {
+  width: min(560px, calc(100% - 32px));
+  max-width: none;
+  max-height: min(760px, calc(100dvh - 32px));
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.7);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-line) transparent;
+}
+.welcome:focus, .welcome:focus-visible { outline: none; }
+.welcome::backdrop {
+  background: rgba(24, 24, 24, 0.66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+html:has(.welcome[open]) { overflow: hidden; }
+
+.welcome__x { position: absolute; top: 12px; right: 12px; }
+
+.welcome__head {
+  padding: 36px 24px 0;
+  text-align: center;
+}
+.welcome__mark { width: 30px; height: 38px; margin: 0 auto 12px; }
+.welcome__ar { margin: 0 0 2px; font-size: 1.75rem; line-height: 1.4; color: var(--gold); }
+.welcome__title {
+  padding-bottom: 0.08em;
+  font: 700 clamp(1.25rem, 5.4vw, 1.625rem)/1.2 var(--font-brand);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.welcome__head::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 1px;
+  margin: 20px auto 0;
+  background: var(--gold);
+}
+
+.welcome__body { padding: 22px 24px 0; color: var(--ink-2); line-height: 1.6; }
+.welcome__body p { margin-bottom: 0.9em; }
+.welcome__greeting,
+.welcome__closing { color: var(--ink); font-weight: 600; }
+.welcome__body .welcome__motto {
+  margin: 22px 0 0;
+  text-align: center;
+  font: 600 0.9375rem/1.45 var(--font-brand);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* The button stays at the bottom of the card while the message scrolls under it. */
+.welcome__foot {
+  position: sticky;
+  bottom: 0;
+  padding: 28px 24px 24px;
+  background: linear-gradient(to bottom, rgba(64, 64, 64, 0), var(--surface) 22px);
+}
+
+@media (min-width: 640px) {
+  .welcome__head { padding: 44px 44px 0; }
+  .welcome__body { padding: 24px 44px 0; }
+  .welcome__foot { padding: 32px 44px 36px; }
+}
+
+/* Opens with a soft fade and rise, and fades away when closed. */
+.welcome,
+.welcome::backdrop {
+  transition:
+    opacity 320ms var(--ease-out),
+    transform 420ms var(--ease-out),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
+}
+.welcome:not([open]) { opacity: 0; transform: translateY(12px) scale(0.98); }
+.welcome:not([open])::backdrop { opacity: 0; }
+@starting-style {
+  .welcome[open] { opacity: 0; transform: translateY(16px) scale(0.98); }
+  .welcome[open]::backdrop { opacity: 0; }
+}
+
 /* ---------- hover, only where there's a real pointer ---------- */
 
 @media (hover: hover) and (pointer: fine) {
@@ -1658,6 +1756,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   .btn:active, .icon-btn:active, .nav-toggle:active, .amount:active, .copy:active { transform: none; }
   .site-nav li { transform: none !important; transition: opacity 200ms ease !important; }
   .nav-toggle__bars, .nav-toggle__bars::before, .nav-toggle__bars::after { transition: none; }
+  .welcome[open], .welcome:not([open]) { transform: none; }
 }
 
 /* Reduced transparency: solid chrome instead of glass */
@@ -1665,6 +1764,11 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   .site-header,
   .countdown {
     background: var(--bg-alt);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .welcome::backdrop {
+    background: rgba(24, 24, 24, 0.85);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -1686,7 +1790,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   :root { color-scheme: light; }
   @page { size: A4 portrait; margin: 10mm 12mm; }
   body { background: #fff; color: #111; font-size: 9.5pt; line-height: 1.25; letter-spacing: 0; }
-  .site-header, .prayer-bar, .site-footer, .skip-link, .month-bar .icon-btn, .month-actions, .no-print { display: none !important; }
+  .site-header, .prayer-bar, .site-footer, .skip-link, .month-bar .icon-btn, .month-actions, .no-print, .welcome { display: none !important; }
   .reveal, .timeline--live .timeline__item > * { opacity: 1 !important; transform: none !important; }
   .timeline__line, .timeline__pen { display: none; }
   .print-only { display: block; }

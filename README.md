@@ -8,6 +8,8 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 
 ## What's on it
 
+**Welcome message** (every page, once): the first time someone opens the site, a short welcome from the trust appears over the page. Closing it (the button, ×, Esc, or a tap outside) takes them to the page; their browser remembers, so it never shows again.
+
 **Prayer times strip** (every page): sits under the menu and scrolls away with the page. It shows today's adhan and iqamah times for Fajr to Isha, plus sunrise, and highlights the next prayer. After Isha it moves on to tomorrow. When the times come from MyLocalMasjid it says "Powered by MyLocalMasjid"; otherwise it says "Calculated times".
 
 **Home page** (`index.html`):
@@ -40,6 +42,7 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 | `myLocalMasjid` | The mosque's MyLocalMasjid listing (its id and page address). |
 | `jumuah` | Khutbah and prayer times for Friday, e.g. `khutbah: "13:15", prayer: "13:45"`. Used only if MyLocalMasjid has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah. |
 | `notices` | Announcements shown at the top of the home page. Each one hides itself after its `until` date. |
+| `welcome` | The welcome message shown once to each new visitor, on whichever page they open first. Their browser remembers it so it isn't shown again; raise `version` to show a new message to everyone once more, or set `enabled: false` to turn it off. |
 | `trustees` | Name, role and photo of each trustee on the About page. To add a headshot, save it in `assets/trustees/` and set `photo` (see `assets/trustees/README.txt`). Without a photo, an outline figure is shown; `figure: "woman"` shows a woman in hijab. |
 | `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |
 | `donations.bank` | Account name, bank, sort code, account number, IBAN, BIC/SWIFT and reference. |
@@ -185,7 +188,7 @@ js/timetable.js   Timetable page behaviour
 js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp card widget and bank transfer details
 js/about.js       The scrolling timeline and trustee cards on the About page
-js/site.js        Mobile menu, footer year
+js/site.js        Mobile menu, footer year, welcome message
 assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
 assets/symbol.svg The mosque symbol beside the name in the header and footer: brand/symbol.svg in gold only, its white left out so the background shows through
 assets/icons/     Browser-tab and home-screen icons; favicon.ico and site.webmanifest sit at the top level

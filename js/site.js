@@ -1,4 +1,4 @@
-/* Golborne Mosque — shared page behaviour: mobile menu, footer year, scroll reveal. */
+/* Golborne Mosque — shared page behaviour: mobile menu, footer year, scroll reveal, welcome message. */
 (function () {
   "use strict";
 
@@ -85,4 +85,84 @@
 
   // After all deferred scripts have run, so content they render (the trustees) is included.
   document.addEventListener("DOMContentLoaded", initReveal);
+
+  /*
+   * The welcome message (`welcome` in config.js): shown once, on whichever page
+   * someone opens first. The browser remembers it was shown, so it never comes
+   * back until `version` changes. Where the browser won't let the site remember
+   * anything (storage blocked), it isn't shown at all rather than on every page.
+   */
+  function initWelcome() {
+    const w = window.MOSQUE_CONFIG && window.MOSQUE_CONFIG.welcome;
+    if (!w || !w.enabled || typeof HTMLDialogElement !== "function") return;
+
+    const key = `golborne-welcome-${w.version || 1}`;
+    try {
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, new Date().toISOString().slice(0, 10));
+    } catch {
+      return;
+    }
+
+    const el = (tag, className, text) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text) node.textContent = text;
+      return node;
+    };
+
+    const dialog = el("dialog", "welcome");
+    dialog.setAttribute("aria-labelledby", "welcome-title");
+    // Focus lands on the message itself (below, once open): screen readers read
+    // it from the top, and the arrow keys scroll it.
+    dialog.tabIndex = -1;
+
+    const x = el("button", "icon-btn welcome__x");
+    x.type = "button";
+    x.setAttribute("aria-label", "Close");
+    x.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+    const head = el("div", "welcome__head");
+    const mark = el("img", "welcome__mark");
+    Object.assign(mark, { src: "/assets/symbol.svg", width: 30, height: 38, alt: "" });
+    head.append(mark);
+    if (w.arabic) {
+      const ar = el("p", "welcome__ar", w.arabic);
+      ar.lang = "ar";
+      ar.dir = "rtl";
+      head.append(ar);
+    }
+    const title = el("h2", "welcome__title", w.title);
+    title.id = "welcome-title";
+    head.append(title);
+
+    const body = el("div", "welcome__body");
+    if (w.greeting) body.append(el("p", "welcome__greeting", w.greeting));
+    (w.paragraphs || []).forEach((text) => body.append(el("p", "", text)));
+    if (w.closing) body.append(el("p", "welcome__closing", w.closing));
+    if (w.motto) body.append(el("p", "welcome__motto", w.motto));
+
+    const foot = el("div", "welcome__foot");
+    const go = el("button", "btn btn--gold btn--block", w.button || "Continue");
+    go.type = "button";
+    foot.append(go);
+
+    dialog.append(x, head, body, foot);
+
+    const close = () => dialog.close();
+    x.addEventListener("click", close);
+    go.addEventListener("click", close);
+    // A click on the dimmed page around the message closes it too.
+    dialog.addEventListener("click", (e) => {
+      if (e.target !== dialog) return;
+      const r = dialog.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close();
+    });
+
+    document.body.append(dialog);
+    dialog.showModal();
+    dialog.focus();
+  }
+
+  initWelcome();
 })();

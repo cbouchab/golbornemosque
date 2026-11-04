@@ -88,6 +88,30 @@ window.MOSQUE_CONFIG = {
   // { title: "Eid al-Fitr prayer", body: "Eid prayer will be held at 8:00 and 9:00.", until: "2027-03-12" }
   notices: [],
 
+  // The welcome message, shown once to each new visitor on whichever page they
+  // open first. Their browser remembers it, so it doesn't appear again. To show
+  // a new message to everyone once more, raise `version` (1 → 2).
+  // Set enabled to false to turn it off.
+  welcome: {
+    enabled: true,
+    version: 1,
+    arabic: "أهلاً وسهلاً",
+    title: "A Warm Welcome to Golborne Mosque",
+    greeting: "Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh,",
+    paragraphs: [
+      "On behalf of Golborne Mosque Trust, it is our pleasure to welcome you to our mosque and our online community.",
+      "Golborne Mosque is more than a place of worship. It is a place where faith brings people together, knowledge inspires personal growth, brotherhood and sisterhood are strengthened, and community spirit flourishes.",
+      "Our vision is to provide a welcoming, inclusive and spiritually enriching environment where everyone can feel a sense of belonging, find guidance and strengthen their relationship with Allah.",
+      "We are committed to serving our worshippers and the wider community through religious services, Islamic education, charitable activities and initiatives that promote unity, compassion and mutual respect.",
+      "As we look towards the future, we remain dedicated to developing our mosque, improving our services and creating opportunities for generations to come.",
+      "Whether you are a regular worshipper, a local resident, a visitor or simply interested in learning more about Islam, you are warmly welcome.",
+      "May Allah bless our community, accept our efforts and guide us towards a future built on faith, sincerity and unity.",
+    ],
+    closing: "Welcome to Golborne Mosque.",
+    motto: "Together in Faith. Stronger as a Community.",
+    button: "Continue to the website",
+  },
+
   // Donations. Anything left as null shows as "To be added" on the website,
   // so fill these in before the site goes live.
   donations: {
