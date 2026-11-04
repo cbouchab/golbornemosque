@@ -6,5 +6,4 @@ set -e
 cd "$(dirname "$0")/.."
 rm -rf _site
 mkdir _site
-cp -R index.html about.html timetable.html 404.html favicon.ico site.webmanifest css js data assets _site/
-rm -f _site/assets/trustees/README.txt
+cp -R index.html about.html timetable.html news.html news-post.html admin.html 404.html favicon.ico site.webmanifest css js data assets _site/

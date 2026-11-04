@@ -49,7 +49,7 @@
     ".give",
     ".visit__info",
     ".map",
-    ".trustee",
+    ".mission__inner",
     ".trust",
   ].join(",");
 
@@ -83,7 +83,7 @@
     items.forEach((el) => io.observe(el));
   }
 
-  // After all deferred scripts have run, so content they render (the trustees) is included.
+  // After all deferred scripts have run, so content they render is included.
   document.addEventListener("DOMContentLoaded", initReveal);
 
   /*

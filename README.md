@@ -24,8 +24,14 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 **About page** (`about.html`):
 
 - "Our story": a timeline of the mosque from the first Moroccan families of the 1960s to today, with its sources listed underneath. The line draws itself down the page as you scroll, and each milestone appears as it reaches it (everything simply shows with reduced motion or without JavaScript).
-- The trustees, each with a headshot (or an outline figure until a photo is added), name and role.
-- The trust's aim and its charity details.
+- The trust's mission, set large: Strengthen Faith. Nurture Knowledge. Unite Our Community. Serve Humanity.
+- About Golborne Mosque Trust, in the trust's own words, with its charity number.
+
+**News** (`news.html`, and each post at `/news/<post>`):
+
+- Posts with a title, date, text and an optional photo, newest first. The three newest also appear on the home page under "Latest news" (the section stays hidden until there is a post).
+- Each post has its own page, built on Cloudflare so link previews on WhatsApp, Facebook and the like show its title, summary and photo.
+- Written on the private posting page, `/admin` (see **News** below).
 
 **Monthly timetable** (`timetable.html`):
 
@@ -43,7 +49,6 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 | `jumuah` | Khutbah and prayer times for Friday, e.g. `khutbah: "13:15", prayer: "13:45"`. Used only if MyLocalMasjid has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah. |
 | `notices` | Announcements shown at the top of the home page. Each one hides itself after its `until` date. |
 | `welcome` | The welcome message shown once to each new visitor, on whichever page they open first. Their browser remembers it so it isn't shown again; raise `version` to show a new message to everyone once more, or set `enabled: false` to turn it off. |
-| `trustees` | Name, role and photo of each trustee on the About page. To add a headshot, save it in `assets/trustees/` and set `photo` (see `assets/trustees/README.txt`). Without a photo, an outline figure is shown; `figure: "woman"` shows a woman in hijab. |
 | `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |
 | `donations.bank` | Account name, bank, sort code, account number, IBAN, BIC/SWIFT and reference. |
 | `calculation`, `adhan`, `iqamah` | The backup, used for any day without synced MyLocalMasjid times (see below). It is set up to follow the mosque's own pattern. `calculation` uses the Moonsighting Committee method (MyLocalMasjid's), with Fajr and Isha 2 minutes later, which matched the mosque's published September 2026 start times to within 2 minutes. `iqamah` uses the mosque's usual gap after the adhan: 15 minutes for Fajr, Dhuhr and Asr, 5 for Maghrib, 10 for Isha. A gap is written `"+15"`; a fixed time `"13:30"` also works. |
@@ -77,6 +82,42 @@ SUMUP_API_KEY=the-sandbox-key
 then run `npx wrangler@4.147.0 pages dev . --port 8642` and donate with SumUp's test card `4200 0000 0000 0091` (any future expiry, any CVV). Amounts of £11.00 always fail, to try the error message.
 
 To hide card donations without removing the key, set `donations.sumup.enabled` to `false` in `js/config.js`. SumUp charges 2.5% on each online payment; there is no monthly fee.
+
+## News
+
+Posts are written at **<https://golbornemosque.pages.dev/admin>**, a private page that isn't linked from the site. Sign in with the News password, then:
+
+- **New post**: a title, the date (today unless changed), an optional photo with a short description for people who can't see it, and the text. The buttons above the text add a heading, bold, italic, a link or a list; **Preview** shows how it will look.
+- **Show on the website** publishes it straight away. Untick it to keep a draft, which only signed-in writers can see.
+- **Edit** changes a post; its address stays the same so links already shared keep working. **Delete post** removes it and its photo for good.
+
+Photos are shrunk in the browser to at most 1600 pixels across before uploading, so phone photos upload quickly.
+
+**Setting the password.** Everyone who posts shares one password, kept as a Cloudflare secret called `NEWS_PASSWORD`. Choose a long one (four or five random words works well) and set it from this folder:
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=722237b243245541dfb7d4407d4c234c npx wrangler@4.147.0 pages secret put NEWS_PASSWORD --project-name golbornemosque
+```
+
+or in the Cloudflare dashboard: **Workers & Pages → golbornemosque → Settings → Variables and secrets**, type *Secret*. It applies from the next deploy. Changing it signs everyone out. Signing in lasts 14 days on each device; after 10 wrong passwords in 15 minutes, that connection has to wait.
+
+**Where posts are kept.** In a Cloudflare D1 database, `golbornemosque-news`, in the same account (free). Its tables are in `migrations/`. If the tables ever need creating again:
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=722237b243245541dfb7d4407d4c234c npx wrangler@4.147.0 d1 migrations apply golbornemosque-news --remote
+```
+
+**Trying it on your own computer.** Put a test password in `.dev.vars` (never published or committed), create the local tables, and preview:
+
+```
+NEWS_PASSWORD=any-test-password
+```
+
+```bash
+npx wrangler@4.147.0 d1 migrations apply golbornemosque-news --local
+```
+
+Posts made locally stay on your computer.
 
 ## Prayer times from MyLocalMasjid
 
@@ -161,23 +202,23 @@ The content is limited to what could be verified from the mosque's public Charit
 - [ ] **"Our story" (About page).** It is built only from the sources listed under it on the page. Please ask the trustees to check:
   - the 1981 founding by three Moroccans, which comes from a single community-history record;
   - where the congregation prayed before 76 Golborne Road (not found anywhere);
-  - Muhammed Khaja's outreach role in the early 1990s, also from a single source;
-  - the wording of the trust's aim, which is written for the site rather than taken from the register.
 
   Founders' names, early photographs or memories would make the story much richer.
 - [ ] **SumUp payment link**: reusable and open-amount, plus any quick-amount links.
 - [ ] **Bank details**: account name, bank, sort code, account number, IBAN and BIC. Check every digit against a bank statement; a wrong number sends donations to the wrong place.
-- [ ] **Phone and email.** `020 8968 1592` and `golbornemosquetrust@gmail.com` are taken from the charity register.
+- [ ] **Email.** The site shows `info@golbornemosque.org`, an iCloud Mail address on the mosque's domain (golbornemosque.org, registered at GoDaddy). Send it a test message before publishing. The charity register still lists `golbornemosquetrust@gmail.com`, so the trustees may want to update it there too. The phone number has been taken off the site.
 - [ ] **Services.** The site lists only those named on the charity register: daily prayers, Jumu'ah, Ramadan prayers and free iftar, Eid, funeral prayers, and spiritual counselling. Classes, sisters' facilities, wudu or access arrangements can be added if the mosque offers them.
 - [ ] **Photos.** There are none yet. A photo of the frontage would suit the hero section well.
-- [ ] **Trustees.** The About page lists the six trustees named on the Charity Commission register (Ahmed Youssfi, Chair; Abdelkader Akhrif; Faissal Bouchab; Fatima Youssfi; Mohamed Said Daoud; Mustapha Bouyardan). Check each is happy to be listed, and add headshots only with their permission. Update the list in `js/config.js` whenever the board changes.
 
 ## Files
 
 ```
 index.html        Home page
-about.html        Our story and the trustees
+about.html        Our story, the mission and the trust
 timetable.html    Monthly, printable timetable
+news.html         All news
+news-post.html    The page each post is built on (by functions/news/[slug].js)
+admin.html        The private posting page for News
 404.html          Shown for addresses that don't exist
 css/styles.css    All styling (colours are set at the top)
 js/config.js      Settings the mosque edits
@@ -187,7 +228,10 @@ js/home.js        Home page behaviour
 js/timetable.js   Timetable page behaviour
 js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp card widget and bank transfer details
-js/about.js       The scrolling timeline and trustee cards on the About page
+js/about.js       The scrolling timeline on the About page
+js/news.js        News cards on the News and home pages
+js/news-format.js The simple formatting posts are written in (used on Cloudflare and in the preview)
+js/admin.js       The posting page
 js/site.js        Mobile menu, footer year, welcome message
 assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
 assets/symbol.svg The mosque symbol beside the name in the header and footer: brand/symbol.svg in gold only, its white left out so the background shows through
@@ -195,9 +239,13 @@ assets/icons/     Browser-tab and home-screen icons; favicon.ico and site.webman
 assets/og.jpg     The picture shown when a link to the site is shared
 assets/zellige.webp  The faint background pattern (one repeat, in the logo's gold)
 brand/            The mosque's master logo files (logo, icon, symbol, favicon, and the full favicon set); not published
-assets/trustees/  Trustee headshots
 scripts/build.sh                     Collects the site's files into _site/ for publishing
 functions/api/donate.js              Sets up SumUp card payments (runs on Cloudflare, holds the API key)
+functions/api/news/                  Published posts and their photos
+functions/api/admin/                 Signing in, and writing, editing and deleting posts (password-protected)
+functions/news/[slug].js             Each post's page
+lib/news-server.js                   Shared News code for the functions above (not published as a file)
+migrations/                          The News database's tables
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours
 .github/workflows/deploy.yml             Publishes the site to Cloudflare

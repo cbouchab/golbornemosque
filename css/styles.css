@@ -957,15 +957,14 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 .countdown__detail { margin-top: 14px !important; font-size: 0.9375rem; color: var(--ink-2); }
 
-/* ---------- facts panel (About page) ---------- */
-
-.facts { margin: 0; }
-.facts > div { padding: 14px 0; border-bottom: 1px solid var(--hairline); }
-.facts > div:first-child { padding-top: 0; }
-.facts > div:last-child { border-bottom: 0; }
-.facts dt { margin-bottom: 4px; font-size: 0.875rem; color: var(--ink-2); }
-.facts dd { margin: 0; }
-.facts__link { margin: 18px 0 0; padding-top: 18px; border-top: 1px solid var(--hairline); }
+/* Ramadan on top, the two Eids side by side beneath it */
+.seasons { display: grid; gap: 16px; }
+.seasons__eids { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+.countdown--small { padding: 24px 16px; }
+.countdown--small .countdown__value { font-size: clamp(1.5rem, 2.6vw, 2rem); white-space: nowrap; }
+.countdown--small .countdown__detail { margin-top: 10px !important; font-size: 0.875rem; }
+.countdown__ar { margin-bottom: 2px !important; font-size: 1.375rem; line-height: 1.4; color: var(--gold); }
+.seasons__note { margin: 4px 0 0 !important; text-align: center; font-size: 0.875rem; color: var(--ink-3); }
 
 /* ---------- donate ---------- */
 
@@ -1545,22 +1544,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .timeline--live .timeline__item.is-shown > :nth-child(2) { transition-delay: 90ms; }
 .timeline--live .timeline__item.is-shown > :nth-child(n + 3) { transition-delay: 180ms; }
 
-/* About the trust: the aim first, then the register details in a row */
-.trust { max-width: 900px; margin: 0 auto; }
-.trust__aims {
-  margin: 0 0 28px;
-  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
-  line-height: 1.42;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-wrap: pretty;
-}
-.trust .facts { padding-top: 24px; border-top: 1px solid var(--hairline); }
-@media (min-width: 760px) {
-  .facts--row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-  .facts--row > div { padding: 0; border: 0; }
-}
-
 .sources { max-width: 900px; margin: 48px auto 0; font-size: 0.875rem; color: var(--ink-2); }
 .sources summary { cursor: pointer; font-size: 0.9375rem; font-weight: 600; color: var(--gold); }
 .sources ol { margin: 14px 0 0; padding-left: 20px; }
@@ -1573,47 +1556,302 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   transition: color 200ms ease;
 }
 
-/* Trustees */
-.trustees {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 36px 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* The mission: four short lines, set large and centred, the last in gold */
+.mission { text-align: center; }
+.mission::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 45%, rgba(231, 178, 46, 0.1), transparent 70%);
+  pointer-events: none;
 }
-@media (min-width: 640px) { .trustees { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 24px; } }
-@media (min-width: 1000px) { .trustees { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-
-.trustee { text-align: center; }
-.trustee__photo {
-  display: grid;
-  place-items: center;
-  width: min(100%, 132px);
-  aspect-ratio: 1;
-  margin: 0 auto 16px;
-  overflow: hidden;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 30%, rgba(231, 178, 46, 0.18), transparent 70%),
-    var(--surface);
-  box-shadow: inset 0 0 0 1px var(--hairline-strong), var(--lift);
-}
-.trustee--chair .trustee__photo { box-shadow: inset 0 0 0 1px var(--gold-line), var(--lift); }
-.trustee__photo img { width: 100%; height: 100%; object-fit: cover; }
-.trustee__figure {
-  width: 100%;
-  height: 100%;
+.mission__inner { position: relative; z-index: 1; }
+.mission__icon {
+  width: 48px; height: 48px;
+  margin: 0 auto 22px;
   fill: none;
   stroke: var(--gold);
-  stroke-width: 2.4;
+  stroke-width: 1.4;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.trustee__name { margin: 0; font-size: 1.0625rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; }
-.trustee__role { margin: 4px 0 0 !important; font-size: 0.875rem; color: var(--ink-2); }
-.trustee--chair .trustee__role { color: var(--gold); }
-.trustees__note { margin: 44px 0 0; text-align: center; font-size: 0.875rem; color: var(--ink-3); }
+.band h2.mission__eyebrow {
+  margin: 0 0 20px;
+  font-size: clamp(1.125rem, 2.6vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.mission__lines { margin: 0; }
+.mission__lines span {
+  display: block;
+  font-size: clamp(2rem, 7.4vw, 4rem);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.mission__lines .mission__gold {
+  padding-bottom: 0.06em;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.mission__by {
+  max-width: 640px;
+  margin: 44px auto 0 !important;
+  padding-top: 28px;
+  border-top: 1px solid var(--gold-line);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* About the trust: a lead sentence, then the trust's own words */
+.trust { max-width: 760px; margin: 0 auto; }
+.trust p { font-size: 1.125rem; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
+.trust .trust__lead {
+  margin-bottom: 1.1em;
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.trust .trust__mission { color: var(--ink); font-weight: 600; }
+.trust .trust__charity {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.9375rem;
+  color: var(--ink-3);
+}
+.trust__charity .text-link { white-space: nowrap; }
+
+/* ---------- News ----------
+   Cards on the News page and the home page (js/news.js), a post's own page
+   (functions/news/[slug].js), and the posting page (admin.html). */
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 24px;
+}
+.news-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 0 1px var(--hairline), var(--lift);
+  transition: box-shadow 200ms ease;
+}
+.news-card:has(a:focus-visible) { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+.news-card__photo { aspect-ratio: 16 / 10; overflow: hidden; background: var(--bg-deep); }
+.news-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+/* No photo: the mosque's symbol on a faint gold lattice */
+.news-card__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(231, 178, 46, 0.14), transparent 70%), var(--bg-deep);
+}
+.news-card__mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--pattern);
+  background-size: 160px auto;
+  opacity: 0.1;
+}
+.news-card .news-card__mark img { position: relative; width: 40px; height: auto; }
+.news-card__text { padding: 22px 24px 26px; }
+.news-card__date { margin: 0 0 8px; font-size: 0.875rem; font-weight: 500; color: var(--gold); }
+.news-card__title { font-size: 1.3125rem; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+.news-card__title a { color: var(--ink); }
+.news-card__title a:focus-visible { outline: none; }
+/* The whole card is the link */
+.news-card__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.news-card__excerpt {
+  display: -webkit-box;
+  margin-top: 10px;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+/* Room for the first cards while they load, so nothing below jumps */
+.news-grid[aria-busy="true"] { min-height: 560px; }
+.news-all { margin: 36px 0 0; text-align: center; }
+.news-empty { margin: 0; text-align: center; color: var(--ink-2); }
+.news-more { margin-top: 40px; text-align: center; }
+.section--news { padding-top: 56px; }
+
+/* A post */
+.page-head--post h1 {
+  max-width: 18em;
+  margin-inline: auto;
+  font-size: clamp(2rem, 5.6vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+.page-head--post .eyebrow a { color: inherit; }
+.post__wrap { max-width: calc(760px + 2 * var(--gutter)); padding-bottom: 96px; }
+.post__draft {
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--gold-wash);
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+  font-size: 0.9375rem;
+}
+.post__photo {
+  margin: 0 0 40px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 0 1px var(--hairline), var(--lift);
+}
+.post__photo img { width: 100%; height: auto; }
+.post__body { font-size: 1.125rem; line-height: 1.65; color: var(--ink-2); overflow-wrap: break-word; }
+.post__body p, .post__body ul { margin: 0 0 1.1em; }
+.post__body > :last-child { margin-bottom: 0; }
+.post__body h2 { margin: 1.6em 0 0.5em; font-size: 1.5rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; color: var(--ink); }
+.post__body > h2:first-child { margin-top: 0; }
+.post__body strong { color: var(--ink); }
+.post__body ul { padding-left: 1.3em; }
+.post__body li { margin-bottom: 0.35em; }
+.post__body li::marker { color: var(--gold); }
+.post__body a {
+  text-decoration: underline;
+  text-decoration-color: rgba(235, 203, 139, 0.5);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.post__back { margin: 48px 0 0; padding-top: 24px; border-top: 1px solid var(--hairline); }
+
+/* The posting page */
+.admin-main { min-height: 70vh; padding: 40px 0 96px; }
+.admin-wrap { max-width: calc(820px + 2 * var(--gutter)); }
+.admin-bar { display: flex; align-items: center; gap: 20px; font-size: 0.9375rem; white-space: nowrap; }
+/* On a phone the posting page keeps just the mosque's symbol, leaving room for its links */
+@media (max-width: 520px) { .admin .brand__text { display: none; } }
+.admin h1:focus { outline: none; }
+.admin code { font: 0.875em ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
+.admin-status { padding: 48px 0; text-align: center; color: var(--ink-2); }
+.admin-card { max-width: 440px; margin: 24px auto 0; }
+.admin-card h1,
+.admin-head h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.025em; }
+.admin-card h1 { margin-bottom: 20px; }
+.admin-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.admin-notice {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--gold-wash);
+  box-shadow: inset 0 0 0 1px var(--gold-line);
+}
+.admin-empty { color: var(--ink-2); }
+
+.admin-posts { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.admin-post {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.admin-post__thumb {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--bg-deep);
+}
+.admin-post__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.admin-post__thumb .admin-post__mark { width: 24px; height: auto; object-fit: contain; }
+.admin-post__title { margin: 0; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.admin-post__meta { margin: 4px 0 0 !important; font-size: 0.875rem; color: var(--ink-2); }
+.admin-badge { font-weight: 600; color: var(--gold); }
+.admin-post__actions { display: flex; align-items: center; gap: 16px; }
+@media (max-width: 520px) {
+  .admin-post { grid-template-columns: 56px minmax(0, 1fr); }
+  .admin-post__thumb { width: 56px; }
+  .admin-post__actions { grid-column: 1 / -1; justify-content: flex-end; }
+}
+.btn--small { min-height: 36px; padding: 7px 16px; font-size: 0.9375rem; }
+
+.admin-form { display: grid; gap: 24px; }
+.field { display: grid; gap: 8px; margin: 0; }
+.field__label { font-size: 0.9375rem; font-weight: 600; color: var(--ink); }
+.field__hint { margin: 0; font-size: 0.875rem; font-weight: 400; color: var(--ink-3); }
+.field__label .field__hint::before { content: "· "; }
+.field--short { max-width: 240px; }
+.field__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-form input:not([type="checkbox"]):not([type="file"]),
+.admin-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--bg-deep);
+  color: var(--ink);
+  font: 400 1.0625rem/1.4 var(--font-sans);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+.admin-form textarea { min-height: 280px; line-height: 1.6; resize: vertical; }
+.admin-form input:focus,
+.admin-form textarea:focus { outline: none; box-shadow: inset 0 0 0 2px var(--gold); }
+.admin-form input::placeholder { color: var(--ink-3); opacity: 1; }
+.field-error { margin: 0; font-size: 0.9375rem; color: #ffa494; }
+.field-error:empty { display: none; }
+.check { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.check input { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--gold); }
+.check .field__hint { display: block; }
+.admin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.link-btn--danger { margin-left: auto; color: #ffa494; }
+
+.photo-pick { display: grid; justify-items: start; gap: 12px; }
+.photo-pick__preview { width: 100%; max-width: 480px; height: auto; border-radius: var(--radius); }
+.photo-pick__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.photo-pick__choose:focus-within { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 6px; }
+.toolbar button,
+.seg__btn {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 980px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+  font: 500 0.9375rem var(--font-sans);
+  cursor: pointer;
+}
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 980px; background: rgba(255, 255, 255, 0.06); }
+.seg__btn { min-height: 32px; background: none; color: var(--ink-2); font-size: 0.875rem; }
+.seg__btn[aria-pressed="true"] { background: var(--surface-2); color: var(--ink); }
+.admin-preview {
+  min-height: 280px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-deep);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
 
 /* ---------- welcome message ----------
    Shown once to a new visitor (js/site.js). The card scrolls on its own
@@ -1732,6 +1970,9 @@ html:has(.welcome[open]) { overflow: hidden; }
   .site-footer__lines a:hover,
   .site-footer__links a:hover { color: var(--ink); }
   .sources a:hover { color: var(--gold-bright); }
+  .news-card:hover { box-shadow: inset 0 0 0 1px var(--gold-line), var(--lift); }
+  .news-card:hover .news-card__title a { color: var(--gold-bright); }
+  .toolbar button:hover, .seg__btn:hover { background: rgba(255, 255, 255, 0.14); color: var(--ink); }
 }
 
 /* ---------- motion ----------

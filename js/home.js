@@ -1,4 +1,4 @@
-/* Golborne Mosque — home page: today's times, next prayer, Jumu'ah, Ramadan and notices. */
+/* Golborne Mosque — home page: today's times, next prayer, Jumu'ah, Ramadan and Eid, and notices. */
 (function () {
   "use strict";
 
@@ -123,49 +123,76 @@
       if (j.prayer != null) rows.push([name ? `${name} · prayer` : "Prayer", P.fmt(j.prayer)]);
     });
     rows.push(["Dhuhr begins", P.fmt(P.adhan(friday, "dhuhr"))]);
+    const J = C.jumuah || {};
+    if (J.languages) rows.push(["Khutbah", J.languages]);
+    if (J.liveTranslation) rows.push(["Live translation", J.liveTranslation]);
 
     $("jumuah-list").innerHTML = rows.map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join("");
     $("jumuah-note").hidden = sessions.length > 0;
   }
 
-  /* ---------- Ramadan ---------- */
+  /* ---------- Ramadan and the two Eids ---------- */
 
-  function renderRamadan() {
+  // The next 1 Ramadan, Eid al-Fitr (1 Shawwal) and Eid al-Adha (10 Dhul Hijjah),
+  // found in one pass through the coming year's Hijri dates.
+  function upcomingSeasons() {
+    const wanted = { ramadan: [9, 1], fitr: [10, 1], adha: [12, 10] };
+    const found = {};
+    for (let i = 1; i < 400 && Object.keys(found).length < 3; i++) {
+      const day = GM.addDays(today, i);
+      const h = P.hijriParts(day);
+      if (!h) break;
+      for (const [key, [month, date]] of Object.entries(wanted)) {
+        if (!found[key] && h.month === month && h.day === date) found[key] = { day, days: i, year: h.year };
+      }
+    }
+    return found;
+  }
+
+  const inDays = (n) => (n === 1 ? "Tomorrow" : `in ${n} days`);
+
+  function renderEid(key, name, isNow, next) {
+    const label = $(`${key}-label`);
+    const value = $(`${key}-value`);
+    const detail = $(`${key}-detail`);
+    label.textContent = name;
+    if (isNow) {
+      value.textContent = "Eid Mubarak";
+      detail.innerHTML = '<span lang="ar" dir="rtl">تقبّل الله منّا ومنكم</span>';
+    } else if (next) {
+      value.textContent = next.days === 1 ? "Tomorrow" : `${next.days} days`;
+      detail.textContent = `Expected around ${GM.formatDay(next.day, { weekday: "short", day: "numeric", month: "long", year: "numeric" }).replace(",", "")}`;
+    }
+  }
+
+  function renderSeasons() {
     const label = $("ramadan-label");
     const value = $("ramadan-value");
     const detail = $("ramadan-detail");
     const h = P.hijriParts(today);
 
+    // Browsers without the Hijri calendar: no countdowns, just what happens in Ramadan.
     if (!h) {
       label.textContent = "Ramadan";
       value.textContent = "Free iftar daily";
       detail.textContent = "The start of Ramadan is announced at the mosque, following the sighting of the moon.";
+      $("eid-boxes").hidden = true;
       return;
     }
 
+    const next = upcomingSeasons();
     if (h.month === 9) {
       label.textContent = `Ramadan ${h.year} · Ramadan Mubarak`;
       value.textContent = `Day ${h.day}`;
       detail.textContent = `Iftar today at Maghrib, ${P.fmt(P.times(today).maghrib)}.`;
-      return;
-    }
-    if ((h.month === 10 && h.day <= 3) || (h.month === 12 && h.day >= 10 && h.day <= 13)) {
-      label.textContent = h.month === 10 ? "Eid al-Fitr" : "Eid al-Adha";
-      value.textContent = "Eid Mubarak";
-      detail.innerHTML = '<span lang="ar" dir="rtl">تقبّل الله منّا ومنكم</span> · May Allah accept from us and from you.';
-      return;
+    } else if (next.ramadan) {
+      label.textContent = `Ramadan ${next.ramadan.year} is expected`;
+      value.textContent = inDays(next.ramadan.days);
+      detail.textContent = `First fast expected on or around ${longDate(next.ramadan.day)}.`;
     }
 
-    for (let i = 1; i < 400; i++) {
-      const day = GM.addDays(today, i);
-      const hp = P.hijriParts(day);
-      if (hp && hp.month === 9 && hp.day === 1) {
-        label.textContent = `Ramadan ${hp.year} is expected`;
-        value.textContent = i === 1 ? "Tomorrow" : `in ${i} days`;
-        detail.textContent = `First fast expected on or around ${longDate(day)}, subject to the sighting of the moon.`;
-        return;
-      }
-    }
+    renderEid("fitr", "Eid al-Fitr", h.month === 10 && h.day <= 3, next.fitr);
+    renderEid("adha", "Eid al-Adha", h.month === 12 && h.day >= 10 && h.day <= 13, next.adha);
   }
 
   /* ---------- notices ---------- */
@@ -192,7 +219,7 @@
     renderHero(next);
     renderTable(next);
     renderJumuah();
-    renderRamadan();
+    renderSeasons();
     renderNotices();
   }
 

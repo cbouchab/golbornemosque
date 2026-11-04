@@ -74,9 +74,12 @@ window.MOSQUE_CONFIG = {
 
   // Friday prayer, e.g. khutbah: "13:15", prayer: "13:45". Used when MyLocalMasjid
   // has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah.
+  // `languages` and `liveTranslation` show in the Jumu'ah card (null hides them).
   jumuah: {
     khutbah: null,
     prayer: null,
+    languages: "Arabic and English",
+    liveTranslation: "Available",
   },
 
   // Shift the Islamic (Hijri) date shown on the site by whole days, to match
@@ -95,14 +98,13 @@ window.MOSQUE_CONFIG = {
   welcome: {
     enabled: true,
     version: 1,
-    arabic: "أهلاً وسهلاً",
+    arabic: "السلام عليكم",
     title: "A Warm Welcome to Golborne Mosque",
     greeting: "Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh,",
     paragraphs: [
       "On behalf of Golborne Mosque Trust, it is our pleasure to welcome you to our mosque and our online community.",
-      "Golborne Mosque is more than a place of worship. It is a place where faith brings people together, knowledge inspires personal growth, brotherhood and sisterhood are strengthened, and community spirit flourishes.",
+      "Golborne Mosque is more than a place of worship. It is a place where faith brings people together, knowledge inspires personal growth, brotherhood is strengthened, and community spirit flourishes.",
       "Our vision is to provide a welcoming, inclusive and spiritually enriching environment where everyone can feel a sense of belonging, find guidance and strengthen their relationship with Allah.",
-      "We are committed to serving our worshippers and the wider community through religious services, Islamic education, charitable activities and initiatives that promote unity, compassion and mutual respect.",
       "As we look towards the future, we remain dedicated to developing our mosque, improving our services and creating opportunities for generations to come.",
       "Whether you are a regular worshipper, a local resident, a visitor or simply interested in learning more about Islam, you are warmly welcome.",
       "May Allah bless our community, accept our efforts and guide us towards a future built on faith, sincerity and unity.",
@@ -140,24 +142,9 @@ window.MOSQUE_CONFIG = {
   },
 
   contact: {
-    phone: "020 8968 1592",
-    email: "golbornemosquetrust@gmail.com",
+    email: "info@golbornemosque.org",
     address: ["76 Golborne Road", "London", "W10 5PS"],
   },
 
   charityNumber: "294588",
-
-  // Trustees shown on the About page, as listed on the Charity Commission register.
-  // To add a headshot, put a square photo (at least 320 × 320 pixels) in
-  // assets/trustees/ and set photo, e.g. photo: "assets/trustees/ahmed-youssfi.jpg".
-  // Without a photo, an outline figure is shown instead: set figure: "woman" for a
-  // woman trustee (shown in hijab).
-  trustees: [
-    { name: "Ahmed Youssfi", role: "Chair", photo: null },
-    { name: "Abdelkader Akhrif", role: "Trustee", photo: null },
-    { name: "Faissal Bouchab", role: "Trustee", photo: null },
-    { name: "Fatima Youssfi", role: "Trustee", photo: null, figure: "woman" },
-    { name: "Mohamed Said Daoud", role: "Trustee", photo: null },
-    { name: "Mustapha Bouyardan", role: "Trustee", photo: null },
-  ],
 };

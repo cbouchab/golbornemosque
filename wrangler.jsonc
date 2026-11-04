@@ -1,10 +1,20 @@
 // Hosts the website on Cloudflare Pages at golbornemosque.pages.dev, in the
-// personal Cloudflare account of cbouchab@gmail.com. There is no server code:
-// Cloudflare serves the files that scripts/build.sh collects into _site/.
+// personal Cloudflare account of cbouchab@gmail.com. Cloudflare serves the
+// files that scripts/build.sh collects into _site/; the functions/ folder
+// runs on Cloudflare for card donations and News.
 // Pages config can't hold the account ID, so deploys set CLOUDFLARE_ACCOUNT_ID
 // (see README), which makes them fail rather than land on any other account.
 {
   "name": "golbornemosque",
   "pages_build_output_dir": "./_site",
-  "compatibility_date": "2026-10-02"
+  "compatibility_date": "2026-10-02",
+  // News posts and their photos (see migrations/ and README → News).
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "golbornemosque-news",
+      "database_id": "558b0655-74ee-4b6a-a72b-77f79d700100",
+      "migrations_dir": "migrations"
+    }
+  ]
 }
