@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 10
     environment:
       name: cloudflare
-      url: https://golbornemosque.pages.dev
+      url: https://golbornemosque.org
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:

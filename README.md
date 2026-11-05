@@ -85,7 +85,7 @@ To hide card donations without removing the key, set `donations.sumup.enabled` t
 
 ## News
 
-Posts are written at **<https://golbornemosque.pages.dev/admin>**, a private page that isn't linked from the site. Sign in with the News password, then:
+Posts are written at **<https://golbornemosque.org/admin>**, a private page that isn't linked from the site. Sign in with the News password, then:
 
 - **New post**: a title, the date (today unless changed), an optional photo with a short description for people who can't see it, and the text. The buttons above the text add a heading, bold, italic, a link or a list; **Preview** shows how it will look.
 - **Show on the website** publishes it straight away. Untick it to keep a draft, which only signed-in writers can see.
@@ -153,7 +153,7 @@ The script prints how many days it saved, or a plain explanation if something we
 
 ## Hosting (Cloudflare Pages)
 
-The site is published free on Cloudflare Pages at **<https://golbornemosque.pages.dev>**, from the personal Cloudflare account of cbouchab@gmail.com. The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
+The site is published free on Cloudflare Pages at **<https://golbornemosque.org>**, from the personal Cloudflare account of cbouchab@gmail.com. Its Cloudflare address, <https://golbornemosque.pages.dev>, still works too. The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
 
 Cloudflare serves the files as they are; there is no server code. `scripts/build.sh` copies the website's own files into `_site/`, and only that folder is published, so this README, the scripts, the workflows and the git files never go online. `wrangler.jsonc` holds the settings. Pages have clean addresses (`/about`, `/timetable`), old links ending in `.html` redirect to them, and any address that doesn't exist shows `404.html`.
 
@@ -188,7 +188,11 @@ To preview on your own computer first, run this and open <http://localhost:8642>
 npx wrangler@4.147.0 pages dev . --port 8642
 ```
 
-**Custom domain.** A domain such as `golbornemosque.org.uk` costs roughly £5–10 a year. Cloudflare sells domains at cost, or one bought elsewhere can be used. Then, in the dashboard, open **Workers & Pages → golbornemosque → Custom domains → Set up a custom domain**. Afterwards, change `golbornemosque.pages.dev` to the new domain in the `og:image` lines of `index.html`, `about.html` and `timetable.html`: link previews need the picture's full address.
+**Domains.** golbornemosque.org is the main address, and golbornemosque.com redirects to it. Both are registered at GoDaddy, where they're renewed each year, but their nameservers point to Cloudflare. So every DNS change, email records included, is made in the Cloudflare dashboard; GoDaddy's own DNS page is no longer used.
+
+- `golbornemosque.org` and `www.golbornemosque.org` are custom domains of the Pages project (**Workers & Pages → golbornemosque → Custom domains**).
+- Redirect Rules send `www.golbornemosque.org` and all of `golbornemosque.com` to `https://golbornemosque.org`, keeping the rest of the address. The .com domain has two placeholder A records (`@` and `www`, `192.0.2.1`, proxied) so that Cloudflare receives its visits.
+- The `og:image` and `og:url` lines in the pages use the full `https://golbornemosque.org` address, because link previews need it.
 
 ## Please confirm with the mosque before launch
 
