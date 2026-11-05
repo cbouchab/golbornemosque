@@ -79,9 +79,13 @@ export async function onRequestPost({ request, env }) {
   if (!Number.isFinite(amount) || amount < MIN || amount > MAX) {
     return json({ error: "amount", min: MIN, max: MAX }, 400);
   }
-  const fundId = String(body.fund || "");
-  if (!Object.prototype.hasOwnProperty.call(FUNDS, fundId)) return json({ error: "fund", funds: Object.keys(FUNDS) }, 400);
-  const fund = FUNDS[fundId];
+  // A page still running a script from before the type list existed sends no
+  // fund. Its donation goes through, labelled plainly rather than guessed.
+  const fundId = body.fund == null || body.fund === "" ? null : String(body.fund);
+  if (fundId !== null && !Object.prototype.hasOwnProperty.call(FUNDS, fundId)) {
+    return json({ error: "fund", funds: Object.keys(FUNDS) }, 400);
+  }
+  const fund = fundId ? FUNDS[fundId] : { description: "Donation - Golborne Mosque", reference: "donation" };
 
   try {
     const res = await sumup(env, "/checkouts", {
