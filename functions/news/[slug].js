@@ -7,7 +7,7 @@
  */
 
 import { renderBody, excerpt, escapeHtml } from "../../js/news-format.js";
-import { imageUrl, isSignedIn } from "../../lib/news-server.js";
+import { imageUrl, isSignedIn, galleryFor } from "../../lib/news-server.js";
 
 const SITE_NAME = "Golborne Mosque";
 
@@ -39,6 +39,16 @@ export async function onRequestGet({ request, env, params }) {
     ? { url: imageUrl(post.image_id), width: post.image_width, height: post.image_height, alt: post.image_alt || "" }
     : null;
 
+  // More photos, under the text; each opens full size.
+  const gallery = await galleryFor(env.DB, post.id).catch(() => []);
+  const galleryHtml = gallery
+    .map(
+      (g) =>
+        `<a class="post__gallery-item" href="${g.url}" target="_blank" rel="noopener">` +
+        `<img src="${g.url}" width="${g.width}" height="${g.height}" alt="${escapeHtml(g.alt)}" loading="lazy" decoding="async"></a>`
+    )
+    .join("");
+
   const template = await env.ASSETS.fetch(new URL("/news-post", request.url));
   const setAttr = (name, value) => ({ element: (el) => el.setAttribute(name, value) });
 
@@ -58,7 +68,15 @@ export async function onRequestGet({ request, env, params }) {
       },
     })
     .on("[data-post-body]", { element: (el) => el.setInnerContent(renderBody(post.body), { html: true }) })
-    .on("[data-post-draft]", { element: (el) => (draft ? el.removeAttribute("hidden") : el.remove()) });
+    .on("[data-post-draft]", { element: (el) => (draft ? el.removeAttribute("hidden") : el.remove()) })
+    .on("[data-post-gallery]", {
+      element: (el) => {
+        if (!galleryHtml) return el.remove();
+        el.removeAttribute("hidden");
+        el.setAttribute("data-count", String(gallery.length));
+        el.setInnerContent(galleryHtml, { html: true });
+      },
+    });
 
   if (photo) {
     rewriter = rewriter

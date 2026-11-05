@@ -285,6 +285,7 @@ async function openEditor(id) {
   $("f-published").checked = post.published;
   $("f-alt").value = post.imageAlt || "";
   showPhoto(post.image && post.image.url, post.image && post.image.width, post.image && post.image.height);
+  resetGallery(post.gallery);
   $("delete").hidden = !id;
   updateSaveLabel();
   dirty = false;
@@ -295,6 +296,7 @@ function leaveEditor() {
   if (dirty && !confirm("Leave without saving this post?")) return;
   dirty = false;
   resetPhoto();
+  resetGallery([]);
   openList().catch((err) => report($("form-error"), err));
 }
 $("editor-back").addEventListener("click", leaveEditor);
@@ -379,6 +381,66 @@ $("photo-remove").addEventListener("click", () => {
   showPhoto(null);
   $("photo-note").textContent = "It’s resized automatically before uploading.";
   dirty = true;
+});
+
+/* More photos: a small gallery under the text, in the order they're added. */
+
+const MAX_GALLERY = 8;
+let gallery = []; // each { keep: id, url, … } (already saved) or { blob, url, … } (new)
+
+function resetGallery(list) {
+  for (const g of gallery) if (g.blob) URL.revokeObjectURL(g.url);
+  gallery = (list || []).map((g) => ({ keep: g.id, url: g.url, width: g.width, height: g.height, alt: g.alt || "" }));
+  $("f-gallery").value = "";
+  renderGallery();
+}
+
+function renderGallery() {
+  $("gallery-list").innerHTML = gallery
+    .map(
+      (g, i) =>
+        `<li class="gallery-pick__item">` +
+        `<img src="${esc(g.url)}" alt="" width="${g.width}" height="${g.height}">` +
+        `<input data-gallery-alt="${i}" maxlength="300" value="${esc(g.alt)}" placeholder="Describe this photo" aria-label="Description of photo ${i + 1}">` +
+        `<button class="link-btn link-btn--danger" type="button" data-gallery-remove="${i}">Remove</button>` +
+        `</li>`
+    )
+    .join("");
+  $("gallery-note").textContent =
+    gallery.length >= MAX_GALLERY
+      ? `That’s the most a post can have (${MAX_GALLERY}).`
+      : "Up to 8. Each one is resized automatically before uploading.";
+}
+
+$("f-gallery").addEventListener("change", async () => {
+  const files = Array.from($("f-gallery").files).slice(0, MAX_GALLERY - gallery.length);
+  $("f-gallery").value = "";
+  if (!files.length) return;
+  $("form-error").textContent = "";
+  for (const [n, file] of files.entries()) {
+    $("gallery-note").textContent = `Preparing photo ${n + 1} of ${files.length}…`;
+    try {
+      gallery.push({ ...(await resize(file)), alt: "" });
+    } catch (err) {
+      $("form-error").textContent = `${file.name} couldn’t be opened. Please try a JPEG or PNG.`;
+    }
+  }
+  dirty = true;
+  renderGallery();
+});
+
+$("gallery-list").addEventListener("input", (e) => {
+  const i = e.target.dataset.galleryAlt;
+  if (i != null && gallery[i]) gallery[i].alt = e.target.value;
+});
+
+$("gallery-list").addEventListener("click", (e) => {
+  const button = e.target.closest("[data-gallery-remove]");
+  if (!button) return;
+  const [removed] = gallery.splice(Number(button.dataset.galleryRemove), 1);
+  if (removed && removed.blob) URL.revokeObjectURL(removed.url);
+  dirty = true;
+  renderGallery();
 });
 
 /* Formatting buttons: they type the simple formatting for you. */
@@ -487,6 +549,13 @@ $("post-form").addEventListener("submit", async (e) => {
   } else if (removePhoto) {
     form.set("remove_image", "1");
   }
+  const entries = gallery.map((g, i) => {
+    if (!g.blob) return { keep: g.keep, alt: g.alt.trim() };
+    const field = `gallery_${i}`;
+    form.set(field, g.blob, `photo-${i + 1}.${g.blob.type === "image/webp" ? "webp" : "jpg"}`);
+    return { file: field, width: g.width, height: g.height, alt: g.alt.trim() };
+  });
+  form.set("gallery", JSON.stringify(entries));
 
   const save = $("save");
   save.disabled = true;
@@ -497,6 +566,7 @@ $("post-form").addEventListener("submit", async (e) => {
     });
     dirty = false;
     resetPhoto();
+    resetGallery([]);
     const link = `<a href="/news/${esc(post.slug)}" target="_blank" rel="noopener">View the post</a>`;
     await openList(post.published ? `Saved and on the website. ${link}.` : `Saved as a draft: only you can see it. ${link}.`);
   } catch (err) {
@@ -512,6 +582,7 @@ $("delete").addEventListener("click", async () => {
     await api(`/api/admin/posts/${editing.id}`, { method: "DELETE" });
     dirty = false;
     resetPhoto();
+    resetGallery([]);
     await openList("The post was deleted.");
   } catch (err) {
     report($("form-error"), err);

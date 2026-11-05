@@ -95,7 +95,7 @@ To hide card donations without removing the key, set `donations.sumup.enabled` t
 
 Posts are written at **<https://golbornemosque.org/admin>**, a private page that isn't linked from the site. Sign in with the News password, then:
 
-- **New post**: a title, the date (today unless changed), an optional photo with a short description for people who can't see it, and the text. The buttons above the text add a heading, bold, italic, a link or a list; **Preview** shows how it will look.
+- **New post**: a title, the date (today unless changed), an optional photo with a short description for people who can't see it, and the text. **More photos** (up to 8) appear as a small gallery under the text, each with its own description; tap one on the site to see it full size. The buttons above the text add a heading, bold, italic, a link or a list; **Preview** shows how it will look.
 - **Show on the website** publishes it straight away. Untick it to keep a draft, which only signed-in writers can see.
 - **Edit** changes a post; its address stays the same so links already shared keep working. **Delete post** removes it and its photo for good.
 
@@ -286,7 +286,7 @@ functions/api/volunteer.js           Saves volunteer sign-ups
 functions/api/admin/                 Signing in, posts, and volunteer sign-ups (password-protected)
 functions/news/[slug].js             Each post's page
 lib/news-server.js                   Shared News code for the functions above (not published as a file)
-migrations/                          The database's tables (News, then volunteer sign-ups)
+migrations/                          The database's tables (News, volunteer sign-ups, then gallery photos)
 scripts/import-timetables.mjs        Turns timetables/ into data/mosque-times.js
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours

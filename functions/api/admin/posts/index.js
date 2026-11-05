@@ -6,7 +6,7 @@
  *   POST /api/admin/posts  (form)     → { post }  creates a post
  */
 
-import { json, card, CARD_COLUMNS, readPostForm, FormError, insertImage, slugify, uniqueSlug } from "../../../../lib/news-server.js";
+import { json, card, CARD_COLUMNS, readPostForm, FormError, insertImage, slugify, uniqueSlug, galleryStatements } from "../../../../lib/news-server.js";
 
 export async function onRequestGet({ env }) {
   const { results } = await env.DB.prepare(
@@ -33,7 +33,11 @@ export async function onRequestPost({ request, env }) {
       .prepare("INSERT INTO posts (slug, title, body, published_on, published, image_id, image_alt) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id")
       .bind(slug, post.title, post.body, post.date, post.published, post.image ? post.image.id : null, post.imageAlt)
   );
+  const postStatement = statements.length - 1;
+  // More photos: a new post can only bring new ones, never keep another post's.
+  const gallery = (post.gallery || []).filter((g) => g.image);
+  statements.push(...galleryStatements(db, gallery, "SELECT id FROM posts WHERE slug = ?", [slug]));
   const results = await db.batch(statements);
-  const id = results[results.length - 1].results[0].id;
+  const id = results[postStatement].results[0].id;
   return json({ post: { id, slug, published: !!post.published } }, 201);
 }

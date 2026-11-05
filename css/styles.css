@@ -1686,7 +1686,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  /* up to three across; with fewer posts the cards stay card-sized and centred */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 380px));
+  justify-content: center;
   gap: 24px;
 }
 .news-card {
@@ -1769,7 +1771,8 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   border-radius: var(--radius-lg);
   box-shadow: inset 0 0 0 1px var(--hairline), var(--lift);
 }
-.post__photo img { width: 100%; height: auto; }
+/* Tall (portrait) photos are cropped a little so the text isn't pushed far down */
+.post__photo img { width: 100%; height: auto; max-height: min(78vh, 620px); object-fit: cover; }
 .post__body { font-size: 1.125rem; line-height: 1.65; color: var(--ink-2); overflow-wrap: break-word; }
 .post__body p, .post__body ul { margin: 0 0 1.1em; }
 .post__body > :last-child { margin-bottom: 0; }
@@ -1785,6 +1788,17 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
+/* More photos under the text: two across (one on a phone), each opening full size */
+.post__gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; margin-top: 40px; }
+.post__gallery[data-count="1"] { grid-template-columns: 1fr; }
+.post__gallery-item {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 0 1px var(--hairline), var(--lift);
+}
+.post__gallery-item img { width: 100%; height: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform 400ms var(--ease-out); }
+.post__gallery[data-count="1"] .post__gallery-item img { aspect-ratio: auto; height: auto; }
 .post__back { margin: 48px 0 0; padding-top: 24px; border-top: 1px solid var(--hairline); }
 
 /* The posting page */
@@ -1914,6 +1928,22 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .photo-pick__preview { width: 100%; max-width: 480px; height: auto; border-radius: var(--radius); }
 .photo-pick__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 .photo-pick__choose:focus-within { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+
+.gallery-pick { display: grid; gap: 10px; margin: 0 0 4px; padding: 0; list-style: none; }
+.gallery-pick:empty { display: none; }
+.gallery-pick__item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-deep);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.gallery-pick__item img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; }
+.admin-form .gallery-pick__item input { padding: 9px 12px; font-size: 0.9375rem; background: var(--surface); }
+.gallery-pick__item .link-btn--danger { margin-left: 0; }
 
 .toolbar { display: flex; flex-wrap: wrap; gap: 6px; }
 .toolbar button,
@@ -2057,6 +2087,7 @@ html:has(.welcome[open]) { overflow: hidden; }
   .site-footer__lines a:hover,
   .site-footer__links a:hover { color: var(--ink); }
   .news-card:hover { box-shadow: inset 0 0 0 1px var(--gold-line), var(--lift); }
+  .post__gallery-item:hover img { transform: scale(1.02); }
   .news-card:hover .news-card__title a { color: var(--gold-bright); }
   .toolbar button:hover, .seg__btn:hover { background: rgba(255, 255, 255, 0.14); color: var(--ink); }
 }

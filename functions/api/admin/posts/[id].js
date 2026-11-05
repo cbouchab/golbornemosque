@@ -4,13 +4,13 @@
  *
  *   GET    /api/admin/posts/<id>          → { post }  everything needed to edit it
  *   PUT    /api/admin/posts/<id>  (form)  → { post }  saves changes
- *   DELETE /api/admin/posts/<id>          → { ok }    removes the post and its photo
+ *   DELETE /api/admin/posts/<id>          → { ok }    removes the post and its photos
  *
  * A post's address (its slug) is kept when its title changes, so links
  * already shared still work.
  */
 
-import { json, imageUrl, readPostForm, FormError, insertImage } from "../../../../lib/news-server.js";
+import { json, imageUrl, readPostForm, FormError, insertImage, galleryFor, galleryStatements } from "../../../../lib/news-server.js";
 
 async function load(db, id) {
   if (!/^\d+$/.test(id)) return null;
@@ -38,6 +38,7 @@ export async function onRequestGet({ env, params }) {
       published: !!row.published,
       image: row.image_id ? { url: imageUrl(row.image_id), width: row.image_width, height: row.image_height, alt: row.image_alt } : null,
       imageAlt: row.image_alt,
+      gallery: await galleryFor(env.DB, row.id),
     },
   });
 }
@@ -73,6 +74,17 @@ export async function onRequestPut({ request, env, params }) {
   );
   // The photo it replaced is no longer used anywhere.
   if (row.image_id && row.image_id !== imageId) statements.push(db.prepare("DELETE FROM images WHERE id = ?").bind(row.image_id));
+
+  // More photos: rebuilt in the order sent; any it no longer has are removed.
+  if (post.gallery) {
+    const before = await galleryFor(db, row.id);
+    const owned = new Set(before.map((g) => g.id));
+    const gallery = post.gallery.filter((g) => g.image || owned.has(g.keep));
+    const kept = new Set(gallery.filter((g) => g.keep).map((g) => g.keep));
+    statements.push(db.prepare("DELETE FROM post_photos WHERE post_id = ?").bind(row.id));
+    statements.push(...galleryStatements(db, gallery, "?", [row.id]));
+    for (const g of before) if (!kept.has(g.id)) statements.push(db.prepare("DELETE FROM images WHERE id = ?").bind(g.id));
+  }
   await db.batch(statements);
 
   return json({ post: { id: row.id, slug: row.slug, published: !!post.published } });
@@ -84,6 +96,8 @@ export async function onRequestDelete({ env, params }) {
   if (!row) return missing();
   const statements = [db.prepare("DELETE FROM posts WHERE id = ?").bind(row.id)];
   if (row.image_id) statements.push(db.prepare("DELETE FROM images WHERE id = ?").bind(row.image_id));
+  for (const g of await galleryFor(db, row.id)) statements.push(db.prepare("DELETE FROM images WHERE id = ?").bind(g.id));
+  statements.push(db.prepare("DELETE FROM post_photos WHERE post_id = ?").bind(row.id));
   await db.batch(statements);
   return json({ ok: true });
 }
