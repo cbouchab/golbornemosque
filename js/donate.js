@@ -68,9 +68,22 @@
     }
   }
 
+  // SumUp's fee rate, from /api/donate. Donors can tick a box to add it to their gift.
+  let feePercent = 0;
+  const cover = $("donate-cover");
+  // The same sum as functions/api/donate.js: gift ÷ (1 − rate), rounded up to the penny.
+  const withFee = (n) => Math.ceil(Math.round(n * 100) / (1 - feePercent / 100) - 1e-6) / 100;
+  const feeOn = (n) => Math.round((withFee(n) - n) * 100) / 100;
+
   function refreshButton() {
     const n = readAmount();
-    submit.textContent = Number.isFinite(n) && n >= MIN && n <= MAX ? `Donate ${pounds(n)}` : "Donate";
+    const valid = Number.isFinite(n) && n >= MIN && n <= MAX;
+    const covering = cover.checked && feePercent > 0;
+    submit.textContent = valid ? `Donate ${pounds(covering ? withFee(n) : n)}` : "Donate";
+    // The tick box names the exact fee for the amount chosen.
+    $("donate-cover-text").textContent = valid
+      ? `Add ${pounds(feeOn(n))} to cover SumUp’s card fee, so the mosque receives the full ${pounds(n)}.`
+      : `Add ${feePercent}% to cover SumUp’s card fee, so the mosque receives your full gift.`;
   }
 
   function renderAmounts() {
@@ -162,7 +175,7 @@
     }
   }
 
-  async function startCheckout(amount, fundId) {
+  async function startCheckout(amount, fundId, coverFee) {
     submit.disabled = true;
     setStatus("Opening the secure card form…");
     try {
@@ -170,7 +183,7 @@
         fetch("/api/donate", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ amount, fund: fundId }),
+          body: JSON.stringify({ amount, fund: fundId, coverFee }),
         }),
         loadSdk(),
       ]);
@@ -181,7 +194,8 @@
       chosen = data.amount;
       chosenFund = data.fund || fundId;
       $("donate-chosen").textContent = pounds(chosen);
-      $("donate-chosen-fund").textContent = (FUNDS[chosenFund] || FUNDS.mosque).giving;
+      $("donate-chosen-fund").textContent =
+        (FUNDS[chosenFund] || FUNDS.mosque).giving + (data.fee > 0 ? `, including ${pounds(data.fee)} for the card fee` : "");
       show("card");
       setStatus("");
       widget = window.SumUpCard.mount({
@@ -220,7 +234,11 @@
     // Card donations switch on by themselves once the SumUp key is added on Cloudflare.
     fetch("/api/donate", { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : { ready: false }))
-      .then((data) => setReady(Boolean(data.ready)))
+      .then((data) => {
+        feePercent = Number(data.feePercent) > 0 ? Number(data.feePercent) : 0;
+        $("donate-cover-box").hidden = !(data.ready && feePercent);
+        setReady(Boolean(data.ready));
+      })
       .catch(() => setReady(false));
     form.addEventListener("change", (e) => {
       if (e.target.name === "amount") other.value = "";
@@ -245,7 +263,7 @@
         other.focus();
         return;
       }
-      startCheckout(amount, fund.value);
+      startCheckout(amount, fund.value, cover.checked && feePercent > 0);
     });
     $("donate-change").addEventListener("click", reset);
     $("donate-again").addEventListener("click", reset);

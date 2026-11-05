@@ -85,6 +85,8 @@ then run `npx wrangler@4.147.0 pages dev . --port 8642` and donate with SumUp's 
 
 To hide card donations without removing the key, set `donations.sumup.enabled` to `false` in `js/config.js`. SumUp charges 2.5% on each online payment; there is no monthly fee.
 
+**Covering the card fee.** Under the amount, donors can tick "Add £0.65 to cover SumUp's card fee, so the mosque receives the full £25". The fee shown follows the amount they pick. Ticking it adds the gift ÷ (1 − 2.5%), rounded up to the penny, so after SumUp's fee the mosque receives at least the full gift. In SumUp, such a payment's description ends "(includes 0.65 card fee)". If the mosque's SumUp rate changes (for example on a SumUp One plan), change `FEE_PERCENT` in `functions/api/donate.js`; the page reads the rate from there. Setting it to `0` hides the tick box.
+
 ## News
 
 Posts are written at **<https://golbornemosque.org/admin>**, a private page that isn't linked from the site. Sign in with the News password, then:

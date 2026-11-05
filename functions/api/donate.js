@@ -5,8 +5,9 @@
  * reaches the browser. It is read from the SUMUP_API_KEY secret (see README →
  * Donations by card).
  *
- *   GET  /api/donate                    → { ready }  whether a key is set (the page switches on by itself)
- *   POST /api/donate  { amount, fund }  → { checkoutId }  creates a SumUp checkout (fund: mosque, zakat or sadaqah)
+ *   GET  /api/donate                    → { ready, feePercent }  whether a key is set (the page switches on by itself)
+ *   POST /api/donate  { amount, fund, coverFee }
+ *                                       → { checkoutId, amount, fee }  creates a SumUp checkout (fund: mosque, zakat or sadaqah)
  *   GET  /api/donate?id=…               → { status, amount }  checks a checkout
  *
  * The page mounts SumUp's card form with the checkout id; the card details go
@@ -25,6 +26,18 @@ const FUNDS = {
   zakat: { description: "Zakat - Golborne Mosque", reference: "zakat" },
   sadaqah: { description: "Sadaqah - Golborne Mosque", reference: "sadaqah" },
 };
+
+// SumUp's fee on each online payment in the UK. A donor can tick a box to add
+// it, so the mosque receives the whole of their gift. Change it here if the
+// mosque's SumUp rate changes, or set it to 0 to hide the tick box.
+const FEE_PERCENT = 2.5;
+
+// The total that leaves exactly the gift once SumUp takes its fee:
+// gift ÷ (1 − rate), rounded up to the penny. js/donate.js shows the same sum.
+function withFee(amount) {
+  const pence = Math.round(amount * 100);
+  return Math.ceil(pence / (1 - FEE_PERCENT / 100) - 1e-6) / 100;
+}
 
 let merchantCodeCache = null;
 
@@ -86,16 +99,19 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "fund", funds: Object.keys(FUNDS) }, 400);
   }
   const fund = fundId ? FUNDS[fundId] : { description: "Donation - Golborne Mosque", reference: "donation" };
+  // The donor chose to add SumUp's fee on top of their gift.
+  const total = body.coverFee === true && FEE_PERCENT > 0 ? withFee(amount) : amount;
+  const fee = Math.round((total - amount) * 100) / 100;
 
   try {
     const res = await sumup(env, "/checkouts", {
       method: "POST",
       body: JSON.stringify({
         checkout_reference: `${fund.reference}-${crypto.randomUUID()}`,
-        amount,
+        amount: total,
         currency: "GBP",
         merchant_code: await merchantCode(env),
-        description: fund.description,
+        description: fee ? `${fund.description} (includes ${fee.toFixed(2)} card fee)` : fund.description,
       }),
     });
     const data = await res.json().catch(() => ({}));
@@ -103,7 +119,7 @@ export async function onRequestPost({ request, env }) {
       console.error("SumUp checkout failed", res.status, JSON.stringify(data).slice(0, 300));
       return json({ error: "sumup" }, 502);
     }
-    return json({ checkoutId: data.id, amount, fund: fundId });
+    return json({ checkoutId: data.id, amount: total, fee, fund: fundId });
   } catch (e) {
     console.error("SumUp checkout error", e && e.message);
     return json({ error: "sumup" }, 502);
@@ -112,7 +128,7 @@ export async function onRequestPost({ request, env }) {
 
 export async function onRequestGet({ request, env }) {
   const id = new URL(request.url).searchParams.get("id");
-  if (id === null) return json({ ready: Boolean(env.SUMUP_API_KEY) });
+  if (id === null) return json({ ready: Boolean(env.SUMUP_API_KEY), feePercent: FEE_PERCENT });
   if (!env.SUMUP_API_KEY) return json({ error: "not-configured" }, 503);
   if (!/^[A-Za-z0-9-]{8,64}$/.test(id)) return json({ error: "bad-request" }, 400);
   try {
