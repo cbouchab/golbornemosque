@@ -276,6 +276,9 @@ assets/icons/     Browser-tab and home-screen icons; favicon.ico and site.webman
 assets/og.jpg     The picture shown when a link to the site is shared
 assets/zellige.webp  The faint background pattern (one repeat, in the logo's gold)
 brand/            The mosque's master logo files (logo, icon, symbol, favicon, and the full favicon set); not published
+brand/zellige-tile.svg  The zellige pattern as a vector: one repeating tile (220 × 243.5) in the logo's gold, sharp at any size, for print and screens
+brand/arabic-name-calligraphy.svg  مسجد غولبورن in Arabic calligraphy, gold, as a vector (traced from arabic-name-calligraphy-source.webp)
+print/            Print artwork, not published: a3-poster-header/ (297 × 100 mm, name and calligraphy) and a3-poster-footer/ (pattern only, 40 or 100 mm) for A3 posters, each as PDF with bleed, 300 dpi PNG and SVG (see their README.txt)
 scripts/build.sh                     Collects the site's files into _site/ for publishing
 functions/api/donate.js              Sets up SumUp card payments (runs on Cloudflare, holds the API key)
 functions/api/news/                  Published posts and their photos
