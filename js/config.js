@@ -3,7 +3,9 @@
  * ---------------------------------------------------------------
  * This is the only file that needs editing for day-to-day updates:
  * Jumu'ah, notices and donation details. Daily adhan and iqamah times come
- * from the mosque's MyLocalMasjid listing (see `myLocalMasjid` below).
+ * from the mosque's own timetable, the one its TV screens show: the files in
+ * timetables/, turned into data/mosque-times.js by scripts/import-timetables.mjs
+ * (README → Prayer times). They cover 2026 to 2033.
  *
  * Times use the 24-hour clock as text, e.g. "13:30".
  * Anything left as null is simply not shown on the website.
@@ -15,16 +17,16 @@ window.MOSQUE_CONFIG = {
   // 76 Golborne Road, London W10 5PS
   location: { lat: 51.52195, lng: -0.2086, timeZone: "Europe/London" },
 
-  // The mosque publishes its adhan (start) and iqamah (jamaat) times on MyLocalMasjid,
-  // the same times its screens show. scripts/sync-prayer-times.mjs copies them into
-  // data/timetable.js, and the website uses them for every day they cover.
+  // The mosque's MyLocalMasjid listing. If its times are ever synced
+  // (scripts/sync-prayer-times.mjs → data/timetable.js), they fill any day the
+  // mosque's own timetable doesn't cover.
   myLocalMasjid: {
     id: "3f6cc274-7ec9-4367-b925-966d484ae2f9",
     url: "https://mylocalmasjid.com/uk/london/royal-borough-of-kensington-and-chelsea/north-kensington/al-huda-mosque",
   },
 
   // Everything from here to `jumuah` is the BACKUP, used only for days that
-  // MyLocalMasjid hasn't published (for example, months further ahead).
+  // neither the mosque's timetable nor MyLocalMasjid covers (2034 onwards).
 
   // How backup prayer START times are calculated.
   //   method:       "MoonsightingCommittee" (what MyLocalMasjid uses), "MWL" (Muslim World League),
@@ -62,13 +64,13 @@ window.MOSQUE_CONFIG = {
   //   "+10"   — 10 minutes after the adhan
   //   "13:30" — a fixed time (remember to update fixed times as the seasons change)
   //   null    — not known; the website shows "—"
-  // These follow the gap between adhan and iqamah in the mosque's published times,
-  // which was the same every day in September 2026.
+  // These follow the usual gap between adhan and iqamah in the mosque's own
+  // timetable (in summer it sets Fajr later and Isha right at the adhan).
   iqamah: {
     fajr: "+15",
     dhuhr: "+15",
-    asr: "+15",
-    maghrib: "+5",
+    asr: "+10",
+    maghrib: "+7",
     isha: "+10",
   },
 

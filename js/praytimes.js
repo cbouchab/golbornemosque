@@ -285,18 +285,46 @@
   /* ---------- convenience wrapper bound to the site config ---------- */
 
   /*
-   * `timetable` is the mosque's published times (data/timetable.js, synced from
-   * MyLocalMasjid). Published times are used wherever they exist; the calculation
-   * and the backup settings in js/config.js fill in any gaps.
+   * The mosque's own timetable, the times its screens show (data/mosque-times.js,
+   * made by scripts/import-timetables.mjs). Each day is its times as HHMM run
+   * together in the order of M.fields; returns them in the same shape as a
+   * MyLocalMasjid day, or null for a day it doesn't cover.
+   */
+  function mosqueDay(M, day) {
+    const list = M && M.years && M.fields && M.years[day.y];
+    if (!list) return null;
+    const rec = list[Math.round((Date.UTC(day.y, day.m - 1, day.d) - Date.UTC(day.y, 0, 1)) / 86400000)];
+    if (typeof rec !== "string" || rec.length !== M.fields.length * 4) return null;
+    const t = {};
+    M.fields.forEach((f, i) => (t[f] = `${rec.slice(i * 4, i * 4 + 2)}:${rec.slice(i * 4 + 2, i * 4 + 4)}`));
+    return {
+      start: { fajr: t.fajr, sunrise: t.sunrise, dhuhr: t.dhuhr, asr: t.asr, maghrib: t.maghrib, isha: t.isha },
+      iqamah: { fajr: t.fajrIqamah, dhuhr: t.dhuhrIqamah, asr: t.asrIqamah, maghrib: t.maghribIqamah, isha: t.ishaIqamah },
+    };
+  }
+
+  /*
+   * Published times are used wherever they exist: first the mosque's own
+   * timetable (data/mosque-times.js), then `timetable`, the times synced from
+   * MyLocalMasjid (data/timetable.js). The calculation and the backup settings
+   * in js/config.js fill in any gaps.
    */
   function forConfig(config, timetable) {
     const zone = config.location.timeZone;
     const calc = config.calculation;
     const T = timetable !== undefined ? timetable : global.MOSQUE_TIMETABLE || null;
+    const M = global.MOSQUE_TIMES || null;
     const cache = new Map();
+    const mosqueCache = new Map();
     const hours = (s) => resolveTime(s, 0);
 
-    const published = (day) => (T && T.days && T.days[dayKey(day)]) || null;
+    const fromMosque = (day) => {
+      const key = dayKey(day);
+      if (!mosqueCache.has(key)) mosqueCache.set(key, mosqueDay(M, day));
+      return mosqueCache.get(key);
+    };
+    const fromMyLocalMasjid = (day) => (T && T.days && T.days[dayKey(day)]) || null;
+    const published = (day) => fromMosque(day) || fromMyLocalMasjid(day);
 
     const api = {
       zone,
@@ -304,8 +332,15 @@
       today: () => todayIn(zone),
       // True when the mosque has published times for this day.
       isPublished: (day) => Boolean(published(day)),
-      // Credit for the published times ("Powered by MyLocalMasjid"), or null.
-      source: T ? { name: "MyLocalMasjid", url: (config.myLocalMasjid || {}).url, updated: T.lastUpdated || T.fetchedAt } : null,
+      // Where a day's times come from, for the credit line, or null when they're calculated:
+      // { kind: "mosque", updated } or { kind: "mylocalmasjid", url, updated }.
+      sourceFor(day) {
+        if (fromMosque(day)) return { kind: "mosque", updated: M.updated || null };
+        if (fromMyLocalMasjid(day)) {
+          return { kind: "mylocalmasjid", url: (config.myLocalMasjid || {}).url, updated: T.lastUpdated || T.fetchedAt };
+        }
+        return null;
+      },
       // Start times for the day: the mosque's published ones, else calculated.
       times(day) {
         const key = dayKey(day);

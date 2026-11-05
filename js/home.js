@@ -79,15 +79,19 @@
 
   // Where the times come from. MyLocalMasjid's terms ask for credit wherever its times are shown.
   function sourceNote(day) {
-    if (P.isPublished(day) && P.source) {
-      const updated = P.source.updated ? new Date(P.source.updated) : null;
+    const source = P.sourceFor(day);
+    if (source && source.kind === "mosque") {
+      return esc("Adhan and iqamah times from the mosque’s own timetable, the same times shown on its screens.");
+    }
+    if (source) {
+      const updated = source.updated ? new Date(source.updated) : null;
       const when =
         updated && !isNaN(updated)
           ? ` Last updated ${updated.toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: P.zone })}.`
           : "";
       return (
         `Adhan and iqamah times as published by the mosque, the same times shown on its screens.${when} ` +
-        `Powered by <a href="${esc(P.source.url)}" target="_blank" rel="noopener">MyLocalMasjid</a>.`
+        `Powered by <a href="${esc(source.url)}" target="_blank" rel="noopener">MyLocalMasjid</a>.`
       );
     }
     const asrNote = C.calculation.asr === "hanafi" ? " with the Hanafi Asr" : "";

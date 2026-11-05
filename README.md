@@ -4,13 +4,13 @@ A website for Golborne Mosque (مسجد غولبورن, also known as Alhuda Mos
 
 It is a plain static site: HTML, CSS and a little JavaScript, with no build tools, database or monthly fees.
 
-Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adhan and iqamah times its screens show. A scheduled job copies them into the site (see [Prayer times from MyLocalMasjid](#prayer-times-from-mylocalmasjid)). For any day the mosque hasn't published, the site calculates the times itself.
+Prayer times come from the mosque's own timetable, the one its TV screens show, for every day from 2026 to 2033 (see [Prayer times](#prayer-times)). For any day it doesn't cover, the site calculates the times itself.
 
 ## What's on it
 
 **Welcome message** (every page, once): the first time someone opens the site, a short welcome from the trust appears over the page. Closing it (the button, ×, Esc, or a tap outside) takes them to the page; their browser remembers, so it never shows again.
 
-**Prayer times strip** (every page): sits under the menu and scrolls away with the page. It shows today's adhan and iqamah times for Fajr to Isha, plus sunrise, and highlights the next prayer. After Isha it moves on to tomorrow. When the times come from MyLocalMasjid it says "Powered by MyLocalMasjid"; otherwise it says "Calculated times".
+**Prayer times strip** (every page): sits under the menu and scrolls away with the page. It shows today's adhan and iqamah times for Fajr to Isha, plus sunrise, and highlights the next prayer. After Isha it moves on to tomorrow. It says "Mosque timetable" when the times come from the mosque's own timetable, "Powered by MyLocalMasjid" for times synced from MyLocalMasjid, and "Calculated times" otherwise.
 
 **Home page** (`index.html`):
 
@@ -41,7 +41,7 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 
 ## Updating the site
 
-Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything else that changes is in **`js/config.js`**. Open it in any text editor, change the values, save, and upload the file again.
+Daily adhan and iqamah times come from the mosque's timetable files (see [Prayer times](#prayer-times)). Everything else that changes is in **`js/config.js`**. Open it in any text editor, change the values, save, and upload the file again.
 
 | Setting | What it does |
 |---|---|
@@ -51,7 +51,7 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 | `welcome` | The welcome message shown once to each new visitor, on whichever page they open first. Their browser remembers it so it isn't shown again; raise `version` to show a new message to everyone once more, or set `enabled: false` to turn it off. |
 | `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |
 | `donations.bank` | Account name, bank, sort code and account number, plus `reference`: the guidance shown next to "Reference" (it asks donors to say whether a transfer is for the Mosque Fund, Zakat or Sadaqah). |
-| `calculation`, `adhan`, `iqamah` | The backup, used for any day without synced MyLocalMasjid times (see below). It is set up to follow the mosque's own pattern. `calculation` uses the Moonsighting Committee method (MyLocalMasjid's), with Fajr and Isha 2 minutes later, which matched the mosque's published September 2026 start times to within 2 minutes. `iqamah` uses the mosque's usual gap after the adhan: 15 minutes for Fajr, Dhuhr and Asr, 5 for Maghrib, 10 for Isha. A gap is written `"+15"`; a fixed time `"13:30"` also works. |
+| `calculation`, `adhan`, `iqamah` | The backup, used for any day the mosque's timetable doesn't cover (2034 onwards). `calculation` uses the Moonsighting Committee method, with Fajr and Isha 2 minutes later. `iqamah` uses the usual gap after the adhan in the mosque's timetable: 15 minutes for Fajr and Dhuhr, 10 for Asr, 7 for Maghrib, 10 for Isha. A gap is written `"+15"`; a fixed time `"13:30"` also works. |
 | `hijriOffsetDays` | Moves the Islamic date by a day to match local moon sighting. |
 | `timeFormat` | `"24h"` (13:05) or `"12h"` (1:05 pm). |
 
@@ -122,6 +122,20 @@ npx wrangler@4.147.0 d1 migrations apply golbornemosque-news --local
 ```
 
 Posts made locally stay on your computer.
+
+## Prayer times
+
+The website shows the mosque's own timetable: the same adhan (start) and iqamah (jamaat) times as its TV screens. They come from the screens' yearly files, one per year, kept in **`timetables/`** (`year2026data.csv` to `year2033data.csv`). That folder isn't published; the website reads a compact copy, `data/mosque-times.js`, made from it.
+
+**Adding or replacing a year.** Put the new file in `timetables/` (same name pattern, e.g. `year2034data.csv`), then run:
+
+```bash
+node scripts/import-timetables.mjs
+```
+
+It checks every file first (every day of each year present, every time written HH:MM, the prayers in the right order) and only then rewrites `data/mosque-times.js`. If something's wrong it says which file and day, and changes nothing. Then publish the site as usual.
+
+The files also carry the Hanafi Asr (`asr_2`); the site uses the standard Asr, which the Asr jamaat follows. For days the files don't cover, the site falls back to MyLocalMasjid (if synced, below) and then to its own calculation.
 
 ## Prayer times from MyLocalMasjid
 
@@ -202,8 +216,6 @@ npx wrangler@4.147.0 pages dev . --port 8642
 
 The content is limited to what could be verified from the mosque's public Charity Commission entry (charity no. 294588). Please check the following with the trustees:
 
-- [ ] **MyLocalMasjid API key**, so the site shows the mosque's exact published times (see above). Until then it shows calculated times that follow the mosque's pattern, within about 2 minutes.
-- [ ] **The iqamah gaps.** In September 2026 the published iqamah was always 15 minutes after the adhan for Fajr, Dhuhr and Asr, 5 for Maghrib and 10 for Isha. Check this is the mosque's own rule rather than a listing default, and whether it changes in winter (e.g. a fixed Isha time).
 - [ ] **The right MyLocalMasjid listing.** The site uses "Al Huda Mosque", 74 Golborne Rd, which has published times. A second listing, "Golborne Mosque Trust", is empty. Check that Al Huda is the listing the screens use. Claiming it lets the mosque manage it directly, and removing the duplicate avoids confusion.
 - [ ] **Jumu'ah times.** MyLocalMasjid has none for this mosque yet. Adding them there (preferred) or in `jumuah` in `js/config.js` fills in the Jumu'ah card and the Friday iqamah.
 - [ ] **Address.** The site uses 76 Golborne Road, as on the charity register. Council planning records confirm the mosque is at 76; No. 74 has been offices since 1970. MyLocalMasjid's "74" looks like a typo worth correcting there.
@@ -230,7 +242,9 @@ admin.html        The private posting page for News
 404.html          Shown for addresses that don't exist
 css/styles.css    All styling (colours are set at the top)
 js/config.js      Settings the mosque edits
-data/timetable.js The mosque's published times (generated, don't edit)
+data/mosque-times.js The mosque's own timetable, 2026–2033 (generated from timetables/, don't edit)
+data/timetable.js The times synced from MyLocalMasjid, if any (generated, don't edit)
+timetables/       The mosque's yearly timetable files from its TV screens (not published)
 js/praytimes.js   Prayer times (published or calculated) and Hijri dates
 js/home.js        Home page behaviour
 js/timetable.js   Timetable page behaviour
@@ -253,6 +267,7 @@ functions/api/admin/                 Signing in, and writing, editing and deleti
 functions/news/[slug].js             Each post's page
 lib/news-server.js                   Shared News code for the functions above (not published as a file)
 migrations/                          The News database's tables
+scripts/import-timetables.mjs        Turns timetables/ into data/mosque-times.js
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours
 .github/workflows/deploy.yml             Publishes the site to Cloudflare

@@ -102,7 +102,8 @@
     document.querySelector(".month-table thead").innerHTML = renderHead(withIqamah);
     document.querySelector(".month-table").classList.toggle("has-iqamah", withIqamah);
     $("month-body").innerHTML = rows.join("");
-    $("month-notes").innerHTML = notes(published, n, markCalculated, withIqamah);
+    const firstPublished = days.find((day) => P.isPublished(day));
+    $("month-notes").innerHTML = notes(published, n, markCalculated, withIqamah, firstPublished && P.sourceFor(firstPublished));
 
     const isThisMonth = y === today.y && m === today.m;
     $("this-month").hidden = isThisMonth;
@@ -112,13 +113,17 @@
     history.replaceState(null, "", url);
   }
 
-  function notes(published, n, markCalculated, withIqamah) {
+  function notes(published, n, markCalculated, withIqamah, source) {
     const calc = C.calculation;
     const parts = [];
-    if (published > 0 && P.source) {
+    if (published > 0 && source && source.kind === "mosque") {
+      parts.push(
+        esc(`${published === n ? "Adhan and iqamah times" : "Times"} from the mosque’s own timetable, the same times shown on its screens.`)
+      );
+    } else if (published > 0 && source) {
       parts.push(
         `${published === n ? "Adhan and iqamah times" : "Times"} as published by the mosque, the same times shown on its screens. ` +
-          `Powered by <a href="${esc(P.source.url)}" target="_blank" rel="noopener">MyLocalMasjid</a>.`
+          `Powered by <a href="${esc(source.url)}" target="_blank" rel="noopener">MyLocalMasjid</a>.`
       );
     }
     if (published < n) {

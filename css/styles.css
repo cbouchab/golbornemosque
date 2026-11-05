@@ -593,6 +593,11 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 
 .sign__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+/* Three buttons in one row on a phone */
+@media (max-width: 420px) {
+  .sign__actions { gap: 8px; }
+  .sign__actions .btn { padding-inline: 16px; }
+}
 
 /* The arch: next prayer */
 .arch {

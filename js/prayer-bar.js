@@ -37,10 +37,13 @@
     dateEl.replaceChildren(date, hijri ? ` · ${hijri}` : "");
     sunriseEl.textContent = `Sunrise ${P.fmt(P.times(day).sunrise)}`;
     // MyLocalMasjid's terms ask for this credit wherever its times are shown.
+    const source = P.sourceFor(day);
     creditEl.innerHTML =
-      P.isPublished(day) && P.source
-        ? `Powered by <a href="${P.source.url}" target="_blank" rel="noopener">MyLocalMasjid</a>`
-        : "Calculated times";
+      source && source.kind === "mosque"
+        ? "Mosque timetable"
+        : source
+          ? `Powered by <a href="${source.url}" target="_blank" rel="noopener">MyLocalMasjid</a>`
+          : "Calculated times";
 
     const cols = PRAYERS.map((p) => ({
       label: GM.labelFor(p, day),
