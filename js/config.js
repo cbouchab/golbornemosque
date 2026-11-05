@@ -131,10 +131,10 @@ window.MOSQUE_CONFIG = {
 
     // Bank transfer, for donors who prefer to give straight from their banking app.
     bank: {
-      accountName: null, // e.g. "Golborne Mosque Trust"
+      accountName: "Golborne Mosque Trust", // exactly as the bank holds it, so Confirmation of Payee matches
       bankName: null,
-      sortCode: null, // 6 digits, e.g. "00-00-00"
-      accountNumber: null, // 8 digits
+      sortCode: "20-96-55", // 6 digits, e.g. "00-00-00"
+      accountNumber: "20072257", // 8 digits
       iban: null, // for transfers from abroad, starts with "GB"
       bic: null, // also called SWIFT code, 8 or 11 characters
       reference: "Donation",
