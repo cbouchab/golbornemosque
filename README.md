@@ -23,15 +23,19 @@ Prayer times come from the mosque's own timetable, the one its TV screens show, 
 
 **About page** (`about.html`):
 
-- "Our story": a timeline of the mosque from the first Moroccan families of the 1960s to today, with its sources listed underneath. The line draws itself down the page as you scroll, and each milestone appears as it reaches it (everything simply shows with reduced motion or without JavaScript).
-- The trust's mission, set large: Strengthen Faith. Nurture Knowledge. Unite Our Community. Serve Humanity.
+- At the top, the trust's mission, set large: Strengthen Faith. Nurture Knowledge. Unite Our Community. Serve Humanity.
 - About Golborne Mosque Trust, in the trust's own words, with its charity number.
+- "Our story", at the bottom: a timeline of the mosque from the first Moroccan families of the 1960s to today. The line draws itself down the page as you scroll, and each milestone appears as it reaches it (everything simply shows with reduced motion or without JavaScript).
 
 **News** (`news.html`, and each post at `/news/<post>`):
 
 - Posts with a title, date, text and an optional photo, newest first. The three newest also appear on the home page under "Latest news" (the section stays hidden until there is a post).
 - Each post has its own page, built on Cloudflare so link previews on WhatsApp, Facebook and the like show its title, summary and photo.
 - Written on the private posting page, `/admin` (see **News** below).
+
+**Volunteer page** (`volunteer.html`, in the menu next to Donate):
+
+- A short form: first and last name, email, phone (optional) and "I am interested in". Pressing **Register** saves the sign-up; the trust sees it on the private `/admin` page (see **Volunteer sign-ups** below).
 
 **Monthly timetable** (`timetable.html`):
 
@@ -122,6 +126,16 @@ npx wrangler@4.147.0 d1 migrations apply golbornemosque-news --local
 ```
 
 Posts made locally stay on your computer.
+
+## Volunteer sign-ups
+
+Sign-ups from the Volunteer page are saved in the same Cloudflare database as News and listed at **/admin** under **Volunteers** (same password as News), newest first. Each one shows the person's email and phone as tap-to-contact links. **Download as a spreadsheet** gives a CSV for Excel, Numbers or Google Sheets.
+
+Once someone has been contacted, choose **Remove**: their details are kept only until then. The privacy note on the form promises they'll only be used to contact them about volunteering.
+
+**Email to info@.** Sign-ups aren't emailed yet: info@golbornemosque.org doesn't exist until the move to Microsoft 365, and Cloudflare's own email sending needs its paid Workers plan (about $5 a month). Once info@ works, an email for each sign-up can be added (through Cloudflare, or through Microsoft 365 itself).
+
+**Spam.** The form only accepts sign-ups from this website, quietly drops anything a bot fills in (a hidden field, or a form sent within two seconds of opening), and accepts at most five sign-ups an hour from one connection.
 
 ## Prayer times
 
@@ -219,7 +233,7 @@ The content is limited to what could be verified from the mosque's public Charit
 - [ ] **The right MyLocalMasjid listing.** The site uses "Al Huda Mosque", 74 Golborne Rd, which has published times. A second listing, "Golborne Mosque Trust", is empty. Check that Al Huda is the listing the screens use. Claiming it lets the mosque manage it directly, and removing the duplicate avoids confusion.
 - [ ] **Jumu'ah times.** MyLocalMasjid has none for this mosque yet. Adding them there (preferred) or in `jumuah` in `js/config.js` fills in the Jumu'ah card and the Friday iqamah.
 - [ ] **Address.** The site uses 76 Golborne Road, as on the charity register. Council planning records confirm the mosque is at 76; No. 74 has been offices since 1970. MyLocalMasjid's "74" looks like a typo worth correcting there.
-- [ ] **"Our story" (About page).** It is built only from the sources listed under it on the page. Please ask the trustees to check:
+- [ ] **"Our story" (About page).** It is built only from public sources: Myriam Cherti, *British Moroccans: Citizenship in Action* (Runnymede Trust, 2009); Change Institute, *The Moroccan Muslim Community in England* (Communities and Local Government, 2009); the Layers of London community record "Al Manaar – Muslim Cultural Heritage Centre and Golborne Road Mosque" by Tabassum Hawa for Everyday Muslim; the council's planning archive for 76 Golborne Road (TP/85/1485, TP/88/1554); and the Charity Commission register (no. 294588). Please ask the trustees to check:
   - the 1981 founding by three Moroccans, which comes from a single community-history record;
   - where the congregation prayed before 76 Golborne Road (not found anywhere);
 
@@ -237,6 +251,7 @@ index.html        Home page
 about.html        Our story, the mission and the trust
 timetable.html    Monthly, printable timetable
 news.html         All news
+volunteer.html    The volunteer sign-up form
 news-post.html    The page each post is built on (by functions/news/[slug].js)
 admin.html        The private posting page for News
 404.html          Shown for addresses that don't exist
@@ -252,6 +267,7 @@ js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp card widget and bank transfer details
 js/about.js       The scrolling timeline on the About page
 js/news.js        News cards on the News and home pages
+js/volunteer.js   Sends the volunteer form
 js/news-format.js The simple formatting posts are written in (used on Cloudflare and in the preview)
 js/admin.js       The posting page
 js/site.js        Mobile menu, footer year, welcome message
@@ -263,10 +279,11 @@ brand/            The mosque's master logo files (logo, icon, symbol, favicon, a
 scripts/build.sh                     Collects the site's files into _site/ for publishing
 functions/api/donate.js              Sets up SumUp card payments (runs on Cloudflare, holds the API key)
 functions/api/news/                  Published posts and their photos
-functions/api/admin/                 Signing in, and writing, editing and deleting posts (password-protected)
+functions/api/volunteer.js           Saves volunteer sign-ups
+functions/api/admin/                 Signing in, posts, and volunteer sign-ups (password-protected)
 functions/news/[slug].js             Each post's page
 lib/news-server.js                   Shared News code for the functions above (not published as a file)
-migrations/                          The News database's tables
+migrations/                          The database's tables (News, then volunteer sign-ups)
 scripts/import-timetables.mjs        Turns timetables/ into data/mosque-times.js
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid
 .github/workflows/sync-prayer-times.yml  Runs the sync every two hours

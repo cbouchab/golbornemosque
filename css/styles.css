@@ -248,25 +248,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   color: var(--ink-2);
 }
 
-.plain-list { margin: 0; padding: 0; list-style: none; }
-.plain-list li {
-  position: relative;
-  margin-bottom: 10px;
-  padding-left: 20px;
-  color: var(--ink-2);
-}
-.plain-list li::before {
-  content: "";
-  position: absolute;
-  left: 3px;
-  top: 0.62em;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-}
-.plain-list strong { color: var(--ink); font-weight: 600; }
-
 /* ---------- header: translucent, content scrolls beneath ---------- */
 
 .site-header {
@@ -420,12 +401,34 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
     letter-spacing: -0.025em;
   }
   .site-nav a[aria-current="page"] { color: var(--gold-bright); }
+  /* Donate closes the menu as a gold button */
+  .site-nav li:has(.nav-donate) { border-bottom: 0; padding-top: 24px; }
+  .site-nav a.nav-donate {
+    display: inline-flex;
+    padding: 14px 32px;
+    border-radius: 980px;
+    background: var(--gold);
+    color: var(--ink-on-gold);
+    font-size: 1.25rem;
+  }
 }
 
 @media (min-width: 900px) {
   .nav-toggle { display: none; }
-  .site-nav ul { display: flex; gap: 32px; }
+  .site-nav ul { display: flex; align-items: center; gap: 32px; }
   .site-nav a { padding: 10px 0; white-space: nowrap; }
+  /* Volunteer and Donate stand out as buttons: Donate in gold, Volunteer outlined */
+  .site-nav a.nav-volunteer,
+  .site-nav a.nav-donate {
+    padding: 9px 16px;
+    border-radius: 980px;
+    font-weight: 600;
+    transition: color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+  }
+  .site-nav a.nav-volunteer { color: var(--gold-bright); box-shadow: inset 0 0 0 1px var(--gold-line); }
+  .site-nav a.nav-volunteer[aria-current="page"] { background: var(--gold-wash); }
+  .site-nav a.nav-donate { background: var(--gold); color: var(--ink-on-gold); }
+  .site-nav li:has(.nav-volunteer) { margin-right: -20px; }
   /* The name's capitals sit 0.35em below the header's middle (it stands on the
      mosque's base), so the menu moves down to the same line */
   .site-nav { translate: 0 calc(var(--brand-size) * 0.35); }
@@ -1236,7 +1239,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .contact-list__label { margin: 0 0 2px !important; font-size: 0.875rem; font-weight: 500; color: var(--ink-3); }
 .contact-list__links { display: flex; gap: 18px; margin-top: 8px !important; font-size: 0.9375rem; }
 
-.visit__subtitle { margin: 32px 0 14px; font-size: 1.3125rem; font-weight: 600; letter-spacing: -0.02em; }
 
 .map { margin: 0; }
 .map iframe {
@@ -1601,17 +1603,6 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .timeline--live .timeline__item.is-shown > :nth-child(2) { transition-delay: 90ms; }
 .timeline--live .timeline__item.is-shown > :nth-child(n + 3) { transition-delay: 180ms; }
 
-.sources { max-width: 900px; margin: 48px auto 0; font-size: 0.875rem; color: var(--ink-2); }
-.sources summary { cursor: pointer; font-size: 0.9375rem; font-weight: 600; color: var(--gold); }
-.sources ol { margin: 14px 0 0; padding-left: 20px; }
-.sources li { margin-bottom: 6px; }
-.sources a {
-  color: var(--ink-2);
-  text-decoration: underline;
-  text-decoration-color: var(--hairline-strong);
-  text-underline-offset: 3px;
-  transition: color 200ms ease;
-}
 
 /* The mission: four short lines, set large and centred, the last in gold */
 .mission { text-align: center; }
@@ -1818,6 +1809,23 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   box-shadow: inset 0 0 0 1px var(--gold-line);
 }
 .admin-empty { color: var(--ink-2); }
+.admin-tabs { margin-bottom: 24px; }
+.admin-count { color: var(--gold); }
+.admin-hint { margin: 0 0 20px; font-size: 0.9375rem; color: var(--ink-2); }
+
+.admin-volunteers { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.admin-volunteer {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.admin-volunteer__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.admin-volunteer__contact { margin: 0; overflow-wrap: anywhere; }
+.admin-volunteer__interests { margin: 0; white-space: pre-line; color: var(--ink-2); }
+.admin-volunteer .link-btn--danger { justify-self: end; margin-left: 0; }
 
 .admin-posts { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
 .admin-post {
@@ -1860,7 +1868,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .field--short { max-width: 240px; }
 .field__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
 .admin-form input:not([type="checkbox"]):not([type="file"]),
-.admin-form textarea {
+.admin-form textarea,
+.signup-form input,
+.signup-form textarea {
   width: 100%;
   padding: 12px 14px;
   border: 0;
@@ -1872,8 +1882,26 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 }
 .admin-form textarea { min-height: 280px; line-height: 1.6; resize: vertical; }
 .admin-form input:focus,
-.admin-form textarea:focus { outline: none; box-shadow: inset 0 0 0 2px var(--gold); }
-.admin-form input::placeholder { color: var(--ink-3); opacity: 1; }
+.admin-form textarea:focus,
+.signup-form input:focus,
+.signup-form textarea:focus { outline: none; box-shadow: inset 0 0 0 2px var(--gold); }
+.admin-form input::placeholder,
+.signup-form input::placeholder,
+.signup-form textarea::placeholder { color: var(--ink-3); opacity: 1; }
+
+/* The volunteer sign-up (volunteer.html) */
+.signup { max-width: 640px; margin: 0 auto; }
+.signup__title { font-size: clamp(1.5rem, 3.6vw, 1.875rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.025em; }
+.signup__lede { margin: 8px 0 28px; color: var(--ink-2); }
+.signup-form { display: grid; gap: 20px; }
+.signup-form__pair { display: grid; gap: 20px; }
+@media (min-width: 560px) { .signup-form__pair { grid-template-columns: 1fr 1fr; } }
+.signup-form textarea { min-height: 140px; line-height: 1.55; resize: vertical; }
+.signup-form [aria-invalid="true"] { box-shadow: inset 0 0 0 2px #ffa494; }
+/* Off-screen: only bots fill it in */
+.signup-form__trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.signup__privacy { margin: 0; font-size: 0.875rem; color: var(--ink-3); text-align: center; }
+.signup .donate-done { margin-top: 0; }
 .field-error { margin: 0; font-size: 0.9375rem; color: #ffa494; }
 .field-error:empty { display: none; }
 .check { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
@@ -2020,13 +2048,14 @@ html:has(.welcome[open]) { overflow: hidden; }
   .nav-toggle:hover { background: rgba(255, 255, 255, 0.14); }
   .brand:hover { color: var(--gold-bright); }
   .site-nav a:hover { color: var(--ink); }
+  .site-nav a.nav-donate:hover { background: var(--gold-bright); color: var(--ink-on-gold); }
+  .site-nav a.nav-volunteer:hover { background: var(--gold-wash); color: var(--gold-bright); }
   .amount:hover { background: rgba(255, 255, 255, 0.1); color: var(--ink); }
   .copy:hover { background: rgba(255, 255, 255, 0.06); }
   .contact-list a[href^="tel"]:hover,
   .contact-list a[href^="mailto"]:hover,
   .site-footer__lines a:hover,
   .site-footer__links a:hover { color: var(--ink); }
-  .sources a:hover { color: var(--gold-bright); }
   .news-card:hover { box-shadow: inset 0 0 0 1px var(--gold-line), var(--lift); }
   .news-card:hover .news-card__title a { color: var(--gold-bright); }
   .toolbar button:hover, .seg__btn:hover { background: rgba(255, 255, 255, 0.14); color: var(--ink); }

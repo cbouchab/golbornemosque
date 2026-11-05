@@ -6,7 +6,7 @@ set -e
 cd "$(dirname "$0")/.."
 rm -rf _site
 mkdir _site
-cp -R index.html about.html timetable.html news.html news-post.html admin.html 404.html favicon.ico site.webmanifest css js data assets _site/
+cp -R index.html about.html timetable.html news.html news-post.html volunteer.html admin.html 404.html favicon.ico site.webmanifest css js data assets _site/
 
 # Every stylesheet and script is linked with ?v=<checksum of the file>, so
 # browsers fetch it again as soon as it changes. golbornemosque.org's Cloudflare

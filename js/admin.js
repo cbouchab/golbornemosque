@@ -1,11 +1,13 @@
 /*
- * Golborne Mosque — the posting page (/admin): sign in, then write, edit and
- * delete News posts. Talks to /api/admin (functions/api/admin).
+ * Golborne Mosque — the admin page (/admin): sign in, then write, edit and
+ * delete News posts, and see volunteer sign-ups. Talks to /api/admin
+ * (functions/api/admin).
  */
 import { renderBody, escapeHtml as esc } from "./news-format.js";
 
 const $ = (id) => document.getElementById(id);
-const VIEWS = ["admin-loading", "view-setup", "view-login", "view-list", "view-editor"];
+const VIEWS = ["admin-loading", "view-setup", "view-login", "view-list", "view-editor", "view-volunteers"];
+const SIGNED_IN_VIEWS = ["view-list", "view-editor", "view-volunteers"];
 const MAX_SIDE = 1600; // photos are resized to at most this many pixels across
 
 const longDate = (iso) =>
@@ -15,7 +17,11 @@ const todayInLondon = () =>
 
 function show(id) {
   for (const v of VIEWS) $(v).hidden = v !== id;
-  $("sign-out").hidden = !(id === "view-list" || id === "view-editor");
+  const inside = SIGNED_IN_VIEWS.includes(id);
+  $("sign-out").hidden = !inside;
+  $("admin-tabs").hidden = !inside;
+  $("tab-news").setAttribute("aria-pressed", String(id === "view-list" || id === "view-editor"));
+  $("tab-volunteers").setAttribute("aria-pressed", String(id === "view-volunteers"));
   window.scrollTo(0, 0);
   const heading = $(id).querySelector("h1");
   if (heading) heading.focus({ preventScroll: true });
@@ -26,6 +32,8 @@ function show(id) {
 class Handled extends Error {}
 
 let signedIn = false;
+// The latest view asked for: a slow earlier request mustn't switch the page back.
+let viewRequest = 0;
 
 const MESSAGES = {
   "wrong-password": "That password isn’t right.",
@@ -113,7 +121,9 @@ function notice(html) {
 }
 
 async function openList(message) {
+  const request = ++viewRequest;
   const data = await api("/api/admin/posts");
+  if (request !== viewRequest) return;
   const list = $("post-list");
   list.innerHTML = data.posts
     .map((p) => {
@@ -136,7 +146,88 @@ async function openList(message) {
   signedIn = true;
   notice(message);
   show("view-list");
+  loadVolunteers().catch(() => {}); // just for the count on the Volunteers tab
 }
+
+/* ---------- volunteer sign-ups ---------- */
+
+let volunteers = [];
+
+const signedUp = (iso) =>
+  new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
+
+async function loadVolunteers() {
+  volunteers = (await api("/api/admin/volunteers")).volunteers;
+  $("volunteer-count").textContent = volunteers.length ? ` (${volunteers.length})` : "";
+  $("volunteer-list").innerHTML = volunteers
+    .map((v) => {
+      const name = `${v.firstName} ${v.lastName}`;
+      return (
+        `<li class="admin-volunteer">` +
+        `<div class="admin-volunteer__head"><p class="admin-post__title">${esc(name)}</p>` +
+        `<p class="admin-post__meta">${esc(signedUp(v.createdAt))}</p></div>` +
+        `<p class="admin-volunteer__contact"><a href="mailto:${esc(v.email)}">${esc(v.email)}</a>` +
+        (v.phone ? ` · <a href="tel:${esc(v.phone.replace(/[^0-9+]/g, ""))}">${esc(v.phone)}</a>` : "") +
+        `</p>` +
+        (v.interests ? `<p class="admin-volunteer__interests">${esc(v.interests)}</p>` : "") +
+        `<button class="link-btn link-btn--danger" type="button" data-remove="${v.id}">Remove</button>` +
+        `</li>`
+      );
+    })
+    .join("");
+  $("volunteers-empty").hidden = volunteers.length > 0;
+  $("volunteers-csv").hidden = volunteers.length === 0;
+}
+
+async function openVolunteers(message) {
+  if (dirty && !confirm("Leave without saving this post?")) return;
+  dirty = false;
+  const request = ++viewRequest;
+  await loadVolunteers();
+  if (request !== viewRequest) return;
+  const status = $("volunteers-status");
+  status.textContent = message || "";
+  status.hidden = !message;
+  show("view-volunteers");
+}
+
+$("tab-volunteers").addEventListener("click", () => openVolunteers().catch((err) => report($("volunteers-status"), err)));
+$("tab-news").addEventListener("click", () => {
+  if (!$("view-volunteers").hidden) openList().catch((err) => report($("list-status"), err));
+});
+
+$("volunteer-list").addEventListener("click", async (e) => {
+  const button = e.target.closest("[data-remove]");
+  if (!button) return;
+  const v = volunteers.find((x) => String(x.id) === button.dataset.remove);
+  if (!v || !confirm(`Remove ${v.firstName} ${v.lastName}’s sign-up? This can’t be undone.`)) return;
+  try {
+    await api(`/api/admin/volunteers/${v.id}`, { method: "DELETE" });
+    await openVolunteers(`${v.firstName} ${v.lastName}’s sign-up was removed.`);
+  } catch (err) {
+    const status = $("volunteers-status");
+    report(status, err);
+    status.hidden = false;
+  }
+});
+
+// A spreadsheet (CSV) of every sign-up, for Excel, Numbers or Google Sheets.
+$("volunteers-csv").addEventListener("click", () => {
+  const cell = (s) => `"${String(s == null ? "" : s).replace(/"/g, '""')}"`;
+  const rows = [["Signed up", "First name", "Last name", "Email", "Phone", "Interested in"]].concat(
+    volunteers.map((v) => [signedUp(v.createdAt), v.firstName, v.lastName, v.email, v.phone, v.interests])
+  );
+  const csv = "﻿" + rows.map((r) => r.map(cell).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `volunteers-${todayInLondon()}.csv`;
+  document.body.append(a);
+  a.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(a.href);
+    a.remove();
+  }, 1000);
+});
 
 $("post-list").addEventListener("click", (e) => {
   const button = e.target.closest("[data-edit]");
@@ -179,6 +270,7 @@ function updateSaveLabel() {
 }
 
 async function openEditor(id) {
+  ++viewRequest;
   resetPhoto();
   $("form-error").textContent = "";
   setTab(false);

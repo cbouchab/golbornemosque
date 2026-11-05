@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Post News · Golborne Mosque</title>
-  <!-- The private posting page: kept out of search engines and off the menus. -->
+  <title>Admin · Golborne Mosque</title>
+  <!-- The private admin page (News and volunteer sign-ups): kept out of search engines and off the menus. -->
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#333333">
   <meta name="color-scheme" content="dark">
@@ -44,8 +44,8 @@
       </section>
 
       <section class="panel panel--framed admin-card" id="view-login" hidden>
-        <p class="eyebrow">News</p>
-        <h1 tabindex="-1">Sign in to post</h1>
+        <p class="eyebrow">Golborne Mosque</p>
+        <h1 tabindex="-1">Sign in</h1>
         <form id="login-form" class="admin-form">
           <label class="field">
             <span class="field__label">Password</span>
@@ -54,6 +54,23 @@
           <p class="field-error" id="login-error" role="alert"></p>
           <button class="btn btn--gold btn--block" type="submit">Sign in</button>
         </form>
+      </section>
+
+      <!-- Once signed in: News posts or volunteer sign-ups -->
+      <div class="seg admin-tabs" id="admin-tabs" role="group" aria-label="Show" hidden>
+        <button type="button" class="seg__btn" id="tab-news" aria-pressed="true">News</button>
+        <button type="button" class="seg__btn" id="tab-volunteers" aria-pressed="false">Volunteers<span class="admin-count" id="volunteer-count"></span></button>
+      </div>
+
+      <section id="view-volunteers" hidden>
+        <div class="admin-head">
+          <h1 tabindex="-1">Volunteers</h1>
+          <button class="btn btn--line" type="button" id="volunteers-csv">Download as a spreadsheet</button>
+        </div>
+        <p class="admin-notice" id="volunteers-status" role="status" hidden></p>
+        <p class="admin-hint">Sign-ups from the <a href="/volunteer" target="_blank" rel="noopener">Volunteer page</a>, newest first. Once someone has been contacted, remove their sign-up: their details are kept only until then.</p>
+        <ul class="admin-volunteers" id="volunteer-list"></ul>
+        <p class="admin-empty" id="volunteers-empty" hidden>No sign-ups yet.</p>
       </section>
 
       <section id="view-list" hidden>
