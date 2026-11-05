@@ -239,7 +239,6 @@ js/news.js        News cards on the News and home pages
 js/news-format.js The simple formatting posts are written in (used on Cloudflare and in the preview)
 js/admin.js       The posting page
 js/site.js        Mobile menu, footer year, welcome message
-assets/logo.svg   The full logo at the top of the home page (a lighter copy of brand/logo.svg)
 assets/symbol.svg The mosque symbol beside the name in the header and footer: brand/symbol.svg in gold only, its white left out so the background shows through
 assets/icons/     Browser-tab and home-screen icons; favicon.ico and site.webmanifest sit at the top level
 assets/og.jpg     The picture shown when a link to the site is shared
