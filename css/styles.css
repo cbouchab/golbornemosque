@@ -729,7 +729,25 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   /* both panels share a height; the Jumu'ah card centres its content in it */
   .times-grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
   .jumuah { display: flex; flex-direction: column; justify-content: center; }
+  /* the times panel stacks its parts, with the verse centred in whatever height is left */
+  .times { display: flex; flex-direction: column; }
+  .times .verse { margin-block: auto; padding-block: 36px 8px; }
 }
+
+/* A verse on guarding the prayers, under the day's times */
+.verse { margin: 28px 0 0; padding-top: 28px; text-align: center; }
+.verse blockquote { margin: 0; }
+.verse::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 1px;
+  margin: 0 auto 26px;
+  background: var(--gold-line);
+}
+.verse__ar { margin: 0 0 12px !important; font: 400 clamp(1.5rem, 2.6vw, 1.875rem)/1.75 var(--font-ar); color: var(--gold); }
+.verse__en { max-width: 30em; margin: 0 auto !important; font-size: 1rem; line-height: 1.5; color: var(--ink-2); text-wrap: balance; }
+.verse figcaption { margin-top: 10px; font-size: 0.875rem; font-weight: 500; color: var(--gold); }
 
 .times__bar {
   display: flex;
