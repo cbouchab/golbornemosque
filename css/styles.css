@@ -1145,6 +1145,7 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .bank dt { font-size: 0.9375rem; color: var(--ink-2); }
 .bank dd { margin: 0 0 0 auto; text-align: right; }
 .bank__value { font-weight: 600; }
+.bank__note { display: block; max-width: 17em; font-size: 0.9375rem; color: var(--ink); }
 
 .copy {
   display: inline-flex;

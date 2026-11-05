@@ -19,7 +19,7 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 - Jumu'ah details, with the date of the next Friday.
 - A Ramadan section with a countdown to the expected start.
 - Services, and how to find the mosque, with a Google map.
-- Donations: card payments on the page itself through SumUp's widget, with a choice of Mosque Fund, Zakat or Sadaqah, and bank transfer details (sort code, account number, IBAN, BIC) with tap-to-copy buttons.
+- Donations: card payments on the page itself through SumUp's widget, with a choice of Mosque Fund, Zakat or Sadaqah, and bank transfer details (account name, bank, sort code, account number) with tap-to-copy buttons, for one-off transfers or a monthly standing order.
 
 **About page** (`about.html`):
 
@@ -50,12 +50,12 @@ Daily adhan and iqamah times are updated on MyLocalMasjid, not here. Everything 
 | `notices` | Announcements shown at the top of the home page. Each one hides itself after its `until` date. |
 | `welcome` | The welcome message shown once to each new visitor, on whichever page they open first. Their browser remembers it so it isn't shown again; raise `version` to show a new message to everyone once more, or set `enabled: false` to turn it off. |
 | `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |
-| `donations.bank` | Account name, bank, sort code, account number, IBAN, BIC/SWIFT and reference. |
+| `donations.bank` | Account name, bank, sort code and account number, plus `reference`: the guidance shown next to "Reference" (it asks donors to say whether a transfer is for the Mosque Fund, Zakat or Sadaqah). |
 | `calculation`, `adhan`, `iqamah` | The backup, used for any day without synced MyLocalMasjid times (see below). It is set up to follow the mosque's own pattern. `calculation` uses the Moonsighting Committee method (MyLocalMasjid's), with Fajr and Isha 2 minutes later, which matched the mosque's published September 2026 start times to within 2 minutes. `iqamah` uses the mosque's usual gap after the adhan: 15 minutes for Fajr, Dhuhr and Asr, 5 for Maghrib, 10 for Isha. A gap is written `"+15"`; a fixed time `"13:30"` also works. |
 | `hijriOffsetDays` | Moves the Islamic date by a day to match local moon sighting. |
 | `timeFormat` | `"24h"` (13:05) or `"12h"` (1:05 pm). |
 
-Any donation detail left as `null` shows on the site as a dashed "To be added" placeholder, so it's obvious what is still missing. If an IBAN, sort code, account number or BIC looks mistyped, the browser console shows a warning.
+Any donation detail left as `null` shows on the site as a dashed "To be added" placeholder, so it's obvious what is still missing. If a sort code or account number has the wrong number of digits, the browser console shows a warning.
 
 ### Donations by card (SumUp)
 

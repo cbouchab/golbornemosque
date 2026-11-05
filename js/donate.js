@@ -254,19 +254,6 @@
   /* ---------- bank transfer ---------- */
 
   const digits = (v) => String(v).replace(/\D/g, "");
-  const compact = (v) => String(v).replace(/[\s-]/g, "").toUpperCase();
-
-  // IBAN check digits (ISO 13616, mod 97), to catch typos in the settings.
-  function ibanValid(v) {
-    const s = compact(v);
-    if (!/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(s)) return false;
-    let rem = 0;
-    for (const ch of s.slice(4) + s.slice(0, 4)) {
-      const n = ch >= "A" ? String(ch.charCodeAt(0) - 55) : ch;
-      for (const d of n) rem = (rem * 10 + Number(d)) % 97;
-    }
-    return rem === 1;
-  }
 
   const FIELDS = [
     { key: "accountName", label: "Account name", copy: true },
@@ -280,16 +267,8 @@
       check: (v) => digits(v).length === 6,
     },
     { key: "accountNumber", label: "Account number", copy: true, show: digits, raw: digits, check: (v) => digits(v).length === 8 },
-    { key: "iban", label: "IBAN", copy: true, show: (v) => compact(v).replace(/(.{4})(?=.)/g, "$1 "), raw: compact, check: ibanValid },
-    {
-      key: "bic",
-      label: "BIC / SWIFT",
-      copy: true,
-      show: compact,
-      raw: compact,
-      check: (v) => /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(compact(v)),
-    },
-    { key: "reference", label: "Reference", copy: true, optional: true },
+    // Guidance for the donor rather than a value to copy.
+    { key: "reference", label: "Reference", note: true, optional: true },
   ];
 
   function renderBank() {
@@ -305,7 +284,7 @@
         ? `<button class="copy" type="button" data-copy="${esc(raw)}" data-label="${esc(f.label)}">` +
           `<span class="copy__value">${esc(shown)}</span> ` +
           `<span class="copy__hint"><span class="copy__word">Copy</span><span class="visually-hidden"> ${esc(f.label)}</span></span></button>`
-        : `<span class="bank__value">${esc(shown)}</span>`;
+        : `<span class="${f.note ? "bank__note" : "bank__value"}">${esc(shown)}</span>`;
       return `<div><dt>${f.label}</dt><dd>${value}</dd></div>`;
     }).join("");
   }
