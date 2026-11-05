@@ -19,7 +19,7 @@ Prayer times come from the mosque's own **MyLocalMasjid** listing: the same adha
 - Jumu'ah details, with the date of the next Friday.
 - A Ramadan section with a countdown to the expected start.
 - Services, and how to find the mosque, with a Google map.
-- Donations: card payments on the page itself through SumUp's widget, and bank transfer details (sort code, account number, IBAN, BIC) with tap-to-copy buttons.
+- Donations: card payments on the page itself through SumUp's widget, with a choice of Mosque Fund, Zakat or Sadaqah, and bank transfer details (sort code, account number, IBAN, BIC) with tap-to-copy buttons.
 
 **About page** (`about.html`):
 
@@ -59,7 +59,9 @@ Any donation detail left as `null` shows on the site as a dashed "To be added" p
 
 ### Donations by card (SumUp)
 
-Donors choose an amount (£10, £25, £50, £100, or any amount from £1 to £5,000) and SumUp's card form opens right on the page. Card details go straight from the donor's browser to SumUp; the mosque's website never sees them. When SumUp reports success, the site checks with SumUp that the payment is really marked paid before it thanks the donor.
+Donors choose the type of donation (Mosque Fund, Zakat or Sadaqah) and an amount (£10, £25, £50, £100, or any amount from £1 to £5,000), and SumUp's card form opens right on the page. Card details go straight from the donor's browser to SumUp; the mosque's website never sees them. When SumUp reports success, the site checks with SumUp that the payment is really marked paid before it thanks the donor.
+
+**Telling Zakat apart.** Each payment reaches SumUp labelled with its type, so Zakat can be kept separate from other giving. In SumUp's sales list, the description reads "Zakat - Golborne Mosque", "Sadaqah - Golborne Mosque" or "Mosque Fund - Golborne Mosque", and the reference starts with `zakat-`, `sadaqah-` or `mosque-`. To add or rename a type, change it in two places: the options of the "Type of donation" list in `index.html` (`id="donate-fund"`), and `FUNDS` in `functions/api/donate.js`, which only accepts the types listed there. The wording on the page ("Giving £25 as Zakat", the thank-you message) is in `FUNDS` in `js/donate.js`.
 
 Behind it is a small Cloudflare function, `functions/api/donate.js`. It holds the mosque's **SumUp API key**, which must never be put in the website's own files, and uses it to set up each payment. The mosque's SumUp merchant code is looked up automatically with the key. Card donations switch on by themselves once the key is added; until then the panel shows "Card donations to be switched on".
 

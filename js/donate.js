@@ -23,13 +23,24 @@
   const MIN = 1;
   const MAX = 5000;
   const form = $("donate-form");
+  const fund = $("donate-fund");
+  const fundHint = $("donate-fund-hint");
   const other = $("donate-other");
   const submit = $("donate-submit");
   const status = $("donate-status");
   const pounds = (n) => `£${n % 1 ? n.toFixed(2) : n}`;
+  // How each type of donation reads in "Giving £25 as Zakat" and "Your Zakat of £25 has been received".
+  // The keys must match the <select id="donate-fund"> values and FUNDS in functions/api/donate.js.
+  const FUNDS = {
+    mosque: { giving: "to the Mosque Fund", gift: (p) => `donation of ${p} to the Mosque Fund` },
+    zakat: { giving: "as Zakat", gift: (p) => `Zakat of ${p}` },
+    sadaqah: { giving: "as Sadaqah", gift: (p) => `Sadaqah of ${p}` },
+  };
+  const giftText = () => (FUNDS[chosenFund] || FUNDS.mosque).gift(pounds(chosen));
   let widget = null;
   let checkoutId = null;
   let chosen = null;
+  let chosenFund = null;
 
   function setStatus(msg) {
     status.textContent = msg || "";
@@ -43,6 +54,18 @@
     }
     const picked = form.querySelector('input[name="amount"]:checked');
     return picked ? Number(picked.value) : NaN;
+  }
+
+  function refreshFund() {
+    const opt = fund.selectedOptions[0];
+    const hint = opt && opt.value ? opt.dataset.hint || "" : "";
+    fundHint.textContent = hint;
+    fundHint.hidden = !hint;
+    const box = fund.closest(".donate-type");
+    if (fund.value && box.classList.contains("is-missing")) {
+      box.classList.remove("is-missing");
+      setStatus("");
+    }
   }
 
   function refreshButton() {
@@ -130,8 +153,8 @@
         widget = null;
         $("donate-done-text").textContent =
           paid === true
-            ? `Your donation of ${pounds(chosen)} has been received. May Allah reward you.`
-            : `Thank you for your donation of ${pounds(chosen)}. SumUp is still confirming the payment; you’ll get a receipt if you gave an email.`;
+            ? `Your ${giftText()} has been received. May Allah reward you.`
+            : `Thank you for your ${giftText()}. SumUp is still confirming the payment; you’ll get a receipt if you gave an email.`;
         show("done");
         setStatus("");
         $("donate-done").focus();
@@ -139,7 +162,7 @@
     }
   }
 
-  async function startCheckout(amount) {
+  async function startCheckout(amount, fundId) {
     submit.disabled = true;
     setStatus("Opening the secure card form…");
     try {
@@ -147,7 +170,7 @@
         fetch("/api/donate", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ amount }),
+          body: JSON.stringify({ amount, fund: fundId }),
         }),
         loadSdk(),
       ]);
@@ -156,7 +179,9 @@
       if (!res.ok || !data.checkoutId) throw new Error("The card form couldn’t be opened just now. Please try again in a moment.");
       checkoutId = data.checkoutId;
       chosen = data.amount;
+      chosenFund = data.fund || fundId;
       $("donate-chosen").textContent = pounds(chosen);
+      $("donate-chosen-fund").textContent = (FUNDS[chosenFund] || FUNDS.mosque).giving;
       show("card");
       setStatus("");
       widget = window.SumUpCard.mount({
@@ -180,7 +205,7 @@
   // Shown as a placeholder until the mosque's SumUp key is in place.
   function setReady(ready) {
     form.classList.toggle("is-off", !ready);
-    form.querySelectorAll("input, button").forEach((el) => (el.disabled = !ready));
+    form.querySelectorAll("input, select, button").forEach((el) => (el.disabled = !ready));
     $("sumup-note").innerHTML = ready
       ? "Card payments are handled securely by SumUp. The mosque never sees your card details."
       : '<span class="placeholder-chip">Card donations to be switched on</span>';
@@ -199,6 +224,7 @@
       .catch(() => setReady(false));
     form.addEventListener("change", (e) => {
       if (e.target.name === "amount") other.value = "";
+      if (e.target === fund) refreshFund();
       refreshButton();
     });
     other.addEventListener("input", () => {
@@ -207,13 +233,19 @@
     });
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      if (!FUNDS[fund.value]) {
+        setStatus("Please choose the type of donation: Mosque Fund, Zakat or Sadaqah.");
+        fund.closest(".donate-type").classList.add("is-missing");
+        fund.focus();
+        return;
+      }
       const amount = readAmount();
       if (!Number.isFinite(amount) || amount < MIN || amount > MAX) {
         setStatus(`Please choose an amount from £${MIN} to £${MAX.toLocaleString("en-GB")}.`);
         other.focus();
         return;
       }
-      startCheckout(amount);
+      startCheckout(amount, fund.value);
     });
     $("donate-change").addEventListener("click", reset);
     $("donate-again").addEventListener("click", reset);

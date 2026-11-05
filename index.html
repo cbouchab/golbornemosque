@@ -373,7 +373,7 @@
     <section id="donate" class="section section--alt" aria-labelledby="donate-title">
       <div class="wrap donate">
         <header class="section__head">
-          <p class="eyebrow eyebrow--ruled">Sadaqah</p>
+          <p class="eyebrow eyebrow--ruled">Zakat &amp; Sadaqah</p>
           <h2 id="donate-title">Support your mosque</h2>
         </header>
         <div class="donate__intro">
@@ -390,8 +390,19 @@
           <div class="panel panel--framed give" aria-labelledby="give-online-title">
             <p class="give__eyebrow">Card payment · SumUp</p>
             <h3 id="give-online-title">Give online</h3>
-            <p class="give__text">Choose an amount and give by card, right here.</p>
+            <p class="give__text">Choose what you’re giving and an amount, then give by card, right here.</p>
             <form class="donate-form" id="donate-form" novalidate>
+              <!-- The values must match FUNDS in functions/api/donate.js -->
+              <label class="donate-type" for="donate-fund">
+                <span class="donate-type__label">Type of donation</span>
+                <select id="donate-fund" name="fund" required aria-describedby="donate-fund-hint">
+                  <option value="" selected disabled>Please select…</option>
+                  <option value="mosque" data-hint="For the mosque’s upkeep, bills and services.">Mosque Fund</option>
+                  <option value="zakat" data-hint="Your obligatory Zakat. It is recorded separately from other donations.">Zakat</option>
+                  <option value="sadaqah" data-hint="Voluntary charity, given whenever you wish.">Sadaqah</option>
+                </select>
+              </label>
+              <p class="fund-hint" id="donate-fund-hint" hidden></p>
               <fieldset class="amounts" id="donate-amounts">
                 <legend class="visually-hidden">Choose an amount</legend>
               </fieldset>
@@ -405,8 +416,8 @@
             <!-- SumUp's card form appears here once an amount is chosen -->
             <div class="donate-card" id="donate-card" hidden>
               <div class="donate-card__head">
-                <p>Giving <strong id="donate-chosen"></strong></p>
-                <button class="link-btn" type="button" id="donate-change">Change amount</button>
+                <p>Giving <strong id="donate-chosen"></strong> <span id="donate-chosen-fund"></span></p>
+                <button class="link-btn" type="button" id="donate-change">Change</button>
               </div>
               <div class="donate-card__form" id="sumup-card"></div>
             </div>

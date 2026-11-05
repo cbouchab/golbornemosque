@@ -6,7 +6,7 @@
  * Donations by card).
  *
  *   GET  /api/donate                    → { ready }  whether a key is set (the page switches on by itself)
- *   POST /api/donate        { amount }  → { checkoutId }  creates a SumUp checkout
+ *   POST /api/donate  { amount, fund }  → { checkoutId }  creates a SumUp checkout (fund: mosque, zakat or sadaqah)
  *   GET  /api/donate?id=…               → { status, amount }  checks a checkout
  *
  * The page mounts SumUp's card form with the checkout id; the card details go
@@ -16,6 +16,15 @@
 const API = "https://api.sumup.com/v0.1";
 const MIN = 1;
 const MAX = 5000;
+
+// The type of donation the donor picks. Its description and reference go into
+// SumUp with the payment, so the mosque can tell Zakat apart from other giving.
+// The keys must match the <select id="donate-fund"> values in index.html.
+const FUNDS = {
+  mosque: { description: "Mosque Fund - Golborne Mosque", reference: "mosque" },
+  zakat: { description: "Zakat - Golborne Mosque", reference: "zakat" },
+  sadaqah: { description: "Sadaqah - Golborne Mosque", reference: "sadaqah" },
+};
 
 let merchantCodeCache = null;
 
@@ -70,16 +79,19 @@ export async function onRequestPost({ request, env }) {
   if (!Number.isFinite(amount) || amount < MIN || amount > MAX) {
     return json({ error: "amount", min: MIN, max: MAX }, 400);
   }
+  const fundId = String(body.fund || "");
+  if (!Object.prototype.hasOwnProperty.call(FUNDS, fundId)) return json({ error: "fund", funds: Object.keys(FUNDS) }, 400);
+  const fund = FUNDS[fundId];
 
   try {
     const res = await sumup(env, "/checkouts", {
       method: "POST",
       body: JSON.stringify({
-        checkout_reference: `donation-${crypto.randomUUID()}`,
+        checkout_reference: `${fund.reference}-${crypto.randomUUID()}`,
         amount,
         currency: "GBP",
         merchant_code: await merchantCode(env),
-        description: "Donation to Golborne Mosque",
+        description: fund.description,
       }),
     });
     const data = await res.json().catch(() => ({}));
@@ -87,7 +99,7 @@ export async function onRequestPost({ request, env }) {
       console.error("SumUp checkout failed", res.status, JSON.stringify(data).slice(0, 300));
       return json({ error: "sumup" }, 502);
     }
-    return json({ checkoutId: data.id, amount });
+    return json({ checkoutId: data.id, amount, fund: fundId });
   } catch (e) {
     console.error("SumUp checkout error", e && e.message);
     return json({ error: "sumup" }, 502);
