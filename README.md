@@ -50,7 +50,7 @@ Daily adhan and iqamah times come from the mosque's timetable files (see [Prayer
 | Setting | What it does |
 |---|---|
 | `myLocalMasjid` | The mosque's MyLocalMasjid listing (its id and page address). |
-| `jumuah` | Khutbah and prayer times for Friday, e.g. `khutbah: "13:15", prayer: "13:45"`. Used only if MyLocalMasjid has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah. |
+| `jumuah` | Khutbah and prayer times for Friday, e.g. `khutbah: "13:15", prayer: "13:45"`. Used only if MyLocalMasjid has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah. Also `languages` (the khutbah's languages), `liveTranslation` and `liveTranslationUrl`: the mosque's Baian live translation page (the QR code on the notice in the mosque), linked from the Jumu'ah card. |
 | `notices` | Announcements shown at the top of the home page. Each one hides itself after its `until` date. |
 | `welcome` | The welcome message shown once to each new visitor, on whichever page they open first. Their browser remembers it so it isn't shown again; raise `version` to show a new message to everyone once more, or set `enabled: false` to turn it off. |
 | `donations.sumup` | Card donations through SumUp's widget: the amount buttons and the one picked at first. See below. |

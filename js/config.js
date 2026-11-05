@@ -77,11 +77,14 @@ window.MOSQUE_CONFIG = {
   // Friday prayer, e.g. khutbah: "13:15", prayer: "13:45". Used when MyLocalMasjid
   // has no Jumu'ah times. On Fridays the prayer time is shown as the Jumu'ah iqamah.
   // `languages` and `liveTranslation` show in the Jumu'ah card (null hides them).
+  // `liveTranslationUrl` is the mosque's Baian page (the QR code on the notice in
+  // the mosque); with it, the row links there for people to listen or read along.
   jumuah: {
     khutbah: null,
     prayer: null,
     languages: "Arabic and English",
     liveTranslation: "Available",
+    liveTranslationUrl: "https://listener.baian.ai/m/483219",
   },
 
   // Shift the Islamic (Hijri) date shown on the site by whole days, to match

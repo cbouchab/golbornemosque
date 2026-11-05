@@ -903,6 +903,9 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 .jumuah__list dt { font-size: 0.9375rem; color: var(--ink-2); }
 .jumuah__list dd { margin: 0; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
 .jumuah__note { font-size: 0.9375rem; color: var(--ink-2); }
+.jumuah__list dd a { white-space: nowrap; }
+.jumuah__translate { margin: 0 0 14px; font-size: 0.9375rem; line-height: 1.5; color: var(--ink-2); }
+.jumuah__translate strong { color: var(--ink); font-weight: 600; }
 
 /* ---------- services ---------- */
 

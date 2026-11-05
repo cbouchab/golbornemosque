@@ -129,9 +129,19 @@
     rows.push(["Dhuhr begins", P.fmt(P.adhan(friday, "dhuhr"))]);
     const J = C.jumuah || {};
     if (J.languages) rows.push(["Khutbah", J.languages]);
-    if (J.liveTranslation) rows.push(["Live translation", J.liveTranslation]);
+    if (J.liveTranslation) {
+      const link = J.liveTranslationUrl
+        ? `<a class="text-link" href="${esc(J.liveTranslationUrl)}" target="_blank" rel="noopener">Listen or read <span aria-hidden="true">↗</span></a>`
+        : null;
+      rows.push(["Live translation", J.liveTranslation, link]);
+    }
 
-    $("jumuah-list").innerHTML = rows.map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join("");
+    $("jumuah-list").innerHTML = rows.map(([dt, dd, html]) => `<div><dt>${esc(dt)}</dt><dd>${html || esc(dd)}</dd></div>`).join("");
+    const translate = $("jumuah-translate");
+    if (translate) {
+      translate.hidden = !J.liveTranslationUrl;
+      if (J.liveTranslationUrl) translate.querySelector("a").href = J.liveTranslationUrl;
+    }
     $("jumuah-note").hidden = sessions.length > 0;
   }
 
