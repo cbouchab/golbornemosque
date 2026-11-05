@@ -39,12 +39,13 @@ export async function onRequestGet({ request, env, params }) {
     ? { url: imageUrl(post.image_id), width: post.image_width, height: post.image_height, alt: post.image_alt || "" }
     : null;
 
-  // More photos, under the text; each opens full size.
+  // More photos, under the text. Each is a link to the full image, which js/lightbox.js
+  // turns into a viewer over the page.
   const gallery = await galleryFor(env.DB, post.id).catch(() => []);
   const galleryHtml = gallery
     .map(
       (g) =>
-        `<a class="post__gallery-item" href="${g.url}" target="_blank" rel="noopener">` +
+        `<a class="post__gallery-item" href="${g.url}">` +
         `<img src="${g.url}" width="${g.width}" height="${g.height}" alt="${escapeHtml(g.alt)}" loading="lazy" decoding="async"></a>`
     )
     .join("");
@@ -88,7 +89,8 @@ export async function onRequestGet({ request, env, params }) {
         element: (el) => {
           el.removeAttribute("hidden");
           el.setInnerContent(
-            `<img src="${photo.url}" width="${photo.width}" height="${photo.height}" alt="${escapeHtml(photo.alt)}" fetchpriority="high">`,
+            `<a class="post__photo-link" href="${photo.url}">` +
+              `<img src="${photo.url}" width="${photo.width}" height="${photo.height}" alt="${escapeHtml(photo.alt)}" fetchpriority="high"></a>`,
             { html: true }
           );
         },

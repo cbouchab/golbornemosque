@@ -1788,11 +1788,13 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
-/* More photos under the text: two across (one on a phone), each opening full size */
+.post__photo-link { display: block; cursor: zoom-in; }
+/* More photos under the text: two across (one on a phone), each opening in the viewer */
 .post__gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; margin-top: 40px; }
 .post__gallery[data-count="1"] { grid-template-columns: 1fr; }
 .post__gallery-item {
   display: block;
+  cursor: zoom-in;
   overflow: hidden;
   border-radius: var(--radius);
   box-shadow: inset 0 0 0 1px var(--hairline), var(--lift);
@@ -1968,6 +1970,77 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
   box-shadow: inset 0 0 0 1px var(--hairline);
 }
 
+/* ---------- photo viewer (js/lightbox.js) ----------
+   A News post's photos, one at a time over a dark screen. */
+
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  overflow: hidden;
+}
+.lightbox:focus { outline: none; }
+.lightbox::backdrop { background: rgba(12, 12, 12, 0.94); }
+html:has(.lightbox[open]) { overflow: hidden; }
+.lightbox__stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 64px 84px 92px;
+  touch-action: pan-y pinch-zoom;
+}
+.lightbox__img {
+  /* sized from the screen itself, leaving room for the buttons and caption */
+  max-width: calc(100vw - 168px);
+  max-height: calc(100dvh - 156px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.lightbox__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  margin: 0;
+  padding: 0 84px;
+  text-align: center;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.lightbox__count { margin-right: 10px; font-weight: 600; color: var(--gold); font-variant-numeric: tabular-nums; }
+.lightbox__btn { position: absolute; width: 48px; height: 48px; background: rgba(255, 255, 255, 0.1); }
+.lightbox__btn svg { width: 22px; height: 22px; }
+.lightbox__close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
+.lightbox__prev,
+.lightbox__next { top: 50%; translate: 0 -50%; }
+.lightbox__prev { left: 18px; }
+.lightbox__next { right: 18px; }
+/* On a phone the photo uses the full width; the arrows sit over its edges, darker so they stand out */
+@media (max-width: 640px) {
+  .lightbox__stage { padding: 60px 10px 120px; }
+  .lightbox__img { max-width: calc(100vw - 20px); max-height: calc(100dvh - 180px); }
+  .lightbox__prev,
+  .lightbox__next { width: 40px; height: 40px; translate: 0 calc(-50% - 30px); background: rgba(0, 0, 0, 0.5); }
+  .lightbox__prev { left: 14px; }
+  .lightbox__next { right: 14px; }
+  .lightbox__caption { padding: 0 18px; bottom: 18px; }
+}
+.lightbox[open] { animation: lightbox-in 220ms var(--ease-out); }
+@keyframes lightbox-in { from { opacity: 0; } }
+
 /* ---------- welcome message ----------
    Shown once to a new visitor (js/site.js). The card scrolls on its own
    when the message is taller than the screen; the button stays in reach. */
@@ -2088,6 +2161,7 @@ html:has(.welcome[open]) { overflow: hidden; }
   .site-footer__links a:hover { color: var(--ink); }
   .news-card:hover { box-shadow: inset 0 0 0 1px var(--gold-line), var(--lift); }
   .post__gallery-item:hover img { transform: scale(1.02); }
+  .lightbox__btn:hover { background: rgba(255, 255, 255, 0.2); }
   .news-card:hover .news-card__title a { color: var(--gold-bright); }
   .toolbar button:hover, .seg__btn:hover { background: rgba(255, 255, 255, 0.14); color: var(--ink); }
 }

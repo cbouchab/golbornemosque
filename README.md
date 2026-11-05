@@ -95,7 +95,7 @@ To hide card donations without removing the key, set `donations.sumup.enabled` t
 
 Posts are written at **<https://golbornemosque.org/admin>**, a private page that isn't linked from the site. Sign in with the News password, then:
 
-- **New post**: a title, the date (today unless changed), an optional photo with a short description for people who can't see it, and the text. **More photos** (up to 8) appear as a small gallery under the text, each with its own description; tap one on the site to see it full size. The buttons above the text add a heading, bold, italic, a link or a list; **Preview** shows how it will look.
+- **New post**: a title, the date (today unless changed), an optional photo with a short description for people who can't see it, and the text. **More photos** (up to 8) appear as a small gallery under the text, each with its own description. On the site, tapping any photo in a post opens it large over the page; the ‹ › arrows, the ← → keys or a swipe move through the post's photos, and ×, Esc or a tap outside closes it. The buttons above the text add a heading, bold, italic, a link or a list; **Preview** shows how it will look.
 - **Show on the website** publishes it straight away. Untick it to keep a draft, which only signed-in writers can see.
 - **Edit** changes a post; its address stays the same so links already shared keep working. **Delete post** removes it and its photo for good.
 
@@ -267,6 +267,7 @@ js/prayer-bar.js  Prayer times strip under the menu
 js/donate.js      SumUp card widget and bank transfer details
 js/about.js       The scrolling timeline on the About page
 js/news.js        News cards on the News and home pages
+js/lightbox.js    The photo viewer on each News post
 js/volunteer.js   Sends the volunteer form
 js/news-format.js The simple formatting posts are written in (used on Cloudflare and in the preview)
 js/admin.js       The posting page
