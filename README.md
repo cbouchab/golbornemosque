@@ -155,7 +155,7 @@ The script prints how many days it saved, or a plain explanation if something we
 
 ## Hosting (Cloudflare Pages)
 
-The site is published free on Cloudflare Pages at **<https://golbornemosque.org>**, from the personal Cloudflare account of cbouchab@gmail.com. Its Cloudflare address, <https://golbornemosque.pages.dev>, still works too. The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
+The site is published free on Cloudflare Pages at **<https://golbornemosque.org>**, from the personal Cloudflare account of cbouchab@gmail.com. Its Cloudflare address, golbornemosque.pages.dev, redirects there (see **Domains** below). The code lives in the repository <https://github.com/cbouchab/golbornemosque>.
 
 Cloudflare serves the files as they are; there is no server code. `scripts/build.sh` copies the website's own files into `_site/`, and only that folder is published, so this README, the scripts, the workflows and the git files never go online. It also adds `?v=` and a checksum to every stylesheet and script link in the published pages, so browsers fetch a file again as soon as it changes. The golbornemosque.org zone tells browsers to keep CSS and JS for 4 hours (Cloudflare's default **Browser Cache TTL**); without the checksums, a returning visitor could get a new page with an old script. `wrangler.jsonc` holds the settings. Pages have clean addresses (`/about`, `/timetable`), old links ending in `.html` redirect to them, and any address that doesn't exist shows `404.html`.
 
@@ -190,10 +190,10 @@ To preview on your own computer first, run this and open <http://localhost:8642>
 npx wrangler@4.147.0 pages dev . --port 8642
 ```
 
-**Domains.** golbornemosque.org is the main address, and golbornemosque.com redirects to it. Both are registered at GoDaddy, where they're renewed each year, but their nameservers point to Cloudflare. So every DNS change, email records included, is made in the Cloudflare dashboard; GoDaddy's own DNS page is no longer used.
+**Domains.** golbornemosque.org is the main address. golbornemosque.com, both `www` addresses and golbornemosque.pages.dev redirect to it. Both are registered at GoDaddy, where they're renewed each year, but their nameservers point to Cloudflare. So every DNS change, email records included, is made in the Cloudflare dashboard; GoDaddy's own DNS page is no longer used.
 
-- `golbornemosque.org` and `www.golbornemosque.org` are custom domains of the Pages project (**Workers & Pages → golbornemosque → Custom domains**).
-- Redirect Rules send `www.golbornemosque.org` and all of `golbornemosque.com` to `https://golbornemosque.org`, keeping the rest of the address. The .com domain has two placeholder A records (`@` and `www`, `192.0.2.1`, proxied) so that Cloudflare receives its visits.
+- `golbornemosque.org`, `www.golbornemosque.org`, `golbornemosque.com` and `www.golbornemosque.com` are all custom domains of the Pages project (**Workers & Pages → golbornemosque → Custom domains**).
+- The account-level Bulk Redirect list `to_org` sends `www.golbornemosque.org`, `golbornemosque.com`, `www.golbornemosque.com` and `golbornemosque.pages.dev` to `https://golbornemosque.org` (301), keeping the rest of the address. Each entry has *Preserve query string*, *Subpath matching* and *Preserve path suffix* ticked, and *Include subdomains* off, so each deploy's own test address (like `42d622f3.golbornemosque.pages.dev`) still opens normally. Never add `golbornemosque.org` itself to the list: it would redirect to itself and take the site down.
 - The `og:image` and `og:url` lines in the pages use the full `https://golbornemosque.org` address, because link previews need it.
 
 ## Please confirm with the mosque before launch

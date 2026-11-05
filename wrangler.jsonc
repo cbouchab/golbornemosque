@@ -1,5 +1,5 @@
-// Hosts the website on Cloudflare Pages at golbornemosque.org (also
-// golbornemosque.pages.dev), in the personal Cloudflare account of
+// Hosts the website on Cloudflare Pages at golbornemosque.org (the other
+// addresses redirect there, see README), in the personal Cloudflare account of
 // cbouchab@gmail.com. Cloudflare serves the
 // files that scripts/build.sh collects into _site/; the functions/ folder
 // runs on Cloudflare for card donations and News.
