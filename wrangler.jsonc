@@ -9,6 +9,12 @@
   "name": "golbornemosque",
   "pages_build_output_dir": "./_site",
   "compatibility_date": "2026-10-02",
+  // The Microsoft app that emails volunteer sign-ups to info@ (README → Volunteer
+  // sign-ups). These two aren't secret; M365_CLIENT_SECRET is kept on Cloudflare.
+  "vars": {
+    "M365_TENANT_ID": "c9353ffa-253e-43b6-bc97-1687408c4976",
+    "M365_CLIENT_ID": "1250c268-d572-4fb4-abba-2cc31697e052"
+  },
   // News posts and their photos (see migrations/ and README → News).
   "d1_databases": [
     {

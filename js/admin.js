@@ -165,7 +165,7 @@ async function loadVolunteers() {
       return (
         `<li class="admin-volunteer">` +
         `<div class="admin-volunteer__head"><p class="admin-post__title">${esc(name)}</p>` +
-        `<p class="admin-post__meta">${esc(signedUp(v.createdAt))}</p></div>` +
+        `<p class="admin-post__meta">${esc(signedUp(v.createdAt))}${v.emailed ? " · Emailed" : ' · <span class="admin-badge">Not emailed</span>'}</p></div>` +
         `<p class="admin-volunteer__contact"><a href="mailto:${esc(v.email)}">${esc(v.email)}</a>` +
         (v.phone ? ` · <a href="tel:${esc(v.phone.replace(/[^0-9+]/g, ""))}">${esc(v.phone)}</a>` : "") +
         `</p>` +

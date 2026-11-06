@@ -1017,19 +1017,20 @@ button, .btn, .icon-btn, .amount, .copy, .nav-toggle, .site-nav a, summary {
 
 /* ---------- donate ---------- */
 
-.donate__intro { max-width: 760px; margin: 0 auto 56px; text-align: center; }
+.donate__intro { max-width: 680px; margin: 0 auto 32px; text-align: center; }
+/* A shorter run-in to the donation cards, which are what people came for */
+#donate .section__head { margin-bottom: 24px; }
 
 .quote { margin: 0; padding: 8px 0 8px 24px; border-left: 2px solid var(--gold); }
 .quote--center { padding: 0; border-left: 0; }
 .quote blockquote { margin: 0; }
 /* The hadith keeps a serif, set apart from the interface type */
-.quote p { font: 400 clamp(1.5rem, 3.8vw, 2rem)/1.42 var(--font-ar); color: var(--ink); }
-.quote figcaption { margin-top: 18px; font-size: 0.9375rem; font-weight: 500; color: var(--gold); }
+.quote p { font: 400 clamp(1.125rem, 2vw, 1.3125rem)/1.45 var(--font-ar); color: var(--ink); }
+.quote figcaption { margin-top: 8px; font-size: 0.875rem; font-weight: 500; color: var(--gold); }
 .donate__lede {
-  max-width: 34em;
-  margin: 28px auto 0;
-  padding-top: 24px;
-  border-top: 1px solid var(--hairline);
+  max-width: 38em;
+  margin: 16px auto 0;
+  font-size: 1rem;
   color: var(--ink-2);
 }
 

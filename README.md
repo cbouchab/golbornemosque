@@ -35,7 +35,7 @@ Prayer times come from the mosque's own timetable, the one its TV screens show, 
 
 **Volunteer page** (`volunteer.html`, in the menu next to Donate):
 
-- A short form: first and last name, email, phone (optional) and "I am interested in". Pressing **Register** saves the sign-up; the trust sees it on the private `/admin` page (see **Volunteer sign-ups** below).
+- A short form: first and last name, email, phone (optional) and "I am interested in". Pressing **Register** saves the sign-up and emails it to info@; the trust also sees it on the private `/admin` page (see **Volunteer sign-ups** below).
 
 **Monthly timetable** (`timetable.html`):
 
@@ -133,7 +133,13 @@ Sign-ups from the Volunteer page are saved in the same Cloudflare database as Ne
 
 Once someone has been contacted, choose **Remove**: their details are kept only until then. The privacy note on the form promises they'll only be used to contact them about volunteering.
 
-**Email to info@.** Sign-ups aren't emailed yet: info@golbornemosque.org doesn't exist until the move to Microsoft 365, and Cloudflare's own email sending needs its paid Workers plan (about $5 a month). Once info@ works, an email for each sign-up can be added (through Cloudflare, or through Microsoft 365 itself).
+**Email to info@.** Each sign-up is also emailed to info@golbornemosque.org, with Reply set to the volunteer. It goes through the mosque's own Microsoft 365 (`lib/volunteer-mail.js`), so it's the mailbox sending to itself, with no outside mail service or DNS change. The sign-up is saved first, so a mail problem can't lose one: `/admin` marks any that didn't go as **Not emailed**.
+
+It uses an app registered in Microsoft Entra, with these settings in Cloudflare: `M365_TENANT_ID` and `M365_CLIENT_ID` (in `wrangler.jsonc`) and the secret `M365_CLIENT_SECRET`. **The client secret expires** (Microsoft allows 24 months at most). If sign-ups start showing **Not emailed**, create a new one in Entra (the app → Certificates & secrets), save it with the command below, and publish the site again:
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=722237b243245541dfb7d4407d4c234c npx wrangler@4.147.0 pages secret put M365_CLIENT_SECRET --project-name golbornemosque
+```
 
 **Spam.** The form only accepts sign-ups from this website, quietly drops anything a bot fills in (a hidden field, or a form sent within two seconds of opening), and accepts at most five sign-ups an hour from one connection.
 
@@ -283,10 +289,11 @@ print/            Print artwork, not published: a3-poster-header/ (297 × 100 mm
 scripts/build.sh                     Collects the site's files into _site/ for publishing
 functions/api/donate.js              Sets up SumUp card payments (runs on Cloudflare, holds the API key)
 functions/api/news/                  Published posts and their photos
-functions/api/volunteer.js           Saves volunteer sign-ups
+functions/api/volunteer.js           Saves volunteer sign-ups and emails them to info@
 functions/api/admin/                 Signing in, posts, and volunteer sign-ups (password-protected)
 functions/news/[slug].js             Each post's page
 lib/news-server.js                   Shared News code for the functions above (not published as a file)
+lib/volunteer-mail.js                Emails a sign-up through Microsoft 365 (not published as a file)
 migrations/                          The database's tables (News, volunteer sign-ups, then gallery photos)
 scripts/import-timetables.mjs        Turns timetables/ into data/mosque-times.js
 scripts/sync-prayer-times.mjs        Copies times from MyLocalMasjid

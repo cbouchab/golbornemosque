@@ -3,8 +3,10 @@
  *
  *   POST /api/volunteer { firstName, lastName, email, phone, interests } → { ok }
  *
- * Each sign-up is saved in the News database (D1) and listed on the private
- * /admin page. Emailing them to info@ can be added once that mailbox exists.
+ * Each sign-up is saved first, in the News database (D1), and listed on the
+ * private /admin page. It's then emailed to info@ in the background, so the
+ * visitor doesn't wait and a mail problem can never lose a sign-up: /admin marks
+ * any that didn't go as "Not emailed".
  *
  * Kept simple for people, awkward for spam: the request must come from this
  * website; a hidden field that only bots fill in, or a form sent within two
@@ -13,6 +15,7 @@
  */
 
 import { json, sameOrigin, clientIp } from "../../lib/news-server.js";
+import { mailConfigured, emailSignUp } from "../../lib/volunteer-mail.js";
 
 const HOUR = 3600000;
 const MAX_PER_HOUR = 5;
@@ -30,7 +33,16 @@ async function hashIp(ip) {
   return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-export async function onRequestPost({ request, env }) {
+async function sendEmail(env, id, volunteer) {
+  try {
+    await emailSignUp(env, volunteer);
+    await env.DB.prepare("UPDATE volunteers SET emailed_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now') WHERE id = ?").bind(id).run();
+  } catch (e) {
+    console.error("volunteer email:", e.message);
+  }
+}
+
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!sameOrigin(request)) return json({ error: "forbidden" }, 403);
   if (!env.DB) return json({ error: "unavailable" }, 503);
 
@@ -68,8 +80,8 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "too-many", message: "Thank you, we already have your details. Please try again later if you need to." }, 429);
     }
 
-    await env.DB.batch([
-      env.DB.prepare("INSERT INTO volunteers (first_name, last_name, email, phone, interests) VALUES (?, ?, ?, ?, ?)").bind(
+    const results = await env.DB.batch([
+      env.DB.prepare("INSERT INTO volunteers (first_name, last_name, email, phone, interests) VALUES (?, ?, ?, ?, ?) RETURNING id").bind(
         v.firstName,
         v.lastName,
         v.email,
@@ -79,6 +91,7 @@ export async function onRequestPost({ request, env }) {
       env.DB.prepare("INSERT INTO form_submissions (ip_hash, at) VALUES (?, ?)").bind(ipHash, Date.now()),
       env.DB.prepare("DELETE FROM form_submissions WHERE at < ?").bind(Date.now() - 24 * HOUR),
     ]);
+    if (mailConfigured(env)) waitUntil(sendEmail(env, results[0].results[0].id, v));
   } catch (e) {
     console.error("volunteer sign-up:", e);
     return json({ error: "unavailable" }, 503);
